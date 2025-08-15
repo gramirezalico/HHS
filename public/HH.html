@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de cajas</title>
+    <link rel="stylesheet" href="HH.css">
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Administración de cajas</h1>
+        <div class="button-group">
+            <button class="btn btn-add">Agregar</button>
+            <button class="btn btn-close-main">Cerrar</button>
+        </div>
+        <div id="packagesList" class="packages-list">
+        </div>
+        <div class="employe">
+            <span class="employee-name">Usuario: <span id="userName"></span></span>
+            <button class="btn btn-logout">Cerrar sesión</button>
+        </div> 
+    </div>
+    <div class="status">
+        Ready
+    </div>
+
+    <div id="addPackagingModal" class="modal">
+        <div class="modal-content">
+            <h2>Agregar embalaje</h2>
+            <p class="order-info">Orden 1 Linea 2 Embarque 1 Linea 1</p>
+
+            <form id="packagingForm">
+                <div class="form-group">
+                    <label for="packagingType">Tipo embalaje</label>
+                    <select name="packagingTypeList1" id="packagingTypeList1">
+                        <option value="">Seleccione tipo embalaje...</option>
+                    </select>
+                </div>
+
+                <div class="form-row dimension-fields-container">
+                    <div class="form-group half-width">
+                        <label for="length">Largo</label>
+                        <input type="number" id="length" class="number-input" value="" required>
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="width">Ancho</label>
+                        <input type="number" id="width" class="number-input" value="" required>
+                    </div>
+                </div>
+
+                <div class="form-row dimension-fields-container">
+                    <div class="form-group half-width">
+                        <label for="height">Alto</label>
+                        <input type="number" id="height" class="number-input" value="" required>
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="um">UM</label>
+                        <input type="text" id="um" class="text-input" required>
+                    </div>
+                </div>
+
+                <div id="palletEditContainer" style="display: none; text-align: center; margin-bottom: 1em;">
+                    <button type="button" id="editPalletBoxesBtn" class="btn" style="background-color: #007bff; color: white; padding: 0.7em 1.2em; border-radius: 5px;">Editar cajas de pallet</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="unitWeight">Peso unita(kg)</label>
+                    <input type="number" id="unitWeight" class="number-input wide-input" value="" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="numPackages">No Embalajes</label>
+                    <input type="number" id="numPackages" class="number-input" value="" required>
+                </div>
+
+                <div class="modal-button-group">
+                    <button type="submit" class="btn btn-save">Guardar</button>
+                    <button type="button" class="btn btn-close-packaging-modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="packagingTypeSelectionModal" class="modal">
+        <div class="modal-content type-selection-content">
+            <h2>Agregar embalaje</h2>
+
+            <div class="type-list-container">
+                <select name="packagingTypeList" id="packagingTypeList"></select>
+            </div>
+
+            <div class="modal-button-group">
+                <button type="button" class="btn btn-cancel-selection">Cancelar</button>
+                <button type="button" class="btn btn-ok-selection">Ok</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editPalletBoxesModal" class="modal">
+        <div class="modal-content">
+            <h2>Cajas Pallet Crear</h2>
+            <div class="order-info">Orden 1 Linea 2 Embarque 1 Linea 1</div>
+
+            <div class="input-row">
+                <select class="box-select" id="boxSelect1">
+                    <option value="">Seleccione caja...</option>
+                    </select>
+                <label>Cant.</label>
+                <input type="number" class="box-qty" id="boxQty1" value="0" min="0">
+            </div>
+            <div class="input-row">
+                <select class="box-select" id="boxSelect2">
+                    <option value="">Seleccione caja...</option>
+                    </select>
+                <label>Cant.</label>
+                <input type="number" class="box-qty" id="boxQty2" value="0" min="0">
+            </div>
+            <div class="input-row">
+                <select class="box-select" id="boxSelect3">
+                    <option value="">Seleccione caja...</option>
+                    </select>
+                <label>Cant.</label>
+                <input type="number" class="box-qty" id="boxQty3" value="0" min="0">
+            </div>
+            <div class="input-row">
+                <select class="box-select" id="boxSelect4">
+                    <option value="">Seleccione caja...</option>
+                    </select>
+                <label>Cant.</label>
+                <input type="number" class="box-qty" id="boxQty4" value="0" min="0">
+            </div>
+
+            <div class="modal-button-group button-group">
+                <button class="cancel btn-close-pallet-boxes-modal">Cancelar</button>
+                <button class="accept" id="acceptPalletBoxesBtn">Aceptar</button>
+            </div>
+        </div>
+    </div>
+    <button id="miBoton">Contar Registros</button>
+</body>
+<script src="assets/js/controller.js"></script>
+<script src="assets/js/bdLocal.js"></script>
+<script src="assets/js/hh.js"></script>
+</html>

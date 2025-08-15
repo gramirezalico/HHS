@@ -1,0 +1,350 @@
+/* Reseteo básico y box-sizing para responsividad */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; /* Espacio para que no se pegue a los bordes en pantallas pequeñas */
+    font-size: 16px; /* Tamaño base para rem y em */
+}
+
+/* Contenedor principal para todos los formularios (login, agregar_embalaje, cajas_pallet_crear) */
+.login-container, .form-container, .container { /* Añadidos .form-container y .container */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 2em; /* Padding relativo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%; /* Ocupa la mayoría del ancho */
+    max-width: 450px; /* Un ancho máximo consistente para todos */
+    text-align: center;
+    position: relative; /* Asegura que los elementos posicionados (como dropdowns) estén dentro de este */
+}
+
+h1 {
+    font-size: 1.8em; /* Tamaño de título relativo */
+    color: #333;
+    margin-bottom: 1.5em;
+}
+
+.form-group {
+    margin-bottom: 1.2em;
+    text-align: left;
+}
+
+.form-group label,
+.form-column label, /* Para agregar_embalaje.html */
+.form-full-width label, /* Para agregar_embalaje.html */
+.custom-select-wrapper .label /* Para agregar_embalaje.html */
+/* .box-input-group label ya no tendrá display: block para que esté al lado del input */
+{
+    display: block; /* La etiqueta arriba del input */
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.form-group input,
+.form-column input, /* Para agregar_embalaje.html */
+.form-full-width input /* Para agregar_embalaje.html */
+{
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box; /* Asegura que el padding no aumente el ancho total */
+}
+
+/* Estilos para el select nativo en cajas_pallet_crear.html */
+.box-input-group select {
+    flex-grow: 1;
+    padding: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2013.2l128%20128c3.9%203.9%208.7%205.8%2013.2%205.8s9.3-1.9%2013.2-5.8l128-128c3.7-3.9%205.6-8.7%205.6-13.2%200-5-1.9-9.3-5.6-13.2z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 0.8em center;
+    background-size: 0.7em auto;
+    padding-right: 2.5em;
+    box-sizing: border-box; /* Añadido para consistencia */
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1em;
+}
+
+.btn-login:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    margin-top: 1.5em;
+    font-size: 0.9em;
+    color: #dc3545; /* Rojo para mensajes de error */
+    text-align: center;
+}
+
+/* === Estilos específicos para agregar_embalaje.html y cajas_pallet_crear.html === */
+
+/* Contenedores de formulario */
+.form-container, .container {
+    max-width: 450px; /* Asegura un ancho máximo */
+}
+
+/* Fila de campos (para Largo/Ancho, Alto/UM) en agregar_embalaje.html */
+.form-row {
+    display: flex;
+    gap: 1.5em;
+    margin-bottom: 1.2em;
+}
+
+.form-column {
+    flex: 1;
+    text-align: left;
+}
+
+.form-full-width {
+    margin-bottom: 1.2em;
+    text-align: left;
+}
+
+/* Grupo de botones inferior */
+.button-group-bottom {
+    display: flex;
+    justify-content: space-around;
+    gap: 1.5em;
+    margin-top: 2em;
+}
+
+.btn-bottom {
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex: 1;
+}
+
+.btn-bottom.cancel {
+    background-color: #6c757d;
+}
+.btn-bottom.cancel:hover {
+    background-color: #5a6268;
+}
+
+.btn-bottom:hover {
+    background-color: #0056b3;
+}
+
+/* --- ESTILOS PARA EL DROPDOWN PERSONALIZADO (Tipo embalaje en agregar_embalaje.html) --- */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.2em;
+    text-align: left;
+}
+
+.custom-select-trigger {
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    background-color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.custom-select-trigger.required-field {
+    border: 1px solid #dc3545;
+}
+
+.custom-select-trigger .arrow {
+    width: 0.7em;
+    height: 0.7em;
+    border-left: 1px solid #666;
+    border-bottom: 1px solid #666;
+    transform: rotate(-45deg);
+    transition: transform 0.2s ease;
+}
+
+.custom-select-trigger.active .arrow {
+    transform: rotate(135deg);
+}
+
+.type-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    position: absolute; /* Importante para que flote sobre otros elementos */
+    width: 100%; /* Ocupa el 100% del ancho de su contenedor (.custom-select-wrapper) */
+    max-height: 200px; /* Altura máxima para scroll */
+    overflow-y: auto; /* Scroll si el contenido es demasiado largo */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    display: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    top: 100%; /* Coloca la lista justo debajo del trigger */
+    left: 0; /* Alinea a la izquierda del trigger */
+}
+
+.type-list.active {
+    display: block;
+}
+
+.type-list li {
+    padding: 0.8em;
+    cursor: pointer;
+    text-align: left;
+}
+
+.type-list li:hover {
+    background-color: #e9e9e9;
+}
+/* --- FIN ESTILOS PERSONALIZADOS --- */
+
+/* Estilos para Cajas Pallet Crear */
+.box-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+    gap: 10px; /* Espacio entre los elementos */
+    position: relative; /* Agregado para que los inputs con position: absolute se posicionen en relación a este grupo */
+    padding-right: 120px; /* Espacio para que el input sobresalga y no choque con el siguiente select */
+}
+
+.box-input-group label { /* Estilo para la etiqueta 'Cant.' */
+    white-space: nowrap; /* Evita que "Cant." se rompa */
+}
+
+.box-input-group input[type="number"] {
+    position: absolute; /* Esto hará que se salga del flujo normal */
+    right: 0; /* Lo alinea a la derecha del .box-input-group */
+    width: 80px; /* Ancho fijo para el campo de cantidad */
+    text-align: right; /* Alinea el número a la derecha */
+    top: 50%; /* Centra verticalmente */
+    transform: translateY(-50%); /* Ajuste fino para centrado vertical */
+}
+
+
+/* Media Queries para responsividad */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .form-column {
+        margin-bottom: 1em;
+    }
+    .form-column:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .login-container, .form-container, .container {
+        padding: 1.5em;
+        width: 95%;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 1em;
+    }
+
+    .form-group input {
+        padding: 0.6em;
+    }
+
+    .btn-login {
+        padding: 0.7em 1em;
+        font-size: 1em;
+    }
+
+    /* Ajustes específicos para Cajas Pallet Crear en móviles */
+    .box-input-group {
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+        justify-content: center;
+        padding-right: 0; /* Quita el padding extra en móviles */
+    }
+    .box-input-group select {
+        width: 100%; /* Ocupan todo el ancho */
+        margin-bottom: 0.5em;
+    }
+    .box-input-group label {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 0.2em;
+    }
+    .box-input-group input[type="number"] {
+        position: static; /* Vuelve a la posición normal en móviles */
+        width: 100%; /* Ocupa todo el ancho */
+        transform: none; /* Elimina la transformación */
+        text-align: left;
+    }
+    .button-group-bottom {
+        flex-direction: column;
+    }
+    .btn-bottom {
+        margin-bottom: 0.8em;
+    }
+    .btn-bottom:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Estilo para el botón "Editar cajas de pallet" */
+.btn-edit-pallet {
+    background-color: #007bff; /* Color azul */
+    color: white;
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 1.5em; /* Espacio superior */
+    transition: background-color 0.3s ease;
+    width: auto; /* Ancho automático para que no ocupe todo el ancho */
+    display: block; /* Para que ocupe su propia línea y se pueda centrar */
+    margin-left: auto; /* Centrar el botón */
+    margin-right: auto; /* Centrar el botón */
+}
+
+.btn-edit-pallet:hover {
+    background-color: #0056b3;
+}

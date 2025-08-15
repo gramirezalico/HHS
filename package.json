@@ -1,0 +1,23 @@
+{
+  "name": "hh-app",
+  "version": "1.0.0",
+  "description": "Aplicación web HH con Express.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "prod": "NODE_ENV=production node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf node_modules package-lock.json",
+    "reinstall": "npm run clean && npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "ag-grid-community": "^34.0.2",
+    "ag-grid-enterprise": "^34.0.2",
+    "express": "^5.1.0"
+  }
+}
