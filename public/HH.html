@@ -12,13 +12,12 @@
         <h1>Administración de cajas</h1>
         <div class="button-group">
             <button class="btn btn-add">Agregar</button>
-            <button class="btn btn-close-main">Cerrar</button>
+            <button class="btn btn-logout">Cerrar sesión</button>
         </div>
         <div id="packagesList" class="packages-list">
         </div>
         <div class="employe">
             <span class="employee-name">Usuario: <span id="userName"></span></span>
-            <button class="btn btn-logout">Cerrar sesión</button>
         </div> 
     </div>
     <div class="status">
@@ -27,56 +26,207 @@
 
     <div id="addPackagingModal" class="modal">
         <div class="modal-content">
-            <h2>Agregar embalaje</h2>
-            <p class="order-info">Orden 1 Linea 2 Embarque 1 Linea 1</p>
-
+            <h2 style="text-align:center;">Agregar embalaje</h2>
+            <div class="order-info">Orden 1 Línea 2 Embarque 1 Línea 1</div>
+            <div class="tab-group" style="display: flex; border-bottom: 1.5px solid #e0e0e0; margin-bottom: 1.2em;">
+                <button type="button" class="tab-btn active" id="tabCajas" style="flex:1; border:none; background:none; font-weight:bold; color:#2563eb; border-bottom:2.5px solid #2563eb; padding:0.7em 0; cursor:pointer;">Cajas</button>
+                <button type="button" class="tab-btn" id="tabPallet" style="flex:1; border:none; background:none; font-weight:normal; color:#444; border-bottom:2.5px solid transparent; padding:0.7em 0; cursor:pointer;">Pallet</button>
+            </div>
             <form id="packagingForm">
-                <div class="form-group">
-                    <label for="packagingType">Tipo embalaje</label>
-                    <select name="packagingTypeList1" id="packagingTypeList1">
-                        <option value="">Seleccione tipo embalaje...</option>
-                    </select>
-                </div>
-
-                <div class="form-row dimension-fields-container">
-                    <div class="form-group half-width">
-                        <label for="length">Largo</label>
-                        <input type="number" id="length" class="number-input" value="" required>
+                <!--Cajas-->
+                <div id="tabCajasContent">
+                    <div class="form-row" style="gap: 1em; margin-bottom: 1.2em;">
+                        <div class="form-group" style="flex: 1 1 60%; min-width: 180px;">
+                            <label for="packagingType" style="min-width: 110px;">Tipo embalaje</label>
+                            <select name="packagingTypeList1" id="packagingTypeList1" style="width: 100%;">
+                                <option value="">CAJA C01</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group half-width">
-                        <label for="width">Ancho</label>
-                        <input type="number" id="width" class="number-input" value="" required>
+                    <div class="form-row" style="gap: 1em; margin-bottom: 1.2em;">
+                        <div class="form-group" style="flex: 1 1 45%; min-width: 120px;">
+                            <label for="length">Largo</label>
+                            <input type="text" id="length" class="number-input" value="46,00000">
+                        </div>
+                        <div class="form-group" style="flex: 1 1 45%; min-width: 120px;">
+                            <label for="width">Ancho</label>
+                            <input type="text" id="width" class="number-input" value="37,50000">
+                        </div>
                     </div>
-                </div>
-
-                <div class="form-row dimension-fields-container">
-                    <div class="form-group half-width">
-                        <label for="height">Alto</label>
-                        <input type="number" id="height" class="number-input" value="" required>
+                    <div class="form-row" style="gap: 1em; margin-bottom: 1.2em;">
+                        <div class="form-group" style="flex: 1 1 45%; min-width: 120px;">
+                            <label for="height">Alto</label>
+                            <input type="text" id="height" class="number-input" value="57,50000">
+                        </div>
+                        <div class="form-group" style="flex: 1 1 45%; min-width: 120px;">
+                            <label for="um">UM</label>
+                            <input type="text" id="um" class="text-input" value="">
+                        </div>
                     </div>
-                    <div class="form-group half-width">
-                        <label for="um">UM</label>
-                        <input type="text" id="um" class="text-input" required>
+                    <div class="form-row" style="margin-bottom: 1.2em;">
+                        <div class="form-group" style="width: 100%;">
+                            <label for="unitWeight" style="min-width: 110px;">Peso unita(kg)</label>
+                            <input type="text" id="unitWeight" class="number-input wide-input" value="">
+                        </div>
                     </div>
+                    <div class="form-row" style="margin-bottom: 1.2em;">
+                        <div class="form-group" style="width: 100%;">
+                            <label for="numPackages" style="min-width: 110px;">No Embalajes</label>
+                            <input type="text" id="numPackages" class="number-input" value="">
+                        </div>
+                    </div>
+                    <div class="modal-button-group">
+                    <button type="submit" class="btn btn-save" style="font-weight:bold; font-size:1.1em; min-width:120px;">Guardar</button>
+                    <button type="button" class="btn btn-close-packaging-modal" style="background:#f5f7fa; color:#2563eb; border:1.5px solid #2563eb; font-weight:bold; font-size:1.1em; min-width:120px;">Cerrar</button>
+                </div>
                 </div>
 
-                <div id="palletEditContainer" style="display: none; text-align: center; margin-bottom: 1em;">
-                    <button type="button" id="editPalletBoxesBtn" class="btn" style="background-color: #007bff; color: white; padding: 0.7em 1.2em; border-radius: 5px;">Editar cajas de pallet</button>
-                </div>
+                <!--Pallet-->
+                <div id="tabPalletContent" style="display:none;">
+                    <div class="form-row" style="gap: 1em; margin-bottom: 1.2em;">
+                        <div class="form-group" style="flex: 1 1 60%; min-width: 180px;">
+                            <label style="min-width: 110px;">Tipo embalaje</label>
+                            <select class="pallet-caja-select" style="width: 100%;">
+                                <option value="">CAJA C01</option>
+                                <option value="">CAJA C02</option>
+                                <option value="">CAJA C03</option>
+                                <option value="">CAJA C04</option>
+                                <option value="">CAJA C05</option>
+                                <option value="">CAJA C06</option>
+                                <option value="">CAJA C07</option>
+                                <option value="">CAJA C08</option>
+                                <option value="">CAJA C09</option>
+                                <option value="">CAJA C10</option>
+                                <option value="">CAJA C11</option>
+                                <option value="">CAJA C12</option>
+                                <option value="">CAJA C13</option>
+                                <option value="">CAJA C15</option>
+                                <option value="">CAJA C16</option>
+                                <option value="">CAJA C17</option>
+                                <option value="">CAJA C21</option>
+                                <option value="">CAJA C23</option>
+                                <option value="">CAJA C25</option>
+                                <option value="">CAJA C27</option>
+                                <option value="">CAJA C30</option>
+                                <option value="">CAJA C31</option>
+                                <option value="">CAJA MUESTRAS TERMOFORMADO</option>
 
-                <div class="form-group">
-                    <label for="unitWeight">Peso unita(kg)</label>
-                    <input type="number" id="unitWeight" class="number-input wide-input" value="" step="0.01" required>
-                </div>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1 1 35%; min-width: 100px;">
+                            <label style="min-width: 50px;">Cant.</label>
+                            <input type="text" class="number-input" value="">
+                        </div>
+                    </div>
+                    <div class="form-row" style="gap: 1em; margin-bottom: 1.2em;">
+                        <div class="form-group" style="flex: 1 1 60%; min-width: 180px;">
+                            <label style="min-width: 110px;">Tipo embalaje</label>
+                            <select class="pallet-caja-select" style="width: 100%;">
+                                <option value="">CAJA C01</option>
+                                <option value="">CAJA C02</option>
+                                <option value="">CAJA C03</option>
+                                <option value="">CAJA C04</option>
+                                <option value="">CAJA C05</option>
+                                <option value="">CAJA C06</option>
+                                <option value="">CAJA C07</option>
+                                <option value="">CAJA C08</option>
+                                <option value="">CAJA C09</option>
+                                <option value="">CAJA C10</option>
+                                <option value="">CAJA C11</option>
+                                <option value="">CAJA C12</option>
+                                <option value="">CAJA C13</option>
+                                <option value="">CAJA C15</option>
+                                <option value="">CAJA C16</option>
+                                <option value="">CAJA C17</option>
+                                <option value="">CAJA C21</option>
+                                <option value="">CAJA C23</option>
+                                <option value="">CAJA C25</option>
+                                <option value="">CAJA C27</option>
+                                <option value="">CAJA C30</option>
+                                <option value="">CAJA C31</option>
+                                <option value="">CAJA MUESTRAS TERMOFORMADO</option>
 
-                <div class="form-group">
-                    <label for="numPackages">No Embalajes</label>
-                    <input type="number" id="numPackages" class="number-input" value="" required>
-                </div>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1 1 35%; min-width: 100px;">
+                            <label style="min-width: 50px;">Cant.</label>
+                            <input type="text" class="number-input" value="">
+                        </div>
+                    </div>
+                    <div class="form-row" style="gap: 1em; margin-bottom: 1.2em;">
+                        <div class="form-group" style="flex: 1 1 60%; min-width: 180px;">
+                            <label style="min-width: 110px;">Tipo embalaje</label>
+                            <select class="pallet-caja-select" style="width: 100%;">
+                                <option value="">CAJA C01</option>
+                                <option value="">CAJA C02</option>
+                                <option value="">CAJA C03</option>
+                                <option value="">CAJA C04</option>
+                                <option value="">CAJA C05</option>
+                                <option value="">CAJA C06</option>
+                                <option value="">CAJA C07</option>
+                                <option value="">CAJA C08</option>
+                                <option value="">CAJA C09</option>
+                                <option value="">CAJA C10</option>
+                                <option value="">CAJA C11</option>
+                                <option value="">CAJA C12</option>
+                                <option value="">CAJA C13</option>
+                                <option value="">CAJA C15</option>
+                                <option value="">CAJA C16</option>
+                                <option value="">CAJA C17</option>
+                                <option value="">CAJA C21</option>
+                                <option value="">CAJA C23</option>
+                                <option value="">CAJA C25</option>
+                                <option value="">CAJA C27</option>
+                                <option value="">CAJA C30</option>
+                                <option value="">CAJA C31</option>
+                                <option value="">CAJA MUESTRAS TERMOFORMADO</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1 1 35%; min-width: 100px;">
+                            <label style="min-width: 50px;">Cant.</label>
+                            <input type="text" class="number-input" value="">
+                        </div>
+                    </div>
+                    <div class="form-row" style="gap: 1em; margin-bottom: 1.2em;">
+                        <div class="form-group" style="flex: 1 1 60%; min-width: 180px;">
+                            <label style="min-width: 110px;">Tipo embalaje</label>
+                            <select class="pallet-caja-select" style="width: 100%;">
+                                <option value="">CAJA C01</option>
+                                <option value="">CAJA C02</option>
+                                <option value="">CAJA C03</option>
+                                <option value="">CAJA C04</option>
+                                <option value="">CAJA C05</option>
+                                <option value="">CAJA C06</option>
+                                <option value="">CAJA C07</option>
+                                <option value="">CAJA C08</option>
+                                <option value="">CAJA C09</option>
+                                <option value="">CAJA C10</option>
+                                <option value="">CAJA C11</option>
+                                <option value="">CAJA C12</option>
+                                <option value="">CAJA C13</option>
+                                <option value="">CAJA C15</option>
+                                <option value="">CAJA C16</option>
+                                <option value="">CAJA C17</option>
+                                <option value="">CAJA C21</option>
+                                <option value="">CAJA C23</option>
+                                <option value="">CAJA C25</option>
+                                <option value="">CAJA C27</option>
+                                <option value="">CAJA C30</option>
+                                <option value="">CAJA C31</option>
+                                <option value="">CAJA MUESTRAS TERMOFORMADO</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1 1 35%; min-width: 100px;">
+                            <label style="min-width: 50px;">Cant.</label>
+                            <input type="text" class="number-input" value="">
+                        </div>
+                    </div>
 
                 <div class="modal-button-group">
-                    <button type="submit" class="btn btn-save">Guardar</button>
-                    <button type="button" class="btn btn-close-packaging-modal">Cerrar</button>
+                    <button type="submit" class="btn btn-save" style="font-weight:bold; font-size:1.1em; min-width:120px;">Guardar</button>
+                    <button type="button" class="btn btn-close-packaging-modal" style="background:#f5f7fa; color:#2563eb; border:1.5px solid #2563eb; font-weight:bold; font-size:1.1em; min-width:120px;">Cerrar</button>
                 </div>
             </form>
         </div>
@@ -106,28 +256,28 @@
                 <select class="box-select" id="boxSelect1">
                     <option value="">Seleccione caja...</option>
                     </select>
-                <label>Cant.</label>
+                
                 <input type="number" class="box-qty" id="boxQty1" value="0" min="0">
             </div>
             <div class="input-row">
                 <select class="box-select" id="boxSelect2">
                     <option value="">Seleccione caja...</option>
                     </select>
-                <label>Cant.</label>
+                
                 <input type="number" class="box-qty" id="boxQty2" value="0" min="0">
             </div>
             <div class="input-row">
                 <select class="box-select" id="boxSelect3">
                     <option value="">Seleccione caja...</option>
                     </select>
-                <label>Cant.</label>
+               
                 <input type="number" class="box-qty" id="boxQty3" value="0" min="0">
             </div>
             <div class="input-row">
                 <select class="box-select" id="boxSelect4">
                     <option value="">Seleccione caja...</option>
                     </select>
-                <label>Cant.</label>
+                
                 <input type="number" class="box-qty" id="boxQty4" value="0" min="0">
             </div>
 
@@ -137,7 +287,7 @@
             </div>
         </div>
     </div>
-    <button id="miBoton">Contar Registros</button>
+    
 </body>
 <script src="assets/js/controller.js"></script>
 <script src="assets/js/bdLocal.js"></script>

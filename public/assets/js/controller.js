@@ -1,5 +1,7 @@
 function T() {
 
+    console.log('[T] llamada a T()');
+
     fetch('/api/packingList', {
         method: 'GET',
         headers: {
@@ -13,19 +15,28 @@ function T() {
             return response.json();
         })
         .then(data => {
+            console.log('[T] data recibido del API:', data);
             console.log('Datos recibidos del servidor:', data); // Log detallado
             if (data.status == 'success') {
                 let idSelect = "packagingTypeList1";
                 let packagingTypeList = document.getElementById(idSelect);
 
-                //packagingTypeList.innerHTML = '<option value="" disabled selected>Seleccione un tipo de embalaje</option>';
-                data.value.forEach((newItem) => {
-                    console.log('Nuevo elemento:', newItem);
-                    // Save each item to IndexedDB
-                    if (window.save) save({ id: newItem.Packing_PkgCode, ...newItem });
-                })
-                setSelectCajas(data.value);
-
+                // Limpiar la base de datos antes de guardar nuevos datos
+                if (window.clearAll) {
+                    window.clearAll(() => {
+                        data.value.forEach((newItem) => {
+                            console.log('Nuevo elemento:', newItem);
+                            if (window.save) save({ id: newItem.Packing_PkgCode, ...newItem });
+                        });
+                        setSelectCajas(data.value);
+                    });
+                } else {
+                    data.value.forEach((newItem) => {
+                        console.log('Nuevo elemento:', newItem);
+                        if (window.save) save({ id: newItem.Packing_PkgCode, ...newItem });
+                    });
+                    setSelectCajas(data.value);
+                }
             }
         })
         .catch(error => {
@@ -36,15 +47,39 @@ function T() {
 }
 
 
-function setSelectCajas(arrydata){
-let packagingTypeList = document.getElementById("packagingTypeList1");
+window.setSelectCajas = function setSelectCajas(arrydata) {
+    console.log('[setSelectCajas] called with', arrydata);
+window.getAllData = getAllData;
+    // Llenar el select principal de cajas
+    let packagingTypeList = document.getElementById("packagingTypeList1");
+    if (packagingTypeList) {
+        packagingTypeList.innerHTML = '';
+        let defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Seleccione tipo embalaje...';
+        packagingTypeList.appendChild(defaultOption);
+    }
 
-    let CAJAS = arrydata.filter(item => item.Packing_Description.includes('CAJA'));
-    
+    // Llenar todos los selects de pallet usando la clase
+    let palletSelects = document.querySelectorAll('.pallet-caja-select');
+    console.log('[setSelectCajas] palletSelects found:', palletSelects.length);
+    palletSelects.forEach(sel => {
+    console.log('[setSelectCajas] Populating select:', sel);
+        sel.innerHTML = '';
+        let defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Seleccione tipo embalaje...';
+        sel.appendChild(defaultOption);
+    });
+
+    let CAJAS = arrydata.filter(item => item.Packing_Description && item.Packing_Description.includes('CAJA'));
+    console.log('[setSelectCajas] CAJAS:', CAJAS);
     CAJAS.forEach(item => {
+    console.log('[setSelectCajas] Adding option:', item.Packing_Description);
         let option = document.createElement('option');
         option.value = item.Packing_PkgCode;
         option.textContent = item.Packing_Description;
-        packagingTypeList.appendChild(option);
+        if (packagingTypeList) packagingTypeList.appendChild(option.cloneNode(true));
+        palletSelects.forEach(sel => sel.appendChild(option.cloneNode(true)));
     });
 }
