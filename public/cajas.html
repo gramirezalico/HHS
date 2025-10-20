@@ -127,9 +127,34 @@
         .btn-secondary:hover {
             background-color: #e3f2fd;
         }
+        /* Estilos para notificaciones */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+        .notification.show { display: block; }
+        .notification.error { background-color: #f44336; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
+    <!-- Contenedor para notificaciones -->
+    <div id="notification" class="notification"></div>
     <div class="cajas-container">
         <div class="cajas-header">
             <h1 class="cajas-title">Agregar embalaje</h1>
@@ -196,8 +221,27 @@
         // Script específico para cajas.html - sin dependencias problemáticas
         console.log('[cajas.html] Page loaded');
         
+        // Sistema de notificaciones local
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type + ' show';
+            setTimeout(() => { notification.classList.remove('show'); }, 3000);
+        }
+
+        // Verificar notificaciones pendientes
+        function checkPendingNotifications() {
+            const pending = localStorage.getItem('pendingNotification');
+            if (pending) {
+                const notification = JSON.parse(pending);
+                localStorage.removeItem('pendingNotification');
+                setTimeout(() => showNotification(notification.message, notification.type), 500);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('[cajas.html] DOM ready');
+            checkPendingNotifications();
             
             // Configurar botón de cerrar
             const closeButton = document.querySelector('.btn-secondary');
@@ -273,7 +317,13 @@
                         // Redirigir a página principal
                         window.location.href = 'PaginaPrincipal.html';
                     } else {
-                        alert('Por favor seleccione un tipo de embalaje');
+                        // Guardar notificación de error
+                        localStorage.setItem('pendingNotification', JSON.stringify({
+                            message: 'Por favor seleccione un tipo de embalaje',
+                            type: 'error'
+                        }));
+                        // Recargar la página para mostrar el error
+                        location.reload();
                     }
                 });
             }
