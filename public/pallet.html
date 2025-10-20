@@ -215,5 +215,69 @@
     <script src="assets/js/controller.js"></script>
     <script src="assets/js/bdLocal.js"></script>
     <script src="assets/js/hh.js"></script>
+    <script>
+        // Script específico para pallet.html
+        console.log('[pallet.html] Page loaded, waiting for data...');
+        
+        function loadPalletData() {
+            console.log('[pallet.html] Attempting to load pallet data...');
+            
+            // Hacer llamada directa a la API
+            fetch('/api/packingList', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('[pallet.html] API response:', data);
+                if (data.status === 'success') {
+                    fillPalletSelects(data.value);
+                }
+            })
+            .catch(error => {
+                console.error('[pallet.html] Error loading data:', error);
+            });
+        }
+        
+        function fillPalletSelects(data) {
+            console.log('[pallet.html] Filling pallet selects with', data.length, 'items');
+            
+            let palletSelects = [
+                document.getElementById("palletTypeList1"),
+                document.getElementById("palletTypeList2"),
+                document.getElementById("palletTypeList3"),
+                document.getElementById("palletTypeList4")
+            ];
+            
+            let CAJAS = data.filter(item => item.Packing_Description && item.Packing_Description.includes('CAJA'));
+            console.log('[pallet.html] Filtered CAJAS:', CAJAS.length, 'items');
+            
+            palletSelects.forEach((select, index) => {
+                if (select) {
+                    console.log('[pallet.html] Filling select', index + 1);
+                    select.innerHTML = '<option value="">Seleccione tipo embalaje...</option>';
+                    
+                    CAJAS.forEach(item => {
+                        let option = document.createElement('option');
+                        option.value = item.Packing_PkgCode;
+                        option.textContent = item.Packing_Description;
+                        select.appendChild(option);
+                    });
+                    
+                    console.log('[pallet.html] Select', index + 1, 'now has', select.options.length, 'options');
+                } else {
+                    console.error('[pallet.html] Select', index + 1, 'not found!');
+                }
+            });
+        }
+        
+        // Cargar datos cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[pallet.html] DOM ready, loading data in 1 second...');
+            setTimeout(loadPalletData, 1000);
+        });
+    </script>
 </body>
 </html>

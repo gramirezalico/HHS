@@ -13,20 +13,25 @@ req.onupgradeneeded = function(event) {
 
  req.onsuccess = function (event) {
     db = event.target.result;
+    console.log('[bdLocal.js] Database ready');
 
-    // Ahora sí puedes usar tus funciones
-    size(count => {
-      console.log('Cantidad de registros:', count);
-        if (count === 0) {
-           T();
-        } else {
-             getAllData(data => {
-                console.log('Datos:', data);
-                setSelectCajas(data);
-                });
-        }
-    });
-
+    // Solo cargar automáticamente en página principal
+    if (window.location.pathname.includes('PaginaPrincipal.html') || window.location.pathname === '/hh') {
+        // Ahora sí puedes usar tus funciones
+        size(count => {
+          console.log('Cantidad de registros:', count);
+            if (count === 0) {
+               T();
+            } else {
+                 getAllData(data => {
+                    console.log('Datos:', data);
+                    if (typeof setSelectCajas === 'function') {
+                        setSelectCajas(data);
+                    }
+                    });
+            }
+        });
+    }
    
   };
  
