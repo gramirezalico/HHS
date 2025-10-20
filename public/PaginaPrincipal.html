@@ -5,6 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración de cajas</title>
     <link rel="stylesheet" href="assets/css/HH.css">
+    <style>
+        /* Estilos para la notificación */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification.success {
+            background-color: #4caf50;
+        }
+
+        .notification.error {
+            background-color: #f44336;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s ease-out;
+        }
+    </style>
     
 </head>
 <body>
@@ -24,6 +81,11 @@
         Ready
     </div>
 
+    <!-- Notificación -->
+    <div id="notification" class="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
     <div id="packagingTypeSelectionModal" class="modal">
         <div class="modal-content type-selection-content">
             <h2>Agregar embalaje</h2>
@@ -40,9 +102,116 @@
     </div>
 
 
-    
+    <script src="assets/js/controller.js"></script>
+    <script src="assets/js/bdLocal.js"></script>
+    <script src="assets/js/hh.js"></script>
+    <script>
+        // Script para mostrar los items guardados en la página principal
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedPackages();
+        });
+
+        function loadSavedPackages() {
+            const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+            displayPackages(savedPackages);
+        }
+
+        function displayPackages(packages) {
+            const packagesList = document.getElementById('packagesList');
+            packagesList.innerHTML = '';
+
+            packages.forEach(package => {
+                const packageItem = createPackageElement(package);
+                packagesList.appendChild(packageItem);
+            });
+        }
+
+        function createPackageElement(package) {
+            const packageDiv = document.createElement('div');
+            packageDiv.className = 'package-item';
+
+            // Crear icono con las primeras letras del tipo
+            const icon = document.createElement('div');
+            icon.className = 'package-icon';
+            
+            // Extraer las primeras letras para el icono
+            let iconText = '';
+            if (package.type === 'pallet') {
+                iconText = 'Paqu'; // Para Paquete
+            } else {
+                // Para cajas, usar las primeras letras del nombre
+                const words = package.packageType.split(' ');
+                iconText = words.slice(0, 2).map(word => word.charAt(0)).join('');
+                if (iconText.length < 3 && words[0].length >= 3) {
+                    iconText = words[0].substring(0, 4);
+                }
+            }
+            icon.textContent = iconText;
+
+            // Crear información del paquete
+            const info = document.createElement('div');
+            info.className = 'package-info';
+            
+            if (package.type === 'pallet') {
+                const title = document.createElement('strong');
+                title.textContent = 'Paquete';
+                info.appendChild(title);
+                
+                const details = document.createElement('div');
+                details.innerHTML = `Cant. :${package.totalQuantity || 0}`;
+                info.appendChild(details);
+            } else {
+                const title = document.createElement('strong');
+                title.textContent = package.packageType;
+                info.appendChild(title);
+                
+                const details = document.createElement('div');
+                details.innerHTML = `Cant. :${package.quantity || 0}`;
+                info.appendChild(details);
+            }
+
+            packageDiv.appendChild(icon);
+            packageDiv.appendChild(info);
+
+            return packageDiv;
+        }
+
+        // Función para agregar nuevo paquete (llamada desde las otras páginas)
+        window.addSavedPackage = function(packageData) {
+            const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+            savedPackages.push(packageData);
+            localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+            loadSavedPackages(); // Recargar la lista
+        };
+
+        // Función para mostrar notificaciones
+        window.showNotification = function(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const messageElement = document.getElementById('notificationMessage');
+            
+            if (notification && messageElement) {
+                messageElement.textContent = message;
+                notification.className = `notification ${type} show`;
+                
+                // Ocultar después de 3 segundos
+                setTimeout(() => {
+                    notification.classList.add('hide');
+                    setTimeout(() => {
+                        notification.classList.remove('show', 'hide');
+                    }, 300);
+                }, 3000);
+            }
+        };
+
+        // Verificar si hay una notificación pendiente al cargar la página
+        window.addEventListener('load', function() {
+            const pendingNotification = localStorage.getItem('pendingNotification');
+            if (pendingNotification) {
+                const data = JSON.parse(pendingNotification);
+                showNotification(data.message, data.type);
+                localStorage.removeItem('pendingNotification');
+            }
+        });
+    </script>
 </body>
-<script src="assets/js/controller.js"></script>
-<script src="assets/js/bdLocal.js"></script>
-<script src="assets/js/hh.js"></script>
 </html>

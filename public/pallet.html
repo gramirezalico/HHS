@@ -357,11 +357,60 @@
             const form = document.getElementById('palletForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevenir envío normal del formulario
+                    
                     if (!validateForm()) {
-                        e.preventDefault();
                         return false;
                     }
-                    console.log('[pallet.html] Formulario válido, enviando...');
+                    
+                    // Recolectar todos los datos del pallet
+                    let palletItems = [];
+                    let totalQuantity = 0;
+                    
+                    for (let i = 1; i <= 4; i++) {
+                        const select = document.getElementById('palletTypeList' + i);
+                        const cantInput = document.getElementById('cant' + i);
+                        
+                        if (select && cantInput && select.value && select.value !== '') {
+                            const selectedText = select.options[select.selectedIndex].text;
+                            const quantity = parseInt(cantInput.value) || 0;
+                            
+                            palletItems.push({
+                                type: selectedText,
+                                quantity: quantity
+                            });
+                            
+                            totalQuantity += quantity;
+                        }
+                    }
+                    
+                    if (palletItems.length > 0) {
+                        // Crear objeto con los datos a guardar
+                        const packageData = {
+                            type: 'pallet',
+                            items: palletItems,
+                            totalQuantity: totalQuantity,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        // Guardar en localStorage
+                        const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                        savedPackages.push(packageData);
+                        localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                        
+                        console.log('[pallet.html] Pallet guardado:', packageData);
+                        
+                        // Guardar notificación pendiente para mostrar en la página principal
+                        localStorage.setItem('pendingNotification', JSON.stringify({
+                            message: 'Pallet guardado exitosamente',
+                            type: 'success'
+                        }));
+                        
+                        // Redirigir a página principal
+                        window.location.href = 'PaginaPrincipal.html';
+                    } else {
+                        alert('Por favor seleccione al menos un tipo de embalaje');
+                    }
                 });
             }
             

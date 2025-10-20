@@ -236,6 +236,48 @@
                 }
             }, 500);
             
+            // Configurar validación del formulario
+            const form = document.getElementById('packagingForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevenir envío normal del formulario
+                    
+                    const selectElement = document.getElementById('packagingTypeList1');
+                    const quantityElement = document.getElementById('numPackages');
+                    
+                    if (selectElement && selectElement.value && selectElement.value !== '') {
+                        const selectedText = selectElement.options[selectElement.selectedIndex].text;
+                        const quantity = quantityElement ? quantityElement.value : '0';
+                        
+                        // Crear objeto con los datos a guardar
+                        const packageData = {
+                            type: 'caja',
+                            packageType: selectedText,
+                            quantity: quantity,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        // Guardar en localStorage
+                        const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                        savedPackages.push(packageData);
+                        localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                        
+                        console.log('[cajas.html] Paquete guardado:', packageData);
+                        
+                        // Guardar notificación pendiente para mostrar en la página principal
+                        localStorage.setItem('pendingNotification', JSON.stringify({
+                            message: 'Embalaje guardado exitosamente',
+                            type: 'success'
+                        }));
+                        
+                        // Redirigir a página principal
+                        window.location.href = 'PaginaPrincipal.html';
+                    } else {
+                        alert('Por favor seleccione un tipo de embalaje');
+                    }
+                });
+            }
+            
             function setupCajasSelect() {
                 let cajaSelect = document.getElementById('packagingTypeList1');
                 if (cajaSelect) {
