@@ -60,18 +60,6 @@ window.getAllData = getAllData;
         packagingTypeList.appendChild(defaultOption);
     }
 
-    // Llenar todos los selects de pallet usando la clase
-    let palletSelects = document.querySelectorAll('.pallet-caja-select');
-    console.log('[setSelectCajas] palletSelects found:', palletSelects.length);
-    palletSelects.forEach(sel => {
-    console.log('[setSelectCajas] Populating select:', sel);
-        sel.innerHTML = '';
-        let defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = 'Seleccione tipo embalaje...';
-        sel.appendChild(defaultOption);
-    });
-
     let CAJAS = arrydata.filter(item => item.Packing_Description && item.Packing_Description.includes('CAJA'));
     console.log('[setSelectCajas] CAJAS:', CAJAS);
     CAJAS.forEach(item => {
@@ -80,6 +68,5 @@ window.getAllData = getAllData;
         option.value = item.Packing_PkgCode;
         option.textContent = item.Packing_Description;
         if (packagingTypeList) packagingTypeList.appendChild(option.cloneNode(true));
-        palletSelects.forEach(sel => sel.appendChild(option.cloneNode(true)));
     });
 }
