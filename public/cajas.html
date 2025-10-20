@@ -88,6 +88,16 @@
             border-color: #1976d2;
             box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
         }
+        .form-field input:invalid, .form-field select:invalid {
+            border-color: #f44336;
+        }
+        .form-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
         .form-row {
             display: flex;
             gap: 15px;
@@ -169,8 +179,8 @@
         <form id="packagingForm">
             <div id="tabCajasContent">
                 <div class="form-field">
-                    <label for="packagingTypeList1">Tipo embalaje</label>
-                    <select name="packagingTypeList1" id="packagingTypeList1">
+                    <label for="packagingTypeList1">Tipo embalaje *</label>
+                    <select name="packagingTypeList1" id="packagingTypeList1" required>
                         <option value="">Seleccione tipo embalaje...</option>
                     </select>
                 </div>
@@ -198,13 +208,14 @@
                 </div>
                 
                 <div class="form-field">
-                    <label for="unitWeight">Peso unita(kg)</label>
-                    <input type="text" id="unitWeight" value="">
+                    <label for="unitWeight">Peso unita(kg) *</label>
+                    <input type="number" id="unitWeight" value="" min="2" max="25" step="0.1" required>
+                    <small style="color: #666; font-size: 12px; display: block; margin-top: 4px;">Debe estar entre 2kg y 25kg</small>
                 </div>
                 
                 <div class="form-field">
-                    <label for="numPackages">No Embalajes</label>
-                    <input type="text" id="numPackages" value="">
+                    <label for="numPackages">No Embalajes *</label>
+                    <input type="number" id="numPackages" value="" min="1" required>
                 </div>
                 
                 <div class="button-container">
@@ -286,45 +297,70 @@
                 form.addEventListener('submit', function(e) {
                     e.preventDefault(); // Prevenir envío normal del formulario
                     
+                    // Validar todos los campos requeridos
                     const selectElement = document.getElementById('packagingTypeList1');
+                    const umElement = document.getElementById('um');
+                    const weightElement = document.getElementById('unitWeight');
                     const quantityElement = document.getElementById('numPackages');
                     
-                    if (selectElement && selectElement.value && selectElement.value !== '') {
-                        const selectedText = selectElement.options[selectElement.selectedIndex].text;
-                        const quantity = quantityElement ? quantityElement.value : '0';
-                        
-                        // Crear objeto con los datos a guardar
-                        const packageData = {
-                            type: 'caja',
-                            packageType: selectedText,
-                            quantity: quantity,
-                            timestamp: new Date().toISOString()
-                        };
-                        
-                        // Guardar en localStorage
-                        const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
-                        savedPackages.push(packageData);
-                        localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
-                        
-                        console.log('[cajas.html] Paquete guardado:', packageData);
-                        
-                        // Guardar notificación pendiente para mostrar en la página principal
-                        localStorage.setItem('pendingNotification', JSON.stringify({
-                            message: 'Embalaje guardado exitosamente',
-                            type: 'success'
-                        }));
-                        
-                        // Redirigir a página principal
-                        window.location.href = 'PaginaPrincipal.html';
-                    } else {
-                        // Guardar notificación de error
-                        localStorage.setItem('pendingNotification', JSON.stringify({
-                            message: 'Por favor seleccione un tipo de embalaje',
-                            type: 'error'
-                        }));
-                        // Recargar la página para mostrar el error
-                        location.reload();
+                    // Verificar que todos los campos requeridos estén llenos
+                    if (!selectElement.value || selectElement.value === '') {
+                        showNotification('Por favor seleccione un tipo de embalaje', 'error');
+                        return;
                     }
+                    
+                    if (!weightElement.value || weightElement.value === '') {
+                        showNotification('Por favor ingrese el peso unitario', 'error');
+                        return;
+                    }
+                    
+                    // Validar peso entre 2kg y 25kg
+                    const weight = parseFloat(weightElement.value);
+                    if (isNaN(weight) || weight < 2 || weight > 25) {
+                        showNotification('El peso debe estar entre 2kg y 25kg', 'error');
+                        return;
+                    }
+                    
+                    if (!quantityElement.value || quantityElement.value === '') {
+                        showNotification('Por favor ingrese el número de embalajes', 'error');
+                        return;
+                    }
+                    
+                    // Validar que el número de embalajes sea positivo
+                    const quantity = parseInt(quantityElement.value);
+                    if (isNaN(quantity) || quantity < 1) {
+                        showNotification('El número de embalajes debe ser mayor a 0', 'error');
+                        return;
+                    }
+                    
+                    // Si todas las validaciones pasan, proceder con el guardado
+                    const selectedText = selectElement.options[selectElement.selectedIndex].text;
+                    
+                    // Crear objeto con los datos a guardar
+                    const packageData = {
+                        type: 'caja',
+                        packageType: selectedText,
+                        um: umElement.value.trim() || '', // Campo opcional
+                        weight: weight,
+                        quantity: quantity,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Guardar en localStorage
+                    const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                    savedPackages.push(packageData);
+                    localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                    
+                    console.log('[cajas.html] Paquete guardado:', packageData);
+                    
+                    // Guardar notificación pendiente para mostrar en la página principal
+                    localStorage.setItem('pendingNotification', JSON.stringify({
+                        message: 'Embalaje guardado exitosamente',
+                        type: 'success'
+                    }));
+                    
+                    // Redirigir a página principal
+                    window.location.href = 'PaginaPrincipal.html';
                 });
             }
             
