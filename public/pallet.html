@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar embalaje - Pallet</title>
+    <link rel="stylesheet" href="assets/css/HH.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .pallet-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .pallet-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .pallet-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+        .order-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .tab-container {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+        }
+        .tab-btn.active {
+            color: #1976d2;
+            font-weight: 600;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #1976d2;
+        }
+        .tab-btn:not(.active) {
+            color: #666;
+        }
+        .pallet-row {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+        .form-field {
+            margin-bottom: 8px;
+        }
+        .form-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+        .form-field select, .form-field input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-field select:focus, .form-field input:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+        }
+        .tipo-embalaje {
+            flex: 3;
+        }
+        .tipo-embalaje select {
+            width: 100%;
+        }
+        .cantidad {
+            flex: 1;
+        }
+        .cantidad input {
+            width: 100%;
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background-color: #1976d2;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1565c0;
+        }
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #1976d2;
+            border: 1px solid #1976d2;
+        }
+        .btn-secondary:hover {
+            background-color: #e3f2fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="pallet-container">
+        <div class="pallet-header">
+            <h1 class="pallet-title">Agregar embalaje</h1>
+            <div class="order-info">Orden 1 Línea 2 Embarque 1 Línea 1</div>
+        </div>
+        
+        <div class="tab-container">
+            <button type="button" class="tab-btn" onclick="window.location.href='cajas.html'">Cajas</button>
+            <button type="button" class="tab-btn active" id="tabPallet">Pallet</button>
+        </div>
+        
+        <form id="palletForm">
+            <div id="tabPalletContent">
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label for="pallet1">Tipo embalaje</label>
+                        <select name="palletTypeList1" id="palletTypeList1">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label for="cant1">Cant.</label>
+                        <input type="number" id="cant1" name="cant1" value="" min="0">
+                    </div>
+                </div>
+                
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label for="pallet2">Tipo embalaje</label>
+                        <select name="palletTypeList2" id="palletTypeList2">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label for="cant2">Cant.</label>
+                        <input type="number" id="cant2" name="cant2" value="" min="0">
+                    </div>
+                </div>
+                
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label for="pallet3">Tipo embalaje</label>
+                        <select name="palletTypeList3" id="palletTypeList3">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label for="cant3">Cant.</label>
+                        <input type="number" id="cant3" name="cant3" value="" min="0">
+                    </div>
+                </div>
+                
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label for="pallet4">Tipo embalaje</label>
+                        <select name="palletTypeList4" id="palletTypeList4">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label for="cant4">Cant.</label>
+                        <input type="number" id="cant4" name="cant4" value="" min="0">
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='PaginaPrincipal.html'">Cerrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script src="assets/js/controller.js"></script>
+    <script src="assets/js/bdLocal.js"></script>
+    <script src="assets/js/hh.js"></script>
+</body>
+</html>

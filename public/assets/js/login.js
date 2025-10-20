@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('userName', data.EmpBasic_Name);
                 setTimeout(() => {
                     message.textContent = ''; // Limpiar mensaje después de 2 segundos
-                    window.location.href = '/hh'; // Redirigir a la aplicación HH
+                    window.location.href = 'PaginaPrincipal.html'; // Redirigir a la página principal
                 }, 2000);
             } else {
                 message.textContent = 'Error al iniciar sesión. Inténtalo de nuevo.';

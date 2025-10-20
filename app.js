@@ -48,8 +48,14 @@ app.get('/', (req, res) => {
 
 // Ruta para la aplicación HH
 app.get('/hh', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'HH.html'));
+    res.sendFile(path.join(__dirname, 'public', 'PaginaPrincipal.html'));
 });
+
+// Ruta para la página de cajas
+app.get('/cajas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'cajas.html'));
+});
+
 // API endpoints para futuras funcionalidades
 app.get('/api/status', (req, res) => {
     res.json({
