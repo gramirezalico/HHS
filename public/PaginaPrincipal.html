@@ -232,6 +232,116 @@
     <!-- Contenedor para notificaciones -->
     <div id="notification" class="notification"></div>
 
+    <!-- Modal de edición de pallet -->
+    <div id="editPalletModal" class="modal">
+        <div class="modal-content">
+            <h2>Editar cargue de embalaje</h2>
+            <div class="order-info">Orden 1 Línea 2 Embarque 1 Línea 1</div>
+
+            <form id="editPalletForm">
+                <div class="form-group">
+                    <label for="editPalletType">Tipo embalaje</label>
+                    <select id="editPalletType" class="text-input wide-input" disabled>
+                        <option value="PALLET">PALLET</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" id="editPalletItemsBtn" class="btn btn-ok-selection" style="width: auto; margin-bottom: 1em;">
+                        Editar cajas de pallet
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPalletWeight">Peso unita(kg)</label>
+                    <input type="text" id="editPalletWeight" class="number-input" style="background-color: #e0f2f7;">
+                </div>
+
+                <div class="form-group">
+                    <label for="editPalletQuantity">No embalajes</label>
+                    <input type="number" id="editPalletQuantity" class="number-input" min="1" readonly>
+                </div>
+
+                <div class="modal-button-group">
+                    <button type="button" class="btn btn-cancel-selection" id="deletePalletBtn">Eliminar</button>
+                    <button type="submit" class="btn btn-ok-selection">Guardar</button>
+                    <button type="button" class="btn btn-cancel-selection" id="closePalletModal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de edición de items de pallet -->
+    <div id="editPalletItemsModal" class="modal">
+        <div class="modal-content">
+            <h2>Editar cajas de pallet</h2>
+            <div class="order-info">Orden 1 Línea 2 Embarque 1 Línea 1</div>
+
+            <form id="editPalletItemsForm">
+                <!-- Fila 1 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem1">Tipo embalaje</label>
+                        <select id="editPalletItem1" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty1">Cant.</label>
+                        <input type="number" id="editPalletQty1" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <!-- Fila 2 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem2">Tipo embalaje</label>
+                        <select id="editPalletItem2" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty2">Cant.</label>
+                        <input type="number" id="editPalletQty2" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <!-- Fila 3 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem3">Tipo embalaje</label>
+                        <select id="editPalletItem3" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty3">Cant.</label>
+                        <input type="number" id="editPalletQty3" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <!-- Fila 4 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem4">Tipo embalaje</label>
+                        <select id="editPalletItem4" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty4">Cant.</label>
+                        <input type="number" id="editPalletQty4" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <div class="modal-button-group">
+                    <button type="submit" class="btn btn-ok-selection">Guardar</button>
+                    <button type="button" class="btn btn-cancel-selection" id="closePalletItemsModal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal de confirmación personalizado -->
     <div id="confirmModal" class="confirm-modal">
         <div class="confirm-modal-content">
@@ -331,13 +441,15 @@
             packageDiv.appendChild(icon);
             packageDiv.appendChild(info);
 
-            // Agregar evento de clic para editar (solo para cajas individuales)
-            if (package.type !== 'pallet') {
-                packageDiv.addEventListener('click', function() {
+            // Agregar evento de clic para editar
+            packageDiv.addEventListener('click', function() {
+                if (package.type === 'pallet') {
+                    editPallet(index, package);
+                } else {
                     editPackage(index, package);
-                });
-                packageDiv.style.cursor = 'pointer';
-            }
+                }
+            });
+            packageDiv.style.cursor = 'pointer';
 
             return packageDiv;
         }
@@ -345,6 +457,7 @@
         // Variables globales para la edición
         let currentEditingIndex = -1;
         let packingListData = [];
+        let currentEditingPallet = null;
 
         // Sistema de notificaciones personalizadas
         function showNotification(message, type = 'success') {
@@ -568,7 +681,195 @@
                     this.style.display = 'none';
                 }
             });
+
+            // Eventos para modal de pallet
+            setupPalletModalEvents();
         });
+
+        // Función para editar un pallet
+        function editPallet(index, palletData) {
+            currentEditingIndex = index;
+            currentEditingPallet = palletData;
+            
+            // Cargar datos del packing list si no están cargados
+            if (packingListData.length === 0) {
+                loadPackingListData(() => {
+                    showEditPalletModal(palletData);
+                });
+            } else {
+                showEditPalletModal(palletData);
+            }
+        }
+
+        // Mostrar modal de edición de pallet
+        function showEditPalletModal(palletData) {
+            const modal = document.getElementById('editPalletModal');
+            
+            // Llenar campos con datos actuales
+            document.getElementById('editPalletWeight').value = palletData.weight || '';
+            document.getElementById('editPalletQuantity').value = palletData.totalQuantity || '';
+
+            modal.style.display = 'flex';
+        }
+
+        // Mostrar modal de edición de items de pallet
+        function showEditPalletItemsModal(palletData) {
+            const modal = document.getElementById('editPalletItemsModal');
+            
+            // Llenar selects con opciones
+            for (let i = 1; i <= 4; i++) {
+                const selectElement = document.getElementById('editPalletItem' + i);
+                selectElement.innerHTML = '<option value="">Seleccione tipo embalaje...</option>';
+                packingListData.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Packing_PkgCode;
+                    option.textContent = item.Packing_Description;
+                    selectElement.appendChild(option);
+                });
+            }
+
+            // Llenar campos con datos existentes
+            if (palletData.items && palletData.items.length > 0) {
+                palletData.items.forEach((item, index) => {
+                    if (index < 4) {
+                        const selectElement = document.getElementById('editPalletItem' + (index + 1));
+                        const qtyElement = document.getElementById('editPalletQty' + (index + 1));
+                        
+                        // Buscar el option que coincida con el texto
+                        for (let option of selectElement.options) {
+                            if (option.textContent === item.type) {
+                                option.selected = true;
+                                break;
+                            }
+                        }
+                        qtyElement.value = item.quantity;
+                    }
+                });
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        // Configurar eventos del modal de pallet
+        function setupPalletModalEvents() {
+            // Cerrar modal de pallet
+            document.getElementById('closePalletModal').addEventListener('click', function() {
+                document.getElementById('editPalletModal').style.display = 'none';
+            });
+
+            // Abrir modal de items de pallet
+            document.getElementById('editPalletItemsBtn').addEventListener('click', function() {
+                document.getElementById('editPalletModal').style.display = 'none';
+                showEditPalletItemsModal(currentEditingPallet);
+            });
+
+            // Eliminar pallet
+            document.getElementById('deletePalletBtn').addEventListener('click', function() {
+                showConfirmDialog(
+                    'Eliminar pallet',
+                    '¿Está seguro de que desea eliminar este pallet?',
+                    function() {
+                        const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                        savedPackages.splice(currentEditingIndex, 1);
+                        localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                        loadSavedPackages();
+                        document.getElementById('editPalletModal').style.display = 'none';
+                        showNotification('Pallet eliminado exitosamente', 'success');
+                    }
+                );
+            });
+
+            // Guardar cambios de pallet
+            document.getElementById('editPalletForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const weight = document.getElementById('editPalletWeight').value;
+                
+                // Actualizar el pallet
+                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                savedPackages[currentEditingIndex] = {
+                    ...savedPackages[currentEditingIndex],
+                    weight: weight,
+                    timestamp: new Date().toISOString()
+                };
+
+                localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                loadSavedPackages();
+                document.getElementById('editPalletModal').style.display = 'none';
+                
+                showNotification('Pallet actualizado exitosamente', 'success');
+            });
+
+            // Cerrar modal de items de pallet
+            document.getElementById('closePalletItemsModal').addEventListener('click', function() {
+                document.getElementById('editPalletItemsModal').style.display = 'none';
+                document.getElementById('editPalletModal').style.display = 'flex';
+            });
+
+            // Guardar cambios de items de pallet
+            document.getElementById('editPalletItemsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Recolectar todos los items del pallet
+                let palletItems = [];
+                let totalQuantity = 0;
+                
+                for (let i = 1; i <= 4; i++) {
+                    const select = document.getElementById('editPalletItem' + i);
+                    const qtyInput = document.getElementById('editPalletQty' + i);
+                    
+                    if (select.value && select.value !== '' && qtyInput.value && qtyInput.value > 0) {
+                        const selectedText = select.options[select.selectedIndex].text;
+                        const quantity = parseInt(qtyInput.value) || 0;
+                        
+                        palletItems.push({
+                            type: selectedText,
+                            quantity: quantity
+                        });
+                        
+                        totalQuantity += quantity;
+                    }
+                }
+                
+                if (palletItems.length === 0) {
+                    showNotification('Por favor seleccione al menos un tipo de embalaje', 'error');
+                    return;
+                }
+
+                // Actualizar el pallet
+                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                savedPackages[currentEditingIndex] = {
+                    ...savedPackages[currentEditingIndex],
+                    items: palletItems,
+                    totalQuantity: totalQuantity,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Actualizar también el campo de cantidad en el modal principal
+                document.getElementById('editPalletQuantity').value = totalQuantity;
+                currentEditingPallet = savedPackages[currentEditingIndex];
+
+                localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                loadSavedPackages();
+                document.getElementById('editPalletItemsModal').style.display = 'none';
+                document.getElementById('editPalletModal').style.display = 'flex';
+                
+                showNotification('Items del pallet actualizados exitosamente', 'success');
+            });
+
+            // Cerrar modales al hacer clic fuera
+            document.getElementById('editPalletModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+
+            document.getElementById('editPalletItemsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        }
 
         // Función para mostrar notificaciones
         window.showNotification = function(message, type = 'success') {
