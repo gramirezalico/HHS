@@ -212,11 +212,8 @@
         </form>
     </div>
     
-    <script src="assets/js/controller.js"></script>
-    <script src="assets/js/bdLocal.js"></script>
-    <script src="assets/js/hh.js"></script>
     <script>
-        // Script específico para pallet.html
+        // Script específico para pallet.html - completamente independiente
         console.log('[pallet.html] Page loaded, waiting for data...');
         
         function loadPalletData() {
@@ -276,6 +273,15 @@
         // Cargar datos cuando la página esté lista
         document.addEventListener('DOMContentLoaded', function() {
             console.log('[pallet.html] DOM ready, loading data in 1 second...');
+            
+            // Configurar botón de logout si existe
+            const logoutButton = document.querySelector('.btn-secondary');
+            if (logoutButton && logoutButton.textContent.includes('Cerrar')) {
+                logoutButton.onclick = function() {
+                    window.location.href = 'PaginaPrincipal.html';
+                };
+            }
+            
             setTimeout(loadPalletData, 1000);
         });
     </script>

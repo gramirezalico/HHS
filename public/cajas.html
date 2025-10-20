@@ -190,8 +190,72 @@
         </form>
     </div>
     
-    <script src="assets/js/controller.js"></script>
-    <script src="assets/js/bdLocal.js"></script>
-    <script src="assets/js/hh.js"></script>
+    <script src="assets/js/controller.js?v=2"></script>
+    <script src="assets/js/bdLocal.js?v=2"></script>
+    <script>
+        // Script específico para cajas.html - sin dependencias problemáticas
+        console.log('[cajas.html] Page loaded');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[cajas.html] DOM ready');
+            
+            // Configurar botón de cerrar
+            const closeButton = document.querySelector('.btn-secondary');
+            if (closeButton && closeButton.textContent.includes('Cerrar')) {
+                closeButton.onclick = function() {
+                    window.location.href = 'PaginaPrincipal.html';
+                };
+            }
+            
+            // Cargar datos para el select
+            setTimeout(function() {
+                if (typeof size === 'function') {
+                    size(function(count) {
+                        console.log('[cajas.html] DB record count:', count);
+                        if (count > 0) {
+                            if (typeof getAllData === 'function') {
+                                getAllData(function(data) {
+                                    console.log('[cajas.html] Loading data from IndexedDB:', data.length, 'items');
+                                    if (typeof setSelectCajas === 'function') {
+                                        setSelectCajas(data);
+                                    }
+                                    setupCajasSelect();
+                                });
+                            }
+                        } else {
+                            console.log('[cajas.html] No data in IndexedDB, loading from API');
+                            if (typeof T === 'function') {
+                                T();
+                            }
+                            setTimeout(setupCajasSelect, 1000);
+                        }
+                    });
+                } else {
+                    console.log('[cajas.html] Functions not ready, retrying...');
+                    setTimeout(arguments.callee, 500);
+                }
+            }, 500);
+            
+            function setupCajasSelect() {
+                let cajaSelect = document.getElementById('packagingTypeList1');
+                if (cajaSelect) {
+                    cajaSelect.onchange = function(event) {
+                        let selectedValue = event.target.value;
+                        if (typeof getById === 'function') {
+                            getById(selectedValue, function(data) {
+                                let length = document.getElementById('length');
+                                let width = document.getElementById('width');
+                                let height = document.getElementById('height');
+                                if (length && data) length.value = data['Packing_PkgLength'] || '';
+                                if (width && data) width.value = data['Packing_PkgWidth'] || '';
+                                if (height && data) height.value = data['Packing_PkgHeight'] || '';
+                            });
+                        }
+                    };
+                    console.log('[cajas.html] Select event listener configured');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
