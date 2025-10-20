@@ -88,6 +88,16 @@
             font-size: 16px;
             box-sizing: border-box;
         }
+        
+        /* Campos más largos para los campos finales */
+        .form-field.wide-field {
+            margin-bottom: 20px;
+        }
+        .form-field.wide-field input {
+            width: 100%;
+            padding: 15px 12px;
+            font-size: 16px;
+        }
         .form-field select:focus, .form-field input:focus {
             outline: none;
             border-color: #1976d2;
@@ -227,6 +237,16 @@
                         <label for="cant4">Cant.</label>
                         <input type="number" id="cant4" name="cant4" value="" min="0">
                     </div>
+                </div>
+                
+                <div class="form-field wide-field">
+                    <label for="unitWeight">Peso unita(kg)</label>
+                    <input type="text" id="unitWeight" value="">
+                </div>
+                
+                <div class="form-field wide-field">
+                    <label for="numPackages">No Embalajes</label>
+                    <input type="text" id="numPackages" value="">
                 </div>
                 
                 <div class="button-container">

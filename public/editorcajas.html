@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar cargue de embalaje</title>
+    <link rel="stylesheet" href="assets/css/HH.css">
+    <style>
+        /* Estilos para notificaciones */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+        .notification.show { display: block; }
+        .notification.success { background-color: #4caf50; }
+        .notification.error { background-color: #f44336; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal de confirmación personalizado */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        
+        .confirm-modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .confirm-modal h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .confirm-modal p {
+            margin: 0 0 25px 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .confirm-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .confirm-modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 90px;
+            transition: background-color 0.2s;
+        }
+        
+        .confirm-modal-buttons .btn-confirm {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .confirm-modal-buttons .btn-confirm:hover {
+            background-color: #d32f2f;
+        }
+        
+        .confirm-modal-buttons .btn-cancel {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        
+        .confirm-modal-buttons .btn-cancel:hover {
+            background-color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Editar cargue de embalaje</h2>
+        <div class="order-info">Orden 1 Línea 2 Embarque 1 Línea 1</div>
+
+        <form id="editPackageForm">
+            <div class="form-group">
+                <label for="editPackageType">Tipo embalaje</label>
+                <select id="editPackageType" class="text-input wide-input">
+                    <option value="">Seleccione tipo embalaje...</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editLength">Largo</label>
+                    <input type="text" id="editLength" class="number-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editWidth">Ancho</label>
+                    <input type="text" id="editWidth" class="number-input" readonly>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editHeight">Alto</label>
+                    <input type="text" id="editHeight" class="number-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editUM">UM</label>
+                    <input type="text" id="editUM" class="text-input">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="editWeight">Peso unita(kg)</label>
+                <input type="text" id="editWeight" class="number-input" style="background-color: #e0f2f7;">
+            </div>
+
+            <div class="form-group">
+                <label for="editQuantity">No embalajes</label>
+                <input type="number" id="editQuantity" class="number-input" min="1">
+            </div>
+
+            <div class="modal-button-group">
+                <button type="button" class="btn btn-cancel-selection" id="deletePackageBtn">Eliminar</button>
+                <button type="submit" class="btn btn-ok-selection">Guardar</button>
+                <button type="button" class="btn btn-cancel-selection" id="closeEditModal">Cerrar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Contenedor para notificaciones -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Modal de confirmación personalizado -->
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <h3 id="confirmTitle">Confirmar acción</h3>
+            <p id="confirmMessage">¿Está seguro de que desea continuar?</p>
+            <div class="confirm-modal-buttons">
+                <button type="button" class="btn-cancel" id="confirmCancel">Cancelar</button>
+                <button type="button" class="btn-confirm" id="confirmAccept">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let packingListData = [];
+        let packageIndex = -1;
+
+        // Sistema de notificaciones personalizadas
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type + ' show';
+            setTimeout(() => { notification.classList.remove('show'); }, 3000);
+        }
+
+        // Sistema de confirmación personalizado
+        function showConfirmDialog(title, message, onConfirm, onCancel) {
+            const modal = document.getElementById('confirmModal');
+            const titleElement = document.getElementById('confirmTitle');
+            const messageElement = document.getElementById('confirmMessage');
+            const acceptBtn = document.getElementById('confirmAccept');
+            const cancelBtn = document.getElementById('confirmCancel');
+            
+            titleElement.textContent = title;
+            messageElement.textContent = message;
+            modal.style.display = 'flex';
+            
+            // Limpiar eventos anteriores
+            const newAcceptBtn = acceptBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            acceptBtn.parentNode.replaceChild(newAcceptBtn, acceptBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Agregar nuevos eventos
+            newAcceptBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                if (onConfirm) onConfirm();
+            });
+            
+            newCancelBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                if (onCancel) onCancel();
+            });
+        }
+
+        // Cargar datos del packing list
+        function loadPackingListData(callback) {
+            fetch('/api/packingList', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    packingListData = data.value.filter(item => 
+                        item.Packing_Description && item.Packing_Description.includes('CAJA')
+                    );
+                    if (callback) callback();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading packing list:', error);
+                showNotification('Error al cargar datos del servidor', 'error');
+            });
+        }
+
+        // Actualizar dimensiones basadas en la selección
+        function updateDimensions(packageCode) {
+            const selectedItem = packingListData.find(item => item.Packing_PkgCode === packageCode);
+            if (selectedItem) {
+                document.getElementById('editLength').value = selectedItem.Packing_PkgLength || '';
+                document.getElementById('editWidth').value = selectedItem.Packing_PkgWidth || '';
+                document.getElementById('editHeight').value = selectedItem.Packing_PkgHeight || '';
+            }
+        }
+
+        // Limpiar dimensiones
+        function clearDimensions() {
+            document.getElementById('editLength').value = '';
+            document.getElementById('editWidth').value = '';
+            document.getElementById('editHeight').value = '';
+        }
+
+        // Cargar datos del paquete a editar
+        function loadPackageData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            packageIndex = parseInt(urlParams.get('index'));
+            
+            if (packageIndex >= 0) {
+                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                const packageData = savedPackages[packageIndex];
+                
+                if (packageData && packageData.type === 'caja') {
+                    // Cargar datos del packing list
+                    loadPackingListData(() => {
+                        // Llenar el select con opciones
+                        const selectElement = document.getElementById('editPackageType');
+                        selectElement.innerHTML = '<option value="">Seleccione tipo embalaje...</option>';
+                        
+                        packingListData.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.Packing_PkgCode;
+                            option.textContent = item.Packing_Description;
+                            if (item.Packing_Description === packageData.packageType) {
+                                option.selected = true;
+                            }
+                            selectElement.appendChild(option);
+                        });
+
+                        // Llenar los campos con los datos actuales
+                        document.getElementById('editQuantity').value = packageData.quantity || '';
+                        document.getElementById('editUM').value = packageData.um || '';
+                        document.getElementById('editWeight').value = packageData.weight || '';
+
+                        // Cargar dimensiones si hay un tipo seleccionado
+                        if (selectElement.value) {
+                            updateDimensions(selectElement.value);
+                        }
+                    });
+                } else {
+                    showNotification('Paquete no encontrado', 'error');
+                    setTimeout(() => window.location.href = 'PaginaPrincipal.html', 2000);
+                }
+            } else {
+                showNotification('Índice de paquete inválido', 'error');
+                setTimeout(() => window.location.href = 'PaginaPrincipal.html', 2000);
+            }
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPackageData();
+
+            // Configurar evento de cambio del select
+            document.getElementById('editPackageType').addEventListener('change', function() {
+                if (this.value) {
+                    updateDimensions(this.value);
+                } else {
+                    clearDimensions();
+                }
+            });
+
+            // Cerrar modal
+            document.getElementById('closeEditModal').addEventListener('click', function() {
+                window.location.href = 'PaginaPrincipal.html';
+            });
+
+            // Eliminar paquete
+            document.getElementById('deletePackageBtn').addEventListener('click', function() {
+                showConfirmDialog(
+                    'Eliminar embalaje',
+                    '¿Está seguro de que desea eliminar este embalaje?',
+                    function() {
+                        const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                        savedPackages.splice(packageIndex, 1);
+                        localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                        
+                        // Guardar notificación para mostrar en página principal
+                        localStorage.setItem('pendingNotification', JSON.stringify({
+                            message: 'Embalaje eliminado exitosamente',
+                            type: 'success'
+                        }));
+                        
+                        window.location.href = 'PaginaPrincipal.html';
+                    }
+                );
+            });
+
+            // Guardar cambios
+            document.getElementById('editPackageForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const selectElement = document.getElementById('editPackageType');
+                const quantity = document.getElementById('editQuantity').value;
+                
+                if (!selectElement.value || !quantity) {
+                    showNotification('Por favor complete todos los campos obligatorios', 'error');
+                    return;
+                }
+
+                // Actualizar el paquete
+                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                const selectedText = selectElement.options[selectElement.selectedIndex].text;
+                
+                savedPackages[packageIndex] = {
+                    ...savedPackages[packageIndex],
+                    packageType: selectedText,
+                    quantity: quantity,
+                    um: document.getElementById('editUM').value,
+                    weight: document.getElementById('editWeight').value,
+                    timestamp: new Date().toISOString()
+                };
+
+                localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                
+                // Guardar notificación para mostrar en página principal
+                localStorage.setItem('pendingNotification', JSON.stringify({
+                    message: 'Embalaje actualizado exitosamente',
+                    type: 'success'
+                }));
+                
+                window.location.href = 'PaginaPrincipal.html';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar cargue de pallet</title>
+    <link rel="stylesheet" href="assets/css/HH.css">
+    <style>
+        /* Estilos para notificaciones */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+        .notification.show { display: block; }
+        .notification.success { background-color: #4caf50; }
+        .notification.error { background-color: #f44336; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal de confirmación personalizado */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        
+        .confirm-modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .confirm-modal h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .confirm-modal p {
+            margin: 0 0 25px 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .confirm-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .confirm-modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 90px;
+            transition: background-color 0.2s;
+        }
+        
+        .confirm-modal-buttons .btn-confirm {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .confirm-modal-buttons .btn-confirm:hover {
+            background-color: #d32f2f;
+        }
+        
+        .confirm-modal-buttons .btn-cancel {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        
+        .confirm-modal-buttons .btn-cancel:hover {
+            background-color: #757575;
+        }
+
+        /* Estilos para el modal de edición de items */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .modal.show { display: flex; }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Editar cargue de pallet</h2>
+        <div class="order-info">Orden 1 Línea 2 Embarque 1 Línea 1</div>
+
+        <form id="editPalletForm">
+            <div class="form-group">
+                <button type="button" id="editPalletItemsBtn" class="btn btn-ok-selection" style="width: auto; margin-bottom: 1em;">
+                    Editar cajas de pallet
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label for="editPalletWeight">Peso unita(kg)</label>
+                <input type="text" id="editPalletWeight" class="number-input" style="background-color: #e0f2f7;">
+            </div>
+
+            <div class="form-group">
+                <label for="editPalletQuantity">No embalajes</label>
+                <input type="number" id="editPalletQuantity" class="number-input" min="1" readonly>
+            </div>
+
+            <div class="modal-button-group">
+                <button type="button" class="btn btn-cancel-selection" id="deletePalletBtn">Eliminar</button>
+                <button type="submit" class="btn btn-ok-selection">Guardar</button>
+                <button type="button" class="btn btn-cancel-selection" id="closeEditModal">Cerrar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Contenedor para notificaciones -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Modal de edición de items de pallet -->
+    <div id="editPalletItemsModal" class="modal">
+        <div class="modal-content">
+            <h2>Editar cajas de pallet</h2>
+            <div class="order-info">Orden 1 Línea 2 Embarque 1 Línea 1</div>
+
+            <form id="editPalletItemsForm">
+                <!-- Fila 1 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem1">Tipo embalaje</label>
+                        <select id="editPalletItem1" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty1">Cant.</label>
+                        <input type="number" id="editPalletQty1" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <!-- Fila 2 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem2">Tipo embalaje</label>
+                        <select id="editPalletItem2" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty2">Cant.</label>
+                        <input type="number" id="editPalletQty2" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <!-- Fila 3 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem3">Tipo embalaje</label>
+                        <select id="editPalletItem3" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty3">Cant.</label>
+                        <input type="number" id="editPalletQty3" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <!-- Fila 4 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPalletItem4">Tipo embalaje</label>
+                        <select id="editPalletItem4" class="text-input">
+                            <option value="">Seleccione tipo embalaje...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPalletQty4">Cant.</label>
+                        <input type="number" id="editPalletQty4" class="number-input" min="0">
+                    </div>
+                </div>
+
+                <div class="modal-button-group">
+                    <button type="submit" class="btn btn-ok-selection">Guardar</button>
+                    <button type="button" class="btn btn-cancel-selection" id="closePalletItemsModal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación personalizado -->
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <h3 id="confirmTitle">Confirmar acción</h3>
+            <p id="confirmMessage">¿Está seguro de que desea continuar?</p>
+            <div class="confirm-modal-buttons">
+                <button type="button" class="btn-cancel" id="confirmCancel">Cancelar</button>
+                <button type="button" class="btn-confirm" id="confirmAccept">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let packingListData = [];
+        let packageIndex = -1;
+        let currentEditingPallet = null;
+
+        // Sistema de notificaciones personalizadas
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type + ' show';
+            setTimeout(() => { notification.classList.remove('show'); }, 3000);
+        }
+
+        // Sistema de confirmación personalizado
+        function showConfirmDialog(title, message, onConfirm, onCancel) {
+            const modal = document.getElementById('confirmModal');
+            const titleElement = document.getElementById('confirmTitle');
+            const messageElement = document.getElementById('confirmMessage');
+            const acceptBtn = document.getElementById('confirmAccept');
+            const cancelBtn = document.getElementById('confirmCancel');
+            
+            titleElement.textContent = title;
+            messageElement.textContent = message;
+            modal.style.display = 'flex';
+            
+            // Limpiar eventos anteriores
+            const newAcceptBtn = acceptBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            acceptBtn.parentNode.replaceChild(newAcceptBtn, acceptBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Agregar nuevos eventos
+            newAcceptBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                if (onConfirm) onConfirm();
+            });
+            
+            newCancelBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                if (onCancel) onCancel();
+            });
+        }
+
+        // Cargar datos del packing list
+        function loadPackingListData(callback) {
+            fetch('/api/packingList', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    packingListData = data.value;
+                    if (callback) callback();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading packing list:', error);
+                showNotification('Error al cargar datos del servidor', 'error');
+            });
+        }
+
+        // Mostrar modal de edición de items de pallet
+        function showEditPalletItemsModal(palletData) {
+            const modal = document.getElementById('editPalletItemsModal');
+            
+            // Llenar selects con opciones
+            for (let i = 1; i <= 4; i++) {
+                const selectElement = document.getElementById('editPalletItem' + i);
+                selectElement.innerHTML = '<option value="">Seleccione tipo embalaje...</option>';
+                packingListData.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.Packing_PkgCode;
+                    option.textContent = item.Packing_Description;
+                    selectElement.appendChild(option);
+                });
+            }
+
+            // Llenar campos con datos existentes
+            if (palletData.items && palletData.items.length > 0) {
+                palletData.items.forEach((item, index) => {
+                    if (index < 4) {
+                        const selectElement = document.getElementById('editPalletItem' + (index + 1));
+                        const qtyElement = document.getElementById('editPalletQty' + (index + 1));
+                        
+                        // Buscar el option que coincida con el texto
+                        for (let option of selectElement.options) {
+                            if (option.textContent === item.type) {
+                                option.selected = true;
+                                break;
+                            }
+                        }
+                        qtyElement.value = item.quantity;
+                    }
+                });
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        // Cargar datos del pallet a editar
+        function loadPalletData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            packageIndex = parseInt(urlParams.get('index'));
+            
+            if (packageIndex >= 0) {
+                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                const packageData = savedPackages[packageIndex];
+                
+                if (packageData && packageData.type === 'pallet') {
+                    currentEditingPallet = packageData;
+                    
+                    // Cargar datos del packing list
+                    loadPackingListData(() => {
+                        // Llenar campos principales
+                        document.getElementById('editPalletWeight').value = packageData.weight || '';
+                        document.getElementById('editPalletQuantity').value = packageData.totalQuantity || '';
+                    });
+                } else {
+                    showNotification('Pallet no encontrado', 'error');
+                    setTimeout(() => window.location.href = 'PaginaPrincipal.html', 2000);
+                }
+            } else {
+                showNotification('Índice de pallet inválido', 'error');
+                setTimeout(() => window.location.href = 'PaginaPrincipal.html', 2000);
+            }
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPalletData();
+
+            // Abrir modal de items de pallet
+            document.getElementById('editPalletItemsBtn').addEventListener('click', function() {
+                showEditPalletItemsModal(currentEditingPallet);
+            });
+
+            // Cerrar modal principal
+            document.getElementById('closeEditModal').addEventListener('click', function() {
+                window.location.href = 'PaginaPrincipal.html';
+            });
+
+            // Eliminar pallet
+            document.getElementById('deletePalletBtn').addEventListener('click', function() {
+                showConfirmDialog(
+                    'Eliminar pallet',
+                    '¿Está seguro de que desea eliminar este pallet?',
+                    function() {
+                        const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                        savedPackages.splice(packageIndex, 1);
+                        localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                        
+                        // Guardar notificación para mostrar en página principal
+                        localStorage.setItem('pendingNotification', JSON.stringify({
+                            message: 'Pallet eliminado exitosamente',
+                            type: 'success'
+                        }));
+                        
+                        window.location.href = 'PaginaPrincipal.html';
+                    }
+                );
+            });
+
+            // Guardar cambios del pallet principal
+            document.getElementById('editPalletForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const weight = document.getElementById('editPalletWeight').value;
+                
+                // Actualizar el pallet
+                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                savedPackages[packageIndex] = {
+                    ...savedPackages[packageIndex],
+                    weight: weight,
+                    timestamp: new Date().toISOString()
+                };
+
+                localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                
+                // Guardar notificación para mostrar en página principal
+                localStorage.setItem('pendingNotification', JSON.stringify({
+                    message: 'Pallet actualizado exitosamente',
+                    type: 'success'
+                }));
+                
+                window.location.href = 'PaginaPrincipal.html';
+            });
+
+            // Cerrar modal de items de pallet
+            document.getElementById('closePalletItemsModal').addEventListener('click', function() {
+                document.getElementById('editPalletItemsModal').style.display = 'none';
+            });
+
+            // Guardar cambios de items de pallet
+            document.getElementById('editPalletItemsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Recolectar todos los items del pallet
+                let palletItems = [];
+                let totalQuantity = 0;
+                
+                for (let i = 1; i <= 4; i++) {
+                    const select = document.getElementById('editPalletItem' + i);
+                    const qtyInput = document.getElementById('editPalletQty' + i);
+                    
+                    if (select.value && select.value !== '' && qtyInput.value && qtyInput.value > 0) {
+                        const selectedText = select.options[select.selectedIndex].text;
+                        const quantity = parseInt(qtyInput.value) || 0;
+                        
+                        palletItems.push({
+                            type: selectedText,
+                            quantity: quantity
+                        });
+                        
+                        totalQuantity += quantity;
+                    }
+                }
+                
+                if (palletItems.length === 0) {
+                    showNotification('Por favor seleccione al menos un tipo de embalaje', 'error');
+                    return;
+                }
+
+                // Actualizar el pallet
+                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                savedPackages[packageIndex] = {
+                    ...savedPackages[packageIndex],
+                    items: palletItems,
+                    totalQuantity: totalQuantity,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Actualizar también el campo de cantidad en el modal principal
+                document.getElementById('editPalletQuantity').value = totalQuantity;
+                currentEditingPallet = savedPackages[packageIndex];
+
+                localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                document.getElementById('editPalletItemsModal').style.display = 'none';
+                
+                showNotification('Items del pallet actualizados exitosamente', 'success');
+            });
+
+            // Cerrar modales al hacer clic fuera
+            document.getElementById('editPalletItemsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

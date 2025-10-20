@@ -528,16 +528,8 @@
 
         // Función para editar un paquete
         function editPackage(index, packageData) {
-            currentEditingIndex = index;
-            
-            // Cargar datos del packing list si no están cargados
-            if (packingListData.length === 0) {
-                loadPackingListData(() => {
-                    showEditModal(packageData);
-                });
-            } else {
-                showEditModal(packageData);
-            }
+            // Redirigir a la página de edición de cajas con el índice como parámetro
+            window.location.href = `editorcajas.html?index=${index}`;
         }
 
         // Cargar datos del packing list
@@ -688,17 +680,8 @@
 
         // Función para editar un pallet
         function editPallet(index, palletData) {
-            currentEditingIndex = index;
-            currentEditingPallet = palletData;
-            
-            // Cargar datos del packing list si no están cargados
-            if (packingListData.length === 0) {
-                loadPackingListData(() => {
-                    showEditPalletModal(palletData);
-                });
-            } else {
-                showEditPalletModal(palletData);
-            }
+            // Redirigir a la página de edición de pallet con el índice como parámetro
+            window.location.href = `editorpallet.html?index=${index}`;
         }
 
         // Mostrar modal de edición de pallet
