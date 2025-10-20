@@ -263,11 +263,82 @@
                         select.appendChild(option);
                     });
                     
+                    // Agregar event listener para validación de cantidad
+                    setupSelectValidation(select, index + 1);
+                    
                     console.log('[pallet.html] Select', index + 1, 'now has', select.options.length, 'options');
                 } else {
                     console.error('[pallet.html] Select', index + 1, 'not found!');
                 }
             });
+        }
+        
+        function setupSelectValidation(select, rowNumber) {
+            const cantidadInput = document.getElementById('cant' + rowNumber);
+            
+            select.addEventListener('change', function() {
+                if (this.value && this.value !== '') {
+                    // Si se selecciona una opción válida, hacer cantidad obligatoria
+                    cantidadInput.required = true;
+                    cantidadInput.style.borderColor = '#1976d2';
+                    console.log('[pallet.html] Cantidad obligatoria para select', rowNumber);
+                    
+                    // Si no tiene valor, agregar valor por defecto
+                    if (!cantidadInput.value || cantidadInput.value === '0') {
+                        cantidadInput.value = '1';
+                    }
+                } else {
+                    // Si se selecciona "Seleccione tipo embalaje...", quitar obligatorio
+                    cantidadInput.required = false;
+                    cantidadInput.style.borderColor = '#ddd';
+                    cantidadInput.value = '';
+                    console.log('[pallet.html] Cantidad no obligatoria para select', rowNumber);
+                }
+            });
+            
+            // Validación adicional en el input de cantidad
+            cantidadInput.addEventListener('blur', function() {
+                const selectValue = select.value;
+                if (selectValue && selectValue !== '' && (!this.value || this.value === '0')) {
+                    this.style.borderColor = '#ff5722';
+                    this.placeholder = 'Cantidad requerida';
+                } else {
+                    this.style.borderColor = '#ddd';
+                    this.placeholder = '';
+                }
+            });
+        }
+        
+        function validateForm() {
+            let isValid = true;
+            let errorMessage = '';
+            
+            for (let i = 1; i <= 4; i++) {
+                const select = document.getElementById('palletTypeList' + i);
+                const cantInput = document.getElementById('cant' + i);
+                
+                if (select && cantInput) {
+                    const selectValue = select.value;
+                    const cantValue = cantInput.value;
+                    
+                    // Si hay un tipo seleccionado pero no cantidad
+                    if (selectValue && selectValue !== '' && (!cantValue || cantValue === '0')) {
+                        isValid = false;
+                        cantInput.style.borderColor = '#ff5722';
+                        cantInput.style.backgroundColor = '#ffebee';
+                        errorMessage += `Fila ${i}: Debe ingresar una cantidad válida.\n`;
+                    } else {
+                        cantInput.style.borderColor = '#ddd';
+                        cantInput.style.backgroundColor = 'white';
+                    }
+                }
+            }
+            
+            if (!isValid) {
+                alert('Por favor complete los siguientes campos:\n\n' + errorMessage);
+            }
+            
+            return isValid;
         }
         
         // Cargar datos cuando la página esté lista
@@ -280,6 +351,18 @@
                 logoutButton.onclick = function() {
                     window.location.href = 'PaginaPrincipal.html';
                 };
+            }
+            
+            // Configurar validación del formulario
+            const form = document.getElementById('palletForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!validateForm()) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    console.log('[pallet.html] Formulario válido, enviando...');
+                });
             }
             
             setTimeout(loadPalletData, 1000);

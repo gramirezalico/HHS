@@ -153,18 +153,18 @@
                 <div class="form-row">
                     <div class="form-field">
                         <label for="length">Largo</label>
-                        <input type="text" id="length" value="46,00000" readonly>
+                        <input type="text" id="length" value="" readonly>
                     </div>
                     <div class="form-field">
                         <label for="width">Ancho</label>
-                        <input type="text" id="width" value="37,50000" readonly>
+                        <input type="text" id="width" value="" readonly>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-field">
                         <label for="height">Alto</label>
-                        <input type="text" id="height" value="57,50000" readonly>
+                        <input type="text" id="height" value="" readonly>
                     </div>
                     <div class="form-field">
                         <label for="um">UM</label>
@@ -239,21 +239,43 @@
             function setupCajasSelect() {
                 let cajaSelect = document.getElementById('packagingTypeList1');
                 if (cajaSelect) {
+                    // Limpiar campos al inicio si no hay selección
+                    clearDimensionFields();
+                    
                     cajaSelect.onchange = function(event) {
                         let selectedValue = event.target.value;
-                        if (typeof getById === 'function') {
-                            getById(selectedValue, function(data) {
-                                let length = document.getElementById('length');
-                                let width = document.getElementById('width');
-                                let height = document.getElementById('height');
-                                if (length && data) length.value = data['Packing_PkgLength'] || '';
-                                if (width && data) width.value = data['Packing_PkgWidth'] || '';
-                                if (height && data) height.value = data['Packing_PkgHeight'] || '';
-                            });
+                        
+                        if (selectedValue && selectedValue !== '') {
+                            // Si se selecciona una opción válida, cargar dimensiones
+                            if (typeof getById === 'function') {
+                                getById(selectedValue, function(data) {
+                                    let length = document.getElementById('length');
+                                    let width = document.getElementById('width');
+                                    let height = document.getElementById('height');
+                                    if (length && data) length.value = data['Packing_PkgLength'] || '';
+                                    if (width && data) width.value = data['Packing_PkgWidth'] || '';
+                                    if (height && data) height.value = data['Packing_PkgHeight'] || '';
+                                    console.log('[cajas.html] Dimensiones cargadas para:', selectedValue);
+                                });
+                            }
+                        } else {
+                            // Si se selecciona "Seleccione tipo embalaje...", limpiar campos
+                            clearDimensionFields();
+                            console.log('[cajas.html] Campos de dimensiones limpiados');
                         }
                     };
                     console.log('[cajas.html] Select event listener configured');
                 }
+            }
+            
+            function clearDimensionFields() {
+                let length = document.getElementById('length');
+                let width = document.getElementById('width');
+                let height = document.getElementById('height');
+                
+                if (length) length.value = '';
+                if (width) width.value = '';
+                if (height) height.value = '';
             }
         });
     </script>
