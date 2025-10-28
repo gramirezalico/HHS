@@ -388,7 +388,17 @@
                                     });
                                 }
                             } else if (type === 'PALLET') {
-                                if (typeof getByIdPallet === 'function') {
+                                // If this is one of the fixed pallets, use the predefined dimensions immediately
+                                const fixed = {
+                                    'PALLET': { Packing_PkgLength: 0.0, Packing_PkgWidth: 0.0, Packing_PkgHeight: 0.0 },
+                                    'PALLET-G': { Packing_PkgLength: 1.2, Packing_PkgWidth: 1.0, Packing_PkgHeight: 1.6 },
+                                    'PALLET-M': { Packing_PkgLength: 1.2, Packing_PkgWidth: 1.0, Packing_PkgHeight: 1.6 },
+                                    'PALLET-P': { Packing_PkgLength: 1.2, Packing_PkgWidth: 1.0, Packing_PkgHeight: 1.6 }
+                                };
+                                if (fixed[selectedValue]) {
+                                    fillDimensionFields(fixed[selectedValue]);
+                                    console.log('[cajas.html] Dimensiones fijas aplicadas para pallet:', selectedValue);
+                                } else if (typeof getByIdPallet === 'function') {
                                     getByIdPallet(selectedValue, function(data) {
                                         fillDimensionFields(data);
                                         console.log('[cajas.html] Dimensiones cargadas (PALLET) para:', selectedValue);
