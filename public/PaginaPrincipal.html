@@ -342,6 +342,135 @@
         </div>
     </div>
 
+    <!-- Templates para editor combinado (no usan IDs para evitar colisiones) -->
+    <template id="tplCombinedCaja">
+        <div class="combined-caja">
+            <form class="combined-edit-package-form" id="combinedEditCajaForm">
+                <div class="form-field">
+                    <label for="">Tipo embalaje *</label>
+                    <select class="combined-edit-package-type" required>
+                        <option value="">Seleccione tipo embalaje...</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="">Largo</label>
+                        <input type="text" class="combined-edit-length" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label for="">Ancho</label>
+                        <input type="text" class="combined-edit-width" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="">Alto</label>
+                        <input type="text" class="combined-edit-height" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label for="">UM</label>
+                        <input type="text" class="combined-edit-um">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="">Peso unita(kg) *</label>
+                    <input type="number" class="combined-edit-weight" min="2" max="25" step="0.1" required style="background-color:#e0f2f7;">
+                    <small style="color:#666; font-size:12px; display:block; margin-top:4px;">Debe estar entre 2kg y 25kg</small>
+                </div>
+
+                <div class="form-field">
+                    <label for="">No Embalajes *</label>
+                    <input type="number" class="combined-edit-quantity" min="1" required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary combined-save-btn">Guardar</button>
+                    <button type="button" class="btn btn-secondary combined-close-btn">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <template id="tplCombinedPallet">
+        <div class="combined-pallet">
+            <form class="combined-edit-pallet-form" id="combinedEditPalletForm">
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label>Tipo embalaje</label>
+                        <select class="combined-edit-pallet-type">
+                            <option value="PALLET">PALLET</option>
+                        </select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label>Cant.</label>
+                        <input type="number" class="combined-edit-pallet-total" min="0" readonly>
+                    </div>
+                </div>
+
+                <!-- 4 filas como en pallet.html -->
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label>Tipo embalaje</label>
+                        <select class="combined-pallet-item-select" data-index="1"><option value="">Seleccione tipo embalaje...</option></select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label>Cant.</label>
+                        <input type="number" class="combined-pallet-item-qty" data-index="1" min="0">
+                    </div>
+                </div>
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label>Tipo embalaje</label>
+                        <select class="combined-pallet-item-select" data-index="2"><option value="">Seleccione tipo embalaje...</option></select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label>Cant.</label>
+                        <input type="number" class="combined-pallet-item-qty" data-index="2" min="0">
+                    </div>
+                </div>
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label>Tipo embalaje</label>
+                        <select class="combined-pallet-item-select" data-index="3"><option value="">Seleccione tipo embalaje...</option></select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label>Cant.</label>
+                        <input type="number" class="combined-pallet-item-qty" data-index="3" min="0">
+                    </div>
+                </div>
+                <div class="pallet-row">
+                    <div class="form-field tipo-embalaje">
+                        <label>Tipo embalaje</label>
+                        <select class="combined-pallet-item-select" data-index="4"><option value="">Seleccione tipo embalaje...</option></select>
+                    </div>
+                    <div class="form-field cantidad">
+                        <label>Cant.</label>
+                        <input type="number" class="combined-pallet-item-qty" data-index="4" min="0">
+                    </div>
+                </div>
+
+                <div class="form-field wide-field">
+                    <label>Peso unita(kg) *</label>
+                    <input type="number" class="combined-edit-pallet-weight" min="2" max="25" step="0.1" required style="background-color:#e0f2f7;">
+                    <small style="color:#666; font-size:12px; display:block; margin-top:4px;">Debe estar entre 2kg y 25kg</small>
+                </div>
+
+                <div class="form-field wide-field">
+                    <label>No Embalajes *</label>
+                    <input type="number" class="combined-edit-pallet-quantity" min="1" required>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary combined-pallet-save-btn">Guardar</button>
+                    <button type="button" class="btn btn-secondary combined-pallet-close-btn">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </template>
+
     <!-- Modal de confirmación personalizado -->
     <div id="confirmModal" class="confirm-modal">
         <div class="confirm-modal-content">
@@ -387,13 +516,13 @@
             const packagesList = document.getElementById('packagesList');
             packagesList.innerHTML = '';
 
-            packages.forEach((package, index) => {
-                const packageItem = createPackageElement(package, index);
+            packages.forEach((pkg, index) => {
+                const packageItem = createPackageElement(pkg, index);
                 packagesList.appendChild(packageItem);
             });
         }
 
-        function createPackageElement(package, index) {
+        function createPackageElement(pkg, index) {
             const packageDiv = document.createElement('div');
             packageDiv.className = 'package-item';
             packageDiv.setAttribute('data-package-index', index);
@@ -404,11 +533,14 @@
             
             // Extraer las primeras letras para el icono
             let iconText = '';
-            if (package.type === 'pallet') {
-                iconText = 'Paqu'; // Para Paquete
+            if (pkg.type === 'pallet') {
+                iconText = 'Pallet';
+            } else if (pkg.type === 'combined') {
+                // Use CP for combined caja+pallet
+                iconText = 'CP';
             } else {
                 // Para cajas, usar las primeras letras del nombre
-                const words = package.packageType.split(' ');
+                const words = pkg.packageType.split(' ');
                 iconText = words.slice(0, 2).map(word => word.charAt(0)).join('');
                 if (iconText.length < 3 && words[0].length >= 3) {
                     iconText = words[0].substring(0, 4);
@@ -420,36 +552,76 @@
             const info = document.createElement('div');
             info.className = 'package-info';
             
-            if (package.type === 'pallet') {
+            if (pkg.type === 'pallet') {
                 const title = document.createElement('strong');
-                title.textContent = 'Paquete';
+                title.textContent = 'Pallet';
                 info.appendChild(title);
                 
                 const details = document.createElement('div');
                 details.innerHTML = `Cant. :${package.totalQuantity || 0}`;
                 info.appendChild(details);
+            } else if (pkg.type === 'combined') {
+                const title = document.createElement('strong');
+                title.textContent = `${pkg.caja.packageType} + Pallet`;
+                info.appendChild(title);
+
+                const details = document.createElement('div');
+                const dims = pkg.caja.dimensions || {};
+                details.innerHTML = `Dims: ${dims.length || ''} x ${dims.width || ''} x ${dims.height || ''} | Pallet Cant.: ${pkg.pallet.totalQuantity || 0}`;
+                info.appendChild(details);
             } else {
                 const title = document.createElement('strong');
-                title.textContent = package.packageType;
+                title.textContent = pkg.packageType;
                 info.appendChild(title);
                 
                 const details = document.createElement('div');
-                details.innerHTML = `Cant. :${package.quantity || 0}`;
+                details.innerHTML = `Cant. :${pkg.quantity || 0}`;
                 info.appendChild(details);
             }
 
             packageDiv.appendChild(icon);
             packageDiv.appendChild(info);
 
-            // Agregar evento de clic para editar
-            packageDiv.addEventListener('click', function() {
-                if (package.type === 'pallet') {
-                    editPallet(index, package);
-                } else {
-                    editPackage(index, package);
+            // Agregar evento de clic para editar (con logging para depuración)
+            packageDiv.addEventListener('click', function(evt) {
+                try {
+                    console.log('[packages] clicked index=', index, 'pkg=', pkg);
+                    if (pkg.type === 'pallet') {
+                        editPallet(index, pkg);
+                    } else {
+                        editPackage(index, pkg);
+                    }
+                } catch (err) {
+                    console.error('[packages] click handler error', err);
                 }
             });
             packageDiv.style.cursor = 'pointer';
+
+            // Add a visible Edit button as a fallback if clicking the card doesn't work
+            try {
+                const editBtn = document.createElement('button');
+                editBtn.type = 'button';
+                editBtn.textContent = 'Editar';
+                editBtn.style.position = 'absolute';
+                editBtn.style.top = '12px';
+                editBtn.style.right = '12px';
+                editBtn.style.padding = '6px 10px';
+                editBtn.style.fontSize = '12px';
+                editBtn.style.border = 'none';
+                editBtn.style.borderRadius = '4px';
+                editBtn.style.background = '#1976d2';
+                editBtn.style.color = 'white';
+                editBtn.style.cursor = 'pointer';
+                editBtn.addEventListener('click', function(ev) {
+                    ev.stopPropagation();
+                    try {
+                        if (pkg.type === 'pallet') editPallet(index, pkg);
+                        else editPackage(index, pkg);
+                    } catch (e) { console.error('[packages] editBtn click error', e); }
+                });
+                packageDiv.style.position = 'relative';
+                packageDiv.appendChild(editBtn);
+            } catch (e) { console.error('Error adding edit button to package card', e); }
 
             return packageDiv;
         }
@@ -528,8 +700,300 @@
 
         // Función para editar un paquete
         function editPackage(index, packageData) {
+            // If this is a combined caja+pallet record, open a combined editor
+            if (packageData && packageData.type === 'combined') {
+                showCombinedEditModal(index, packageData);
+                return;
+            }
+
             // Redirigir a la página de edición de cajas con el índice como parámetro
             window.location.href = `editorcajas.html?index=${index}`;
+        }
+
+        // Mostrar editor combinado (muestra info de la pestaña Cajas y de la pestaña Pallet)
+        function showCombinedEditModal(index, packageData) {
+            console.log('[combinedEditor] open called index=', index, 'packageData=', packageData);
+            currentEditingIndex = index;
+            currentEditingPallet = packageData.pallet || null;
+
+            const modal = document.getElementById('editPackageModal');
+            if (!modal) { console.error('[combinedEditor] editPackageModal not found in DOM'); return; }
+
+            // Ensure packing list data is loaded
+            if (!packingListData || packingListData.length === 0) {
+                console.log('[combinedEditor] packingListData empty, loading...');
+                loadPackingListData(function() { try { showCombinedEditModal(index, packageData); } catch (e) { console.error('[combinedEditor] retry error', e); } });
+                return;
+            }
+
+            // Remove any previous combined wrapper
+            const prev = document.getElementById('combinedTabsWrapper');
+            if (prev) prev.remove();
+
+            // Build a proper '.modal-content' wrapper so the cloned templates get the same background and padding
+            const wrapperContent = document.createElement('div');
+            wrapperContent.id = 'combinedTabsWrapper';
+            wrapperContent.className = 'modal-content';
+
+            // Build header (tabs)
+            const tabsInner = document.createElement('div');
+            tabsInner.className = 'combined-tabs-inner';
+            const header = document.createElement('div'); header.style.display = 'flex'; header.style.gap = '8px'; header.style.marginBottom = '12px';
+            const tabBtnCajas = document.createElement('button'); tabBtnCajas.type = 'button'; tabBtnCajas.textContent = 'Cajas'; tabBtnCajas.className = 'tab-btn active'; tabBtnCajas.style.flex='1';
+            const tabBtnPallet = document.createElement('button'); tabBtnPallet.type = 'button'; tabBtnPallet.textContent = 'Pallet'; tabBtnPallet.className = 'tab-btn'; tabBtnPallet.style.flex='1';
+            header.appendChild(tabBtnCajas); header.appendChild(tabBtnPallet);
+
+            // Create containers
+            const cajasContainer = document.createElement('div'); cajasContainer.id = 'combinedCajasContainer';
+            const palletContainer = document.createElement('div'); palletContainer.id = 'combinedPalletContainer'; palletContainer.style.display = 'none';
+
+            // Clone templates
+            const tplCaja = document.getElementById('tplCombinedCaja');
+            const tplPallet = document.getElementById('tplCombinedPallet');
+            if (!tplCaja || !tplPallet) { console.error('[combinedEditor] templates not found'); return; }
+
+            const cajaClone = tplCaja.content.cloneNode(true);
+            const palletClone = tplPallet.content.cloneNode(true);
+
+            // Append clones into containers
+            cajasContainer.appendChild(cajaClone);
+            palletContainer.appendChild(palletClone);
+
+            // Append header + containers to the wrapper content
+            tabsInner.appendChild(header);
+            tabsInner.appendChild(cajasContainer);
+            tabsInner.appendChild(palletContainer);
+            wrapperContent.appendChild(tabsInner);
+
+            // Insert wrapper after existing modal content and hide original content
+            const originalModalContent = modal.querySelector('.modal-content');
+            if (!originalModalContent) { console.error('[combinedEditor] original modal content missing'); return; }
+            originalModalContent.style.display = 'none';
+            originalModalContent.parentNode.insertBefore(wrapperContent, originalModalContent.nextSibling);
+
+            // Wire tabs
+            tabBtnCajas.addEventListener('click', function() { tabBtnCajas.classList.add('active'); tabBtnPallet.classList.remove('active'); cajasContainer.style.display=''; palletContainer.style.display='none'; });
+            tabBtnPallet.addEventListener('click', function() { tabBtnPallet.classList.add('active'); tabBtnCajas.classList.remove('active'); cajasContainer.style.display='none'; palletContainer.style.display=''; });
+
+            // Populate caja fields in the cloned form
+            try {
+                const cajaForm = cajasContainer.querySelector('.combined-edit-package-form');
+                const cajaSelect = cajaForm.querySelector('.combined-edit-package-type');
+                const cajaQty = cajaForm.querySelector('.combined-edit-quantity');
+                const cajaUM = cajaForm.querySelector('.combined-edit-um');
+                const cajaLength = cajaForm.querySelector('.combined-edit-length');
+                const cajaWidth = cajaForm.querySelector('.combined-edit-width');
+                const cajaHeight = cajaForm.querySelector('.combined-edit-height');
+                // populate select (ONLY pallet types for this specific select)
+                cajaSelect.innerHTML = '<option value="">Seleccione tipo embalaje...</option>';
+                // Fetch full packing list and filter for pallet types only (do not alter global packingListData)
+                fetch('/api/packingList')
+                    .then(resp => resp.json())
+                    .then(fullData => {
+                        if (fullData && fullData.status === 'success' && Array.isArray(fullData.value)) {
+                            const pallets = fullData.value.filter(it => {
+                                const desc = (it.Packing_Description || '').toString().toUpperCase();
+                                const code = (it.Packing_PkgCode || '').toString().toUpperCase();
+                                return desc.includes('PALLET') || code.includes('PALLET');
+                            });
+
+                            // If none detected by keyword, try items with type explicitly 'PALLET' in code or description as fallback
+                            const itemsToUse = pallets.length > 0 ? pallets : fullData.value.filter(it => (it.Packing_PkgCode || '').toString().toUpperCase() === 'PALLET');
+
+                            itemsToUse.forEach(item => {
+                                const opt = document.createElement('option');
+                                opt.value = item.Packing_PkgCode;
+                                opt.textContent = item.Packing_Description || item.Packing_PkgCode;
+                                // embed dimensions into data-* attributes so change handler can read them
+                                if (item.Packing_PkgLength) opt.dataset.length = item.Packing_PkgLength;
+                                if (item.Packing_PkgWidth) opt.dataset.width = item.Packing_PkgWidth;
+                                if (item.Packing_PkgHeight) opt.dataset.height = item.Packing_PkgHeight;
+                                if (item.Packing_Description) opt.dataset.description = item.Packing_Description;
+                                if (item.Packing_PkgCode) opt.dataset.code = item.Packing_PkgCode;
+                                if (item.Packing_PkgCode === (packageData.caja.packageCode || '') || item.Packing_Description === (packageData.caja.packageType || '')) opt.selected = true;
+                                cajaSelect.appendChild(opt);
+                            });
+
+                            // Attach change handler to autopopulate dimensions when a pallet is selected
+                            cajaSelect.addEventListener('change', function() {
+                                const sel = this.options[this.selectedIndex];
+                                if (sel) {
+                                    const l = sel.dataset.length || '';
+                                    const w = sel.dataset.width || '';
+                                    const h = sel.dataset.height || '';
+                                    const lengthEl = cajaForm.querySelector('.combined-edit-length');
+                                    const widthEl = cajaForm.querySelector('.combined-edit-width');
+                                    const heightEl = cajaForm.querySelector('.combined-edit-height');
+                                    if (lengthEl) lengthEl.value = l;
+                                    if (widthEl) widthEl.value = w;
+                                    if (heightEl) heightEl.value = h;
+                                }
+                            });
+
+                            // If packageData already had dimensions, ensure they're visible (otherwise will be set by selected option's dataset)
+                            const preSelected = cajaSelect.options[cajaSelect.selectedIndex];
+                            if (preSelected) {
+                                const l = preSelected.dataset.length || (packageData.caja.dimensions && packageData.caja.dimensions.length) || '';
+                                const w = preSelected.dataset.width || (packageData.caja.dimensions && packageData.caja.dimensions.width) || '';
+                                const h = preSelected.dataset.height || (packageData.caja.dimensions && packageData.caja.dimensions.height) || '';
+                                const lengthEl = cajaForm.querySelector('.combined-edit-length');
+                                const widthEl = cajaForm.querySelector('.combined-edit-width');
+                                const heightEl = cajaForm.querySelector('.combined-edit-height');
+                                if (lengthEl) lengthEl.value = l;
+                                if (widthEl) widthEl.value = w;
+                                if (heightEl) heightEl.value = h;
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error('[combinedEditor] error loading pallet types for select', err);
+                    });
+
+                cajaQty.value = packageData.caja.quantity || '';
+                cajaUM.value = packageData.caja.um || '';
+                const dims = packageData.caja.dimensions || {};
+                cajaLength.value = dims.length || '';
+                cajaWidth.value = dims.width || '';
+                cajaHeight.value = dims.height || '';
+
+                // Update dimensions when select changes
+                cajaSelect.addEventListener('change', function() {
+                    const selected = packingListData.find(it => it.Packing_PkgCode === this.value);
+                    if (selected) {
+                        cajaLength.value = selected.Packing_PkgLength || '';
+                        cajaWidth.value = selected.Packing_PkgWidth || '';
+                        cajaHeight.value = selected.Packing_PkgHeight || '';
+                    } else { cajaLength.value = ''; cajaWidth.value = ''; cajaHeight.value = ''; }
+                });
+
+                // Wire save/close/delete buttons for caja
+                const cajaClose = cajaForm.querySelector('.combined-close-btn');
+                const cajaDelete = cajaForm.querySelector('.combined-delete-btn');
+                cajaClose.addEventListener('click', function() { cleanupCombined(); });
+                cajaDelete.addEventListener('click', function() {
+                    showConfirmDialog('Eliminar embalaje','¿Está seguro de que desea eliminar este embalaje?', function() {
+                        const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                        savedPackages.splice(currentEditingIndex,1);
+                        localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                        loadSavedPackages();
+                        cleanupCombined();
+                        showNotification('Embalaje eliminado exitosamente','success');
+                    });
+                });
+
+                cajaForm.addEventListener('submit', function(ev) {
+                    ev.preventDefault();
+                    const sel = cajaForm.querySelector('.combined-edit-package-type');
+                    const qty = cajaForm.querySelector('.combined-edit-quantity').value;
+                    if (!sel.value || !qty) { showNotification('Por favor complete todos los campos obligatorios','error'); return; }
+                    const selectedText = sel.options[sel.selectedIndex].text;
+                    const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                    if (savedPackages[currentEditingIndex] && savedPackages[currentEditingIndex].type === 'combined') {
+                        const combined = savedPackages[currentEditingIndex];
+                        combined.caja = combined.caja || {};
+                        combined.caja.packageType = selectedText;
+                        combined.caja.packageCode = sel.value || combined.caja.packageCode;
+                        combined.caja.quantity = qty;
+                        combined.caja.um = cajaForm.querySelector('.combined-edit-um').value;
+                        combined.timestamp = new Date().toISOString();
+                        savedPackages[currentEditingIndex] = combined;
+                    } else {
+                        // fallback
+                        savedPackages[currentEditingIndex] = { ...savedPackages[currentEditingIndex], packageType: selectedText, quantity: qty, um: cajaForm.querySelector('.combined-edit-um').value, weight: cajaForm.querySelector('.combined-edit-weight').value, timestamp: new Date().toISOString() };
+                    }
+                    localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                    loadSavedPackages();
+                    cleanupCombined();
+                    showNotification('Embalaje actualizado exitosamente','success');
+                });
+            } catch (e) { console.error('[combinedEditor] error populating caja clone', e); }
+
+            // Populate pallet fields in the cloned pallet form
+            try {
+                const palletForm = palletContainer.querySelector('.combined-edit-pallet-form');
+                const palletWeight = palletForm.querySelector('.combined-edit-pallet-weight');
+                const palletQty = palletForm.querySelector('.combined-edit-pallet-quantity');
+
+                // Populate item selects with packingListData
+                const itemSelects = palletForm.querySelectorAll('.combined-pallet-item-select');
+                itemSelects.forEach(sel => {
+                    sel.innerHTML = '<option value="">Seleccione tipo embalaje...</option>';
+                    packingListData.forEach(item => {
+                        const opt = document.createElement('option'); opt.value = item.Packing_PkgCode; opt.textContent = item.Packing_Description; sel.appendChild(opt);
+                    });
+                });
+
+                // Fill values from packageData.pallet if present
+                if (packageData.pallet) {
+                    palletWeight.value = packageData.pallet.weight || '';
+                    palletQty.value = packageData.pallet.totalQuantity || '';
+                    (packageData.pallet.items || []).forEach((it, idx) => {
+                        const sel = palletForm.querySelector('.combined-pallet-item-select[data-index="' + (idx+1) + '"]');
+                        const qty = palletForm.querySelector('.combined-pallet-item-qty[data-index="' + (idx+1) + '"]');
+                        if (sel) {
+                            for (let o of sel.options) { if (o.textContent === it.type) { o.selected = true; break; } }
+                        }
+                        if (qty) qty.value = it.quantity;
+                    });
+                }
+
+                // Wire pallet form save/close
+                palletForm.addEventListener('submit', function(ev) {
+                    ev.preventDefault();
+                    // collect items
+                    const items = [];
+                    let total = 0;
+                    const rows = palletForm.querySelectorAll('.pallet-item-row');
+                    rows.forEach(row => {
+                        const sel = row.querySelector('.combined-pallet-item-select');
+                        const qtyEl = row.querySelector('.combined-pallet-item-qty');
+                        if (sel && qtyEl && sel.value && qtyEl.value && qtyEl.value > 0) {
+                            items.push({ type: sel.options[sel.selectedIndex].text, quantity: parseInt(qtyEl.value,10) });
+                            total += parseInt(qtyEl.value,10);
+                        }
+                    });
+                    if (items.length === 0) { showNotification('Por favor seleccione al menos un tipo de embalaje','error'); return; }
+
+                    const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                    if (savedPackages[currentEditingIndex] && savedPackages[currentEditingIndex].type === 'combined') {
+                        const combined = savedPackages[currentEditingIndex];
+                        combined.pallet = combined.pallet || {};
+                        combined.pallet.items = items;
+                        combined.pallet.totalQuantity = total;
+                        combined.pallet.weight = palletForm.querySelector('.combined-edit-pallet-weight').value;
+                        combined.timestamp = new Date().toISOString();
+                        savedPackages[currentEditingIndex] = combined;
+                    } else {
+                        savedPackages[currentEditingIndex] = { ...savedPackages[currentEditingIndex], items: items, totalQuantity: total, weight: palletForm.querySelector('.combined-edit-pallet-weight').value, timestamp: new Date().toISOString() };
+                    }
+                    localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+                    loadSavedPackages();
+                    cleanupCombined();
+                    showNotification('Pallet actualizado exitosamente','success');
+                });
+
+                const palletClose = palletForm.querySelector('.combined-pallet-close-btn');
+                palletClose.addEventListener('click', function() { cleanupCombined(); });
+
+            } catch (e) { console.error('[combinedEditor] error populating pallet clone', e); }
+
+            // Show modal wrapper (set modal visible)
+            modal.style.zIndex = 4000; modal.style.display = 'flex';
+
+            // cleanup function removes wrapper and shows original content again
+            function cleanupCombined() {
+                try {
+                    const w = document.getElementById('combinedTabsWrapper');
+                    if (w) w.remove();
+                    originalModalContent.style.display = '';
+                    modal.style.display = 'none';
+                } catch (e) { console.error('[combinedEditor] cleanup error', e); }
+            }
+
+            // Clicking outside should cleanup
+            modal.addEventListener('click', function onClickOutside(ev) {
+                if (ev.target === modal) { cleanupCombined(); modal.removeEventListener('click', onClickOutside); }
+            });
         }
 
         // Cargar datos del packing list
@@ -616,7 +1080,10 @@
 
             // Cerrar modal
             document.getElementById('closeEditModal').addEventListener('click', function() {
-                document.getElementById('editPackageModal').style.display = 'none';
+                const modal = document.getElementById('editPackageModal');
+                modal.style.display = 'none';
+                const existing = document.getElementById('combinedPalletInfo');
+                if (existing) existing.remove();
             });
 
             // Eliminar paquete
@@ -650,20 +1117,35 @@
                 // Actualizar el paquete
                 const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
                 const selectedText = selectElement.options[selectElement.selectedIndex].text;
-                
-                savedPackages[currentEditingIndex] = {
-                    ...savedPackages[currentEditingIndex],
-                    packageType: selectedText,
-                    quantity: quantity,
-                    um: document.getElementById('editUM').value,
-                    weight: document.getElementById('editWeight').value,
-                    timestamp: new Date().toISOString()
-                };
+
+                // If this is a combined record, update its 'caja' sub-object instead of replacing top-level fields
+                if (savedPackages[currentEditingIndex] && savedPackages[currentEditingIndex].type === 'combined') {
+                    const combined = savedPackages[currentEditingIndex];
+                    combined.caja = combined.caja || {};
+                    combined.caja.packageType = selectedText;
+                    combined.caja.packageCode = selectElement.value || combined.caja.packageCode;
+                    combined.caja.quantity = quantity;
+                    combined.caja.um = document.getElementById('editUM').value;
+                    // dimensions are read-only here; timestamp update
+                    combined.timestamp = new Date().toISOString();
+                    savedPackages[currentEditingIndex] = combined;
+                } else {
+                    savedPackages[currentEditingIndex] = {
+                        ...savedPackages[currentEditingIndex],
+                        packageType: selectedText,
+                        quantity: quantity,
+                        um: document.getElementById('editUM').value,
+                        weight: document.getElementById('editWeight').value,
+                        timestamp: new Date().toISOString()
+                    };
+                }
 
                 localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
                 loadSavedPackages();
+                const existing = document.getElementById('combinedPalletInfo');
+                if (existing) existing.remove();
                 document.getElementById('editPackageModal').style.display = 'none';
-                
+
                 showNotification('Embalaje actualizado exitosamente', 'success');
             });
 
@@ -671,10 +1153,75 @@
             document.getElementById('editPackageModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.style.display = 'none';
+                    const existing = document.getElementById('combinedPalletInfo');
+                    if (existing) existing.remove();
                 }
             });
 
             // Eventos para modal de pallet
+            // Add event delegation on the packages list so clicks always reach handler
+            try {
+                const packagesListEl = document.getElementById('packagesList');
+                if (packagesListEl) {
+                    console.log('[packages:list] element found, children=', packagesListEl.children.length);
+                    // log indices present on children
+                    Array.from(packagesListEl.children).forEach((ch, i) => {
+                        console.log('[packages:list] child', i, 'data-index=', ch.getAttribute('data-package-index'));
+                    });
+                    packagesListEl.addEventListener('click', function(ev) {
+                        try {
+                            // find closest .package-item (compatible fallback if closest is not available)
+                            let item = null;
+                            if (ev.target.closest) item = ev.target.closest('.package-item');
+                            else {
+                                let n = ev.target;
+                                while (n && n !== packagesListEl) {
+                                    if (n.classList && n.classList.contains('package-item')) { item = n; break; }
+                                    n = n.parentElement;
+                                }
+                            }
+                            if (!item) return;
+                            const idx = parseInt(item.getAttribute('data-package-index'), 10);
+                            console.log('[packages:list] delegated click index=', idx);
+                            const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                            const pkg = savedPackages[idx];
+                            if (!pkg) {
+                                console.warn('[packages:list] no package at index', idx);
+                                return;
+                            }
+                            if (pkg.type === 'pallet') editPallet(idx, pkg);
+                            else editPackage(idx, pkg);
+                        } catch (err) { console.error('[packages:list] delegated handler error', err); }
+                    });
+                    // Add a small permanent debug button to force-open the first package editor for testing
+                    try {
+                        const debugBtn = document.createElement('button');
+                        debugBtn.textContent = 'Abrir 1er registro (debug)';
+                        debugBtn.style.position = 'fixed';
+                        debugBtn.style.bottom = '16px';
+                        debugBtn.style.right = '16px';
+                        debugBtn.style.zIndex = 10000;
+                        debugBtn.style.padding = '8px 12px';
+                        debugBtn.style.background = '#00796b';
+                        debugBtn.style.color = 'white';
+                        debugBtn.style.border = 'none';
+                        debugBtn.style.borderRadius = '6px';
+                        debugBtn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+                        debugBtn.addEventListener('click', function() {
+                            const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                            if (savedPackages.length === 0) { alert('No hay registros guardados'); return; }
+                            // prefer combined or first
+                            let idx = 0;
+                            for (let i = 0; i < savedPackages.length; i++) { if (savedPackages[i].type === 'combined') { idx = i; break; } }
+                            console.log('[debugBtn] opening index=', idx, 'pkg=', savedPackages[idx]);
+                            const pkg = savedPackages[idx];
+                            if (pkg.type === 'pallet') editPallet(idx, pkg); else editPackage(idx, pkg);
+                        });
+                        document.body.appendChild(debugBtn);
+                    } catch (e) { console.error('Error adding debug open button', e); }
+                }
+            } catch (e) { console.error('[packages:list] delegation setup error', e); }
+
             setupPalletModalEvents();
         });
 
@@ -770,11 +1317,19 @@
                 
                 // Actualizar el pallet
                 const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
-                savedPackages[currentEditingIndex] = {
-                    ...savedPackages[currentEditingIndex],
-                    weight: weight,
-                    timestamp: new Date().toISOString()
-                };
+                if (savedPackages[currentEditingIndex] && savedPackages[currentEditingIndex].type === 'combined') {
+                    const combined = savedPackages[currentEditingIndex];
+                    combined.pallet = combined.pallet || {};
+                    combined.pallet.weight = weight;
+                    combined.timestamp = new Date().toISOString();
+                    savedPackages[currentEditingIndex] = combined;
+                } else {
+                    savedPackages[currentEditingIndex] = {
+                        ...savedPackages[currentEditingIndex],
+                        weight: weight,
+                        timestamp: new Date().toISOString()
+                    };
+                }
 
                 localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
                 loadSavedPackages();
@@ -821,16 +1376,26 @@
 
                 // Actualizar el pallet
                 const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
-                savedPackages[currentEditingIndex] = {
-                    ...savedPackages[currentEditingIndex],
-                    items: palletItems,
-                    totalQuantity: totalQuantity,
-                    timestamp: new Date().toISOString()
-                };
-
-                // Actualizar también el campo de cantidad en el modal principal
-                document.getElementById('editPalletQuantity').value = totalQuantity;
-                currentEditingPallet = savedPackages[currentEditingIndex];
+                if (savedPackages[currentEditingIndex] && savedPackages[currentEditingIndex].type === 'combined') {
+                    const combined = savedPackages[currentEditingIndex];
+                    combined.pallet = combined.pallet || {};
+                    combined.pallet.items = palletItems;
+                    combined.pallet.totalQuantity = totalQuantity;
+                    combined.timestamp = new Date().toISOString();
+                    savedPackages[currentEditingIndex] = combined;
+                    // Update modal main quantity
+                    document.getElementById('editPalletQuantity').value = totalQuantity;
+                    currentEditingPallet = combined.pallet;
+                } else {
+                    savedPackages[currentEditingIndex] = {
+                        ...savedPackages[currentEditingIndex],
+                        items: palletItems,
+                        totalQuantity: totalQuantity,
+                        timestamp: new Date().toISOString()
+                    };
+                    document.getElementById('editPalletQuantity').value = totalQuantity;
+                    currentEditingPallet = savedPackages[currentEditingIndex];
+                }
 
                 localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
                 loadSavedPackages();

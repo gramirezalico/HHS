@@ -480,8 +480,8 @@
                     }
                     
                     if (palletItems.length > 0) {
-                        // Crear objeto con los datos a guardar
-                        const packageData = {
+                        // Crear objeto con los datos a guardar (pallet part)
+                        const palletPart = {
                             type: 'pallet',
                             items: palletItems,
                             weight: weight,
@@ -489,20 +489,58 @@
                             totalQuantity: totalQuantity,
                             timestamp: new Date().toISOString()
                         };
-                        
-                        // Guardar en localStorage
+
+                        // If there's a pending caja->pallet marker from cajas.html, merge into a single record
+                        const markerRaw = localStorage.getItem('pendingPalletSelection');
+                        if (markerRaw) {
+                            try {
+                                const marker = JSON.parse(markerRaw);
+                                const combined = {
+                                    type: 'combined',
+                                    caja: {
+                                        packageCode: marker.packageCode,
+                                        packageType: marker.packageType,
+                                        dimensions: marker.dimensions,
+                                        um: marker.um || ''
+                                    },
+                                    pallet: palletPart,
+                                    timestamp: new Date().toISOString()
+                                };
+
+                                const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
+                                savedPackages.push(combined);
+                                localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
+
+                                // cleanup marker
+                                localStorage.removeItem('pendingPalletSelection');
+                                console.log('[pallet.html] Saved combined caja+pallet record:', combined);
+
+                                // Notify and redirect
+                                localStorage.setItem('pendingNotification', JSON.stringify({
+                                    message: 'Pallet (combinado) guardado exitosamente',
+                                    type: 'success'
+                                }));
+                                window.location.href = 'PaginaPrincipal.html';
+                                return;
+                            } catch (e) {
+                                console.error('Error parsing pendingPalletSelection marker:', e);
+                                // fallback to regular save below
+                            }
+                        }
+
+                        // No marker: save pallet-only as before
                         const savedPackages = JSON.parse(localStorage.getItem('savedPackages')) || [];
-                        savedPackages.push(packageData);
+                        savedPackages.push(palletPart);
                         localStorage.setItem('savedPackages', JSON.stringify(savedPackages));
-                        
-                        console.log('[pallet.html] Pallet guardado:', packageData);
-                        
+
+                        console.log('[pallet.html] Pallet guardado:', palletPart);
+
                         // Guardar notificación pendiente para mostrar en la página principal
                         localStorage.setItem('pendingNotification', JSON.stringify({
                             message: 'Pallet guardado exitosamente',
                             type: 'success'
                         }));
-                        
+
                         // Redirigir a página principal
                         window.location.href = 'PaginaPrincipal.html';
                     } else {
