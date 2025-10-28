@@ -108,15 +108,73 @@
             if (cajaSelect) {
                 cajaSelect.onchange = function(event) {
                     let selectedValue = event.target.value;
-                    if (typeof getById === 'function') {
-                        getById(selectedValue, function(data) {
-                            let length = document.getElementById('length');
-                            let width = document.getElementById('width');
-                            let height = document.getElementById('height');
-                            if (length && data) length.value = data['Packing_PkgLength'] || '';
-                            if (width && data) width.value = data['Packing_PkgWidth'] || '';
-                            if (height && data) height.value = data['Packing_PkgHeight'] || '';
-                        });
+                    let selectedOption = event.target.options[event.target.selectedIndex];
+                    let type = selectedOption ? selectedOption.dataset.type : null;
+
+                    if (selectedValue && selectedValue !== '') {
+                        if (type === 'CAJA') {
+                            if (typeof getById === 'function') {
+                                getById(selectedValue, function(data) {
+                                    let length = document.getElementById('length');
+                                    let width = document.getElementById('width');
+                                    let height = document.getElementById('height');
+                                    if (length && data) length.value = data['Packing_PkgLength'] || '';
+                                    if (width && data) width.value = data['Packing_PkgWidth'] || '';
+                                    if (height && data) height.value = data['Packing_PkgHeight'] || '';
+                                });
+                            }
+                        } else if (type === 'PALLET') {
+                            if (typeof getByIdPallet === 'function') {
+                                getByIdPallet(selectedValue, function(data) {
+                                    let length = document.getElementById('length');
+                                    let width = document.getElementById('width');
+                                    let height = document.getElementById('height');
+                                    if (length && data) length.value = data['Packing_PkgLength'] || '';
+                                    if (width && data) width.value = data['Packing_PkgWidth'] || '';
+                                    if (height && data) height.value = data['Packing_PkgHeight'] || '';
+                                });
+                            }
+                        } else {
+                            // fallback: try caja then pallet
+                            if (typeof getById === 'function') {
+                                getById(selectedValue, function(data) {
+                                    if (data) {
+                                        let length = document.getElementById('length');
+                                        let width = document.getElementById('width');
+                                        let height = document.getElementById('height');
+                                        if (length && data) length.value = data['Packing_PkgLength'] || '';
+                                        if (width && data) width.value = data['Packing_PkgWidth'] || '';
+                                        if (height && data) height.value = data['Packing_PkgHeight'] || '';
+                                    } else if (typeof getByIdPallet === 'function') {
+                                        getByIdPallet(selectedValue, function(dataP) {
+                                            let length = document.getElementById('length');
+                                            let width = document.getElementById('width');
+                                            let height = document.getElementById('height');
+                                            if (length && dataP) length.value = dataP['Packing_PkgLength'] || '';
+                                            if (width && dataP) width.value = dataP['Packing_PkgWidth'] || '';
+                                            if (height && dataP) height.value = dataP['Packing_PkgHeight'] || '';
+                                        });
+                                    }
+                                });
+                            } else if (typeof getByIdPallet === 'function') {
+                                getByIdPallet(selectedValue, function(dataP) {
+                                    let length = document.getElementById('length');
+                                    let width = document.getElementById('width');
+                                    let height = document.getElementById('height');
+                                    if (length && dataP) length.value = dataP['Packing_PkgLength'] || '';
+                                    if (width && dataP) width.value = dataP['Packing_PkgWidth'] || '';
+                                    if (height && dataP) height.value = dataP['Packing_PkgHeight'] || '';
+                                });
+                            }
+                        }
+                    } else {
+                        // clear
+                        let length = document.getElementById('length');
+                        let width = document.getElementById('width');
+                        let height = document.getElementById('height');
+                        if (length) length.value = '';
+                        if (width) width.value = '';
+                        if (height) height.value = '';
                     }
                 };
                 console.log('[hh.js] Cajas select event listener configured');

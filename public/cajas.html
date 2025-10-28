@@ -369,22 +369,51 @@
                 if (cajaSelect) {
                     // Limpiar campos al inicio si no hay selección
                     clearDimensionFields();
+
+                    // Limpiar campos al inicio si no hay selección
+                    clearDimensionFields();
                     
                     cajaSelect.onchange = function(event) {
                         let selectedValue = event.target.value;
-                        
+                        let selectedOption = event.target.options[event.target.selectedIndex];
+                        let type = selectedOption ? selectedOption.dataset.type : null;
+
                         if (selectedValue && selectedValue !== '') {
-                            // Si se selecciona una opción válida, cargar dimensiones
-                            if (typeof getById === 'function') {
-                                getById(selectedValue, function(data) {
-                                    let length = document.getElementById('length');
-                                    let width = document.getElementById('width');
-                                    let height = document.getElementById('height');
-                                    if (length && data) length.value = data['Packing_PkgLength'] || '';
-                                    if (width && data) width.value = data['Packing_PkgWidth'] || '';
-                                    if (height && data) height.value = data['Packing_PkgHeight'] || '';
-                                    console.log('[cajas.html] Dimensiones cargadas para:', selectedValue);
-                                });
+                            // Si es CAJA, usar getById; si es PALLET, usar getByIdPallet. Si no se sabe, probar getById y fallback a getByIdPallet.
+                            if (type === 'CAJA') {
+                                if (typeof getById === 'function') {
+                                    getById(selectedValue, function(data) {
+                                        fillDimensionFields(data);
+                                        console.log('[cajas.html] Dimensiones cargadas (CAJA) para:', selectedValue);
+                                    });
+                                }
+                            } else if (type === 'PALLET') {
+                                if (typeof getByIdPallet === 'function') {
+                                    getByIdPallet(selectedValue, function(data) {
+                                        fillDimensionFields(data);
+                                        console.log('[cajas.html] Dimensiones cargadas (PALLET) para:', selectedValue);
+                                    });
+                                }
+                            } else {
+                                // Fallback: intentar caja, luego pallet
+                                if (typeof getById === 'function') {
+                                    getById(selectedValue, function(data) {
+                                        if (data) {
+                                            fillDimensionFields(data);
+                                            console.log('[cajas.html] Dimensiones cargadas (fallback CAJA) para:', selectedValue);
+                                        } else if (typeof getByIdPallet === 'function') {
+                                            getByIdPallet(selectedValue, function(dataP) {
+                                                fillDimensionFields(dataP);
+                                                console.log('[cajas.html] Dimensiones cargadas (fallback PALLET) para:', selectedValue);
+                                            });
+                                        }
+                                    });
+                                } else if (typeof getByIdPallet === 'function') {
+                                    getByIdPallet(selectedValue, function(dataP) {
+                                        fillDimensionFields(dataP);
+                                        console.log('[cajas.html] Dimensiones cargadas (fallback PALLET only) para:', selectedValue);
+                                    });
+                                }
                             }
                         } else {
                             // Si se selecciona "Seleccione tipo embalaje...", limpiar campos
@@ -393,6 +422,31 @@
                         }
                     };
                     console.log('[cajas.html] Select event listener configured');
+                    // Ensure fixed pallet options appear at the top of the select so user sees them
+                    try {
+                        const fixedTop = [
+                            { label: 'PALLET', value: 'PALLET' },
+                            { label: 'PALLET GRANDE', value: 'PALLET-G' },
+                            { label: 'PALLET MEDIANO', value: 'PALLET-M' },
+                            { label: 'PALLET PEQUEÑO', value: 'PALLET-P' }
+                        ];
+                        // Insert after the default option
+                        fixedTop.reverse().forEach(f => {
+                            if (!cajaSelect.querySelector(`option[value="${f.value}"]`)) {
+                                const opt = document.createElement('option');
+                                opt.value = f.value;
+                                opt.textContent = f.label;
+                                opt.dataset.type = 'PALLET';
+                                // insert after the first child (default)
+                                if (cajaSelect.children.length > 0) {
+                                    cajaSelect.insertBefore(opt, cajaSelect.children[1] || null);
+                                } else {
+                                    cajaSelect.appendChild(opt);
+                                }
+                                console.log('[cajas.html] Inserted fixed pallet at top:', f.label);
+                            }
+                        });
+                    } catch (e) { console.error('Error inserting fixed pallets:', e); }
                 }
             }
             
@@ -404,6 +458,15 @@
                 if (length) length.value = '';
                 if (width) width.value = '';
                 if (height) height.value = '';
+            }
+
+            function fillDimensionFields(data) {
+                let length = document.getElementById('length');
+                let width = document.getElementById('width');
+                let height = document.getElementById('height');
+                if (length && data) length.value = data['Packing_PkgLength'] || '';
+                if (width && data) width.value = data['Packing_PkgWidth'] || '';
+                if (height && data) height.value = data['Packing_PkgHeight'] || '';
             }
         });
     </script>
