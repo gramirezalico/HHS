@@ -46,6 +46,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Alias de login para compatibilidad
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Ruta para la aplicación HH
 app.get('/hh', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'HH.html'));
