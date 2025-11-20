@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             const base = (window.APP_BASE||'').replace(/\/?$/, '/');
-            const response = await fetch(base + 'api/login', {
+            const response = await fetch(base + './api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('userName', data.EmpBasic_Name);
                 setTimeout(() => {
                     message.textContent = ''; // Limpiar mensaje después de 2 segundos
-                    window.location.href = '/hh'; // Redirigir a la aplicación HH
+                    window.location.href = './CrearCaja'; // Redirigir a la aplicación HH
                 }, 2000);
             } else {
                 message.textContent = 'Error al iniciar sesión. Inténtalo de nuevo.';

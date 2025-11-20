@@ -55,6 +55,11 @@ app.get('/login', (req, res) => {
 app.get('/hh', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'HH.html'));
 });
+
+// Ruta para la aplicación HH
+app.get('/CrearCaja', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'CrearCaja.html'));
+});
 // API endpoints para futuras funcionalidades
 app.get('/api/status', (req, res) => {
     res.json({

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('userId', data.EmpBasic_EmpID);
         localStorage.setItem('userName', data.EmpBasic_Name);
         msg.textContent=`Bienvenido, ${data.EmpBasic_EmpID}`;
-        setTimeout(()=>{ window.location.href='/hh'; }, 800);
+        setTimeout(()=>{ window.location.href='./CrearCaja'; }, 800);
       } else { msg.textContent='Error al iniciar sesión.'; }
     } catch(err){ console.error(err); msg.textContent='Error al iniciar sesión.'; }
   });
