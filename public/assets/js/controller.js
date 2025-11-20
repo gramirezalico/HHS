@@ -1,6 +1,7 @@
 function T() {
 
-    fetch('/api/packingList', {
+    const base = (window.APP_BASE||'').replace(/\/?$/, '/');
+    fetch(base + 'api/packingList', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

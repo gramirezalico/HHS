@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 message.textContent = 'Por favor, ingresa tu ID de empleado.';
                 return;
             }
-            const response = await fetch('/api/login', {
+            const base = (window.APP_BASE||'').replace(/\/?$/, '/');
+            const response = await fetch(base + 'api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

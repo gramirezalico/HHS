@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración de cajas</title>
     <!-- Restaurar estilos -->
-    <link rel="stylesheet" href="HH.css">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="./HH.css">
+    <link rel="stylesheet" href="./main.css">
 </head>
 <body>
     <div class="container">
@@ -297,52 +297,105 @@
 import { initDB, getAllData, addEntry } from './assets/js/modules/db.js';
 import { populateSelect, renderEntries, wireEntryDeletion } from './assets/js/modules/ui.js';
 
+// LISTA y borrado
 const packagesList = document.getElementById('packagesList');
 wireEntryDeletion(packagesList);
 
-let userName = localStorage.getItem('userName');
+// Usuario
+const userName = localStorage.getItem('userName');
 if (userName) document.getElementById('userName').textContent = userName;
 
-let dbReady = initDB().then(()=>{
-    // Load data
+// Inicializar DB y cargar catálogo de cajas
+initDB().then(()=>{
     getAllData().then(data=>{
         if(!data.length){
-            fetch('/api/packingList').then(r=>r.json()).then(api=>{
+            fetch('./api/packingList').then(r=>r.json()).then(api=>{
                 if(api.status==='success'){
                     api.value.forEach(item=>{ if(item.Packing_Description.includes('CAJA')) addEntry({kind:'CATALOGO', pkgCode:item.Packing_PkgCode}); });
                     populateSelect(document.getElementById('packagingTypeList1'), api.value.filter(i=>i.Packing_Description.includes('CAJA')));
+                    // Popular selects de pallet
+                    document.querySelectorAll('#tabPalletContent .pallet-caja-select').forEach(sel=>{
+                        populateSelect(sel, api.value.filter(i=>i.Packing_Description.includes('CAJA')));
+                    });
                 }
             });
         } else {
             populateSelect(document.getElementById('packagingTypeList1'), data);
+            document.querySelectorAll('#tabPalletContent .pallet-caja-select').forEach(sel=>populateSelect(sel, data));
         }
     });
     renderEntries(packagesList);
 });
 
-// Open modal
+// Modal manejadores
 const addPackagingModal = document.getElementById('addPackagingModal');
 document.querySelector('.btn-add').addEventListener('click',()=>{ addPackagingModal.style.display='flex'; });
 document.querySelector('.btn-close-packaging-modal').addEventListener('click',()=>{ addPackagingModal.style.display='none'; });
 
-const selectCaja = document.getElementById('packagingTypeList1');
-selectCaja.addEventListener('change', e=>{
-    // length/width/height would come from catalog; placeholder logic
-});
+// Tabs
+const tabBtnCajas = document.getElementById('tabCajas');
+const tabBtnPallet = document.getElementById('tabPallet');
+const tabCajasContent = document.getElementById('tabCajasContent');
+const tabPalletContent = document.getElementById('tabPalletContent');
 
+function activateTab(kind){
+    if(kind==='Cajas'){
+        tabBtnCajas.classList.add('active');
+        tabBtnPallet.classList.remove('active');
+        tabCajasContent.style.display='block';
+        tabPalletContent.style.display='none';
+    } else {
+        tabBtnPallet.classList.add('active');
+        tabBtnCajas.classList.remove('active');
+        tabPalletContent.style.display='block';
+        tabCajasContent.style.display='none';
+    }
+}
+tabBtnCajas.addEventListener('click',()=>activateTab('Cajas'));
+tabBtnPallet.addEventListener('click',()=>activateTab('Pallet'));
+
+// Select caja principal (cajas tab)
+const selectCaja = document.getElementById('packagingTypeList1');
+selectCaja.addEventListener('change', ()=>{/* Placeholder para futura lógica de dimensiones */});
+
+// Submit único que decide según tab activo
 document.getElementById('packagingForm').addEventListener('submit', e=>{
     e.preventDefault();
-    const pkgCode = selectCaja.value;
-    const length = Number(document.getElementById('length').value)||0;
-    const width = Number(document.getElementById('width').value)||0;
-    const height = Number(document.getElementById('height').value)||0;
-    const unitWeight = Number(document.getElementById('unitWeight').value)||0;
-    const numPackages = Number(document.getElementById('numPackages').value)||0;
-    if(!pkgCode){ alert('Seleccione caja'); return; }
-    addEntry({kind:'CAJA', pkgCode, length,width,height,unitWeight,numPackages});
+    const isPallet = tabPalletContent.style.display==='block';
+    if(!isPallet){
+        // Guardar CAJA
+        const pkgCode = selectCaja.value;
+        if(!pkgCode){ alert('Seleccione caja'); return; }
+        const length = Number(document.getElementById('length').value.replace(',', '.'))||0;
+        const width = Number(document.getElementById('width').value.replace(',', '.'))||0;
+        const height = Number(document.getElementById('height').value.replace(',', '.'))||0;
+        const unitWeight = Number(document.getElementById('unitWeight').value.replace(',', '.'))||0;
+        const numPackages = Number(document.getElementById('numPackages').value.replace(',', '.'))||0;
+        addEntry({kind:'CAJA', pkgCode, length,width,height,unitWeight,numPackages});
+    } else {
+        // Guardar PALLET
+        const palletType = (document.querySelector('input[name="palletType"]:checked')||{}).value || '';
+        if(!palletType){ alert('Seleccione tipo de pallet'); return; }
+        const palletTotalWeight = Number(document.getElementById('palletTotalWeight').value.replace(',', '.'))||0;
+        const boxData = [];
+        // Recorre filas pallet: select seguido de input number
+        const rows = tabPalletContent.querySelectorAll('.form-row');
+        rows.forEach(r=>{
+            const sel = r.querySelector('.pallet-caja-select');
+            const qtyInput = r.querySelector('input.number-input');
+            if(sel && qtyInput){
+                const code = sel.value;
+                const qty = Number(qtyInput.value)||0;
+                if(code && qty>0) boxData.push({pkgCode:code, qty});
+            }
+        });
+        if(!boxData.length){ alert('Agregue al menos una caja con cantidad'); return; }
+        addEntry({kind:'PALLET', palletType, palletTotalWeight, boxes: boxData, pkgCodes: boxData.map(b=>b.pkgCode)});
+    }
     addPackagingModal.style.display='none';
     renderEntries(packagesList);
     e.target.reset();
+    activateTab('Cajas');
 });
 </script>
 </body>

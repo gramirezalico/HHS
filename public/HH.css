@@ -1,36 +1,14 @@
 /* Reseteo básico y box-sizing para responsividad */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, sans-serif; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; font-size: 16px; }
-/* Contenedor principal */
-.login-container, .form-container, .container { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 2em; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 90%; max-width: 450px; text-align: center; position: relative; }
-h1 { font-size: 1.8em; color: #333; margin-bottom: 1.5em; }
-.form-group { margin-bottom: 1.2em; text-align: left; }
-.form-group label, .form-column label, .form-full-width label, .custom-select-wrapper .label { display: block; margin-bottom: 0.5em; font-size: 0.9em; color: #555; }
-.form-group input, .form-column input, .form-full-width input { width: 100%; padding: 0.8em; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
-.btn { padding: 0.5em 1em; border: none; border-radius: 3px; cursor: pointer; font-size: 0.9em; color: #fff; background-color: #007bff; flex-grow: 1; min-width: 80px; }
-.btn:hover { background-color: #0056b3; }
-.button-group { display: flex; justify-content: center; gap: 0.5em; margin-bottom: 1em; flex-wrap: wrap; }
-/* Modal */
-.modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color: rgba(0,0,0,0.4); justify-content:center; align-items:center; padding:10px; }
-.modal-content { background:#fefefe; margin:auto; padding:1.2em; border:1px solid #888; width:90%; max-width:450px; border-radius:5px; box-shadow:0 4px 8px rgba(0,0,0,.2); position:relative; display:flex; flex-direction:column; }
-.modal-content h2 { font-size:1.3em; margin:0 0 1em; color:#333; text-align:center; }
-.order-info { font-size:.85em; color:#555; margin-bottom:1em; text-align:center; }
-.form-row { display:flex; gap:0.5em; margin-bottom:0.8em; flex-wrap:wrap; }
-.form-row .form-group { margin-bottom:0; flex-basis:48%; flex-grow:1; min-width:140px; }
-.number-input, .text-input { flex-grow:1; padding:0.4em; border:1px solid #ccc; border-radius:3px; font-size:0.9em; }
-.number-input { text-align:right; }
-.wide-input { width:auto; }
-.modal-button-group { display:flex; justify-content:center; gap:0.5em; margin-top:1.5em; flex-wrap:wrap; }
-.status { font-size:0.8em; color:#555; text-align:center; margin-top:1em; }
-/* Lista paquetes */
-.packages-list { margin-top:1.5em; display:flex; flex-direction:column; gap:0.8em; align-items:flex-start; width:100%; }
-.package-item { display:flex; align-items:center; gap:0.8em; padding:0.6em; background:#fcfcfc; border:1px solid #eee; border-radius:5px; width:100%; cursor:pointer; transition:background-color .2s ease; }
-.package-item:hover { background:#eaf6ff; }
-.package-icon { width:3.5em; height:3.5em; background:#008080; color:#fff; display:flex; justify-content:center; align-items:center; font-size:1.1em; font-weight:bold; border-radius:3px; flex-shrink:0; }
-.package-info { text-align:left; font-size:0.9em; color:#333; flex-grow:1; word-break:break-word; }
-.package-info strong { display:block; font-size:1.1em; color:#222; margin-bottom:0.2em; }
-/* Responsive pequeños */
-@media (max-width:480px){ body{ padding:10px; font-size:14px; } .login-container,.form-container,.container{ padding:1.5em; width:95%; } h1{ font-size:1.5em; margin-bottom:1em; } }
-@media (max-width:360px){ .form-row{ flex-direction:column; gap:0.5em; } .form-row .form-group{ flex-basis:100%; min-width:unset; } }
-@media (min-width:768px){ .container{ max-width:500px; } .modal-content{ max-width:550px; } }
-@media (min-width:1200px){ body{ font-size:18px; } .container{ max-width:600px; } .modal-content{ max-width:650px; } h1{ font-size:2em; } .btn{ padding:0.6em 1.2em; font-size:1em; } .package-icon{ width:4.5em; height:4.5em; font-size:1.3em; } }
+/* OPTIMIZED: delegate most styles to main.css design system */
+* { box-sizing: border-box; }
+body { font: inherit; }
+/* Specific overrides for HH screen if needed */
+.container { animation: fadeIn .4s ease; }
+.packages-list { list-style:none; padding:0; }
+.packages-list li { display:flex; align-items:center; gap:12px; background:var(--color-surface); border:1px solid var(--color-border); padding:10px 14px; border-radius:var(--radius-md); position:relative; }
+.packages-list li strong { font-weight:600; color:var(--color-text-strong); }
+.packages-list li:hover { background:linear-gradient(90deg,#f8fafc,#eef2f7); }
+.packages-list li button.delEntry { position:absolute; top:6px; right:6px; }
+/* Pallet form rows: tighten spacing */
+#tabPalletContent .form-row { margin-bottom:14px; }
+@media (max-width:640px){ .packages-list li{ flex-direction:column; align-items:flex-start; } }
