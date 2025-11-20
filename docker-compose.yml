@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  hhs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hhs
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # Descomenta para desarrollo con autoreload (requiere cambiar Dockerfile)
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+
+# Opcional: definir red explícita
+# networks:
+#   default:
+#     name: hhs_net

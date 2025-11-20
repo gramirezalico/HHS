@@ -1,0 +1,25 @@
+# Dependencias locales
+node_modules
+other/HHS/node_modules
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Control de versiones
+.git
+.gitignore
+
+# Sistemas operativos
+.DS_Store
+Thumbs.db
+
+# Archivos de construcción temporales
+package-lock.json
+
+# Docker
+Dockerfile.old
+
+# Otros
+*.swp
