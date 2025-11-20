@@ -289,6 +289,59 @@
     </div>
 
     <button id="miBoton">Contar Registros</button>
-    <script type="module" src=".assets/js/main-hh.js"></script>
+    <!-- Limpieza: removido script obsoleto main-hh.js -->
+    
+<script type="module">
+import { initDB, getAllData, addEntry } from './assets/js/modules/db.js';
+import { populateSelect, renderEntries, wireEntryDeletion } from './assets/js/modules/ui.js';
+
+const packagesList = document.getElementById('packagesList');
+wireEntryDeletion(packagesList);
+
+let userName = localStorage.getItem('userName');
+if (userName) document.getElementById('userName').textContent = userName;
+
+let dbReady = initDB().then(()=>{
+    // Load data
+    getAllData().then(data=>{
+        if(!data.length){
+            fetch('/api/packingList').then(r=>r.json()).then(api=>{
+                if(api.status==='success'){
+                    api.value.forEach(item=>{ if(item.Packing_Description.includes('CAJA')) addEntry({kind:'CATALOGO', pkgCode:item.Packing_PkgCode}); });
+                    populateSelect(document.getElementById('packagingTypeList1'), api.value.filter(i=>i.Packing_Description.includes('CAJA')));
+                }
+            });
+        } else {
+            populateSelect(document.getElementById('packagingTypeList1'), data);
+        }
+    });
+    renderEntries(packagesList);
+});
+
+// Open modal
+const addPackagingModal = document.getElementById('addPackagingModal');
+document.querySelector('.btn-add').addEventListener('click',()=>{ addPackagingModal.style.display='flex'; });
+document.querySelector('.btn-close-packaging-modal').addEventListener('click',()=>{ addPackagingModal.style.display='none'; });
+
+const selectCaja = document.getElementById('packagingTypeList1');
+selectCaja.addEventListener('change', e=>{
+    // length/width/height would come from catalog; placeholder logic
+});
+
+document.getElementById('packagingForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const pkgCode = selectCaja.value;
+    const length = Number(document.getElementById('length').value)||0;
+    const width = Number(document.getElementById('width').value)||0;
+    const height = Number(document.getElementById('height').value)||0;
+    const unitWeight = Number(document.getElementById('unitWeight').value)||0;
+    const numPackages = Number(document.getElementById('numPackages').value)||0;
+    if(!pkgCode){ alert('Seleccione caja'); return; }
+    addEntry({kind:'CAJA', pkgCode, length,width,height,unitWeight,numPackages});
+    addPackagingModal.style.display='none';
+    renderEntries(packagesList);
+    e.target.reset();
+});
+</script>
 </body>
 </html>
