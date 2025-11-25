@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   redirect: "follow"
                 };
 
-                const response = await fetch("/api/getCaja", requestOptions);
+                const response = await fetch("./api/getCaja", requestOptions);
                 const result = await response.json();
 
                 if (result && result.ordersArray && Array.isArray(result.ordersArray)) {

@@ -17,11 +17,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                   redirect: "follow"
                 };
 
-                const response = await fetch("/api/getCaja", requestOptions);
+                const response = await fetch("./api/getCaja", requestOptions);
                 const result = await response.json();
 
-                if (Array.isArray(result) && result.length > 0) {
-                    window.location.href = `/EditCajas?orden=${ordenParam}&EmpId=${empIdParam}`;
+                if (Object.keys(result).length > 0) {
+                    const newUrl = new URL("EditCajas", window.location.href);
+                    newUrl.search = window.location.search;
+                    window.location.href = newUrl.toString();
                     return;
                 }
             } catch (error) {
