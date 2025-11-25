@@ -89,41 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function updatePalletWeight() {
-        const itemCards = document.querySelectorAll('.item-card');
-        let totalBoxWeight = 0;
-        const palletInputs = [];
-
-        // 1. Calcular peso total de las cajas
-        itemCards.forEach(card => {
-            const select = card.querySelector('.item-select select');
-            if (!select || !select.value) return;
-
-            const itemData = JSON.parse(select.options[select.selectedIndex].dataset.item);
-            const isPallet = itemData.Packing_Description.toLowerCase().includes('pallet');
-            
-            const inputs = card.querySelectorAll('.input-box input');
-            const qty = parseFloat(inputs[0].value) || 0;
-            const weight = parseFloat(inputs[1].value) || 0;
-
-            if (isPallet) {
-                // Guardamos referencia al input de peso del pallet para actualizarlo luego
-                palletInputs.push(inputs[1]);
-            } else {
-                // Es una caja: Sumamos (Cantidad * Peso Unitario)
-                totalBoxWeight += (qty * weight);
-            }
-        });
-
-        // 2. Actualizar todos los pallets con el peso total calculado
-        palletInputs.forEach(input => {
-            input.value = totalBoxWeight.toFixed(2); // 2 decimales
-            
-            // Opcional: Efecto visual para mostrar que se actualizó
-            input.style.backgroundColor = '#dcfce7'; // Verde muy suave
-            setTimeout(() => {
-                input.style.backgroundColor = '#e5e7eb'; // Volver al gris original
-            }, 500);
-        });
+        // Funcionalidad de suma automática deshabilitada
     }
 
     function addItemToList(selectedOption, tipoEmpaque) {   
@@ -192,7 +158,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (codeEl) codeEl.textContent = data.Packing_PkgCode || 'N/A';
         if (widthEl) widthEl.textContent = `ANCHO ${data.Packing_PkgWidth || 'N/A'} CM`;
         if (lengthEl) lengthEl.textContent = `LARGO ${data.Packing_PkgLength || 'N/A'} CM`;
-        if (heightEl) heightEl.textContent = `PROFUNDO ${data.Packing_PkgHeight || 'N/A'} CM`;
+        if (heightEl) heightEl.textContent = `ALTO ${data.Packing_PkgHeight || 'N/A'} CM`;
         if (weightInput) weightInput.value = data.Packing_PkgWeight || 0;
     }
 

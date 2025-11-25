@@ -8,10 +8,10 @@
 
 :root {
     --border-color: #1e1f24;
-    --panel-bg: #ecf4ee;
-    --panel-bg-strong: #f7faf7;
+    --panel-bg: #eff6ff;
+    --panel-bg-strong: #f8fafc;
     --shadow-soft: 0 16px 28px rgba(16, 24, 40, 0.12);
-    --accent-caja: #22c55e;
+    --accent-caja: #2563eb;
     --accent-pallet: #0ea5e9;
     --accent-otro: #f97316;
     --font-heading: "Bebas Neue", sans-serif;
@@ -20,24 +20,24 @@
 
 body {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f0f5ef 0%, #dfe8e1 100%);
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
     font-family: var(--font-body);
     color: #1f2937;
     line-height: 1.6;
-    padding: 24px 16px;
+    padding: 12px 8px;
 }
 
 .main-container {
-    max-width: 960px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 40px 48px 48px;
+    padding: 20px 24px 24px;
     background: var(--panel-bg-strong);
-    border: 4px solid var(--border-color);
-    border-radius: 24px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
     box-shadow: var(--shadow-soft);
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 16px;
 }
 
 .header {
@@ -51,25 +51,25 @@ body {
 
 .header h1 {
     font-family: var(--font-heading);
-    font-size: 3.2rem;
-    letter-spacing: 0.4rem;
+    font-size: 1.6rem;
+    letter-spacing: 0.2rem;
     color: var(--border-color);
 }
 
 .tipo-empaque-container {
     display: flex;
-    gap: 24px;
+    gap: 12px;
     justify-content: space-between;
-    padding: 28px;
-    border: 4px solid var(--border-color);
-    border-radius: 20px;
-    background: #eaf4eb;
+    padding: 14px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    background: #eef2ff;
 }
 
 .tipo-card {
     position: relative;
     flex: 1;
-    max-width: 220px;
+    max-width: 110px;
     display: flex;
     justify-content: center;
     text-align: center;
@@ -85,29 +85,29 @@ body {
 
 .card-content {
     width: 100%;
-    min-height: 150px;
-    padding: 18px 20px;
-    border-radius: 18px;
-    border: 3px solid var(--border-color);
+    min-height: 75px;
+    padding: 9px 10px;
+    border-radius: 9px;
+    border: 2px solid var(--border-color);
     background: #fdfdfd;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 8px;
     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    box-shadow: inset 0 -6px 0 rgba(15, 23, 42, 0.08);
+    box-shadow: inset 0 -3px 0 rgba(15, 23, 42, 0.08);
 }
 
 .tipo-card:hover .card-content {
-    transform: translateY(-4px);
-    box-shadow: inset 0 -6px 0 rgba(15, 23, 42, 0.08), 0 10px 22px rgba(15, 23, 42, 0.12);
+    transform: translateY(-2px);
+    box-shadow: inset 0 -3px 0 rgba(15, 23, 42, 0.08), 0 5px 11px rgba(15, 23, 42, 0.12);
 }
 
 .card-label {
     font-family: var(--font-heading);
-    font-size: 1.8rem;
-    letter-spacing: 0.18rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.09rem;
     color: var(--border-color);
 }
 
@@ -118,23 +118,23 @@ body {
 .icon-container::after {
     content: "";
     position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 20px;
-    height: 20px;
+    top: -3px;
+    right: -3px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    border: 2px solid var(--border-color);
+    border: 1px solid var(--border-color);
     background: #ffffff;
-    box-shadow: inset 0 -2px 0 rgba(15, 23, 42, 0.15);
+    box-shadow: inset 0 -1px 0 rgba(15, 23, 42, 0.15);
 }
 
 .icon {
-    width: 86px;
-    height: 86px;
-    border-radius: 20px;
-    border: 3px solid var(--border-color);
+    width: 43px;
+    height: 43px;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
     background-color: #ffffff;
-    box-shadow: inset 0 -8px 0 rgba(15, 23, 42, 0.08);
+    box-shadow: inset 0 -4px 0 rgba(15, 23, 42, 0.08);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 68%;
@@ -160,7 +160,7 @@ body {
 .tipo-card[data-tipo="cajas"] input[type="radio"]:checked + .card-content {
     background: #dbeafe;
     border-color: var(--accent-caja);
-    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.26);
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.26);
 }
 
 .tipo-card[data-tipo="pallet"] input[type="radio"]:checked + .card-content {
@@ -187,11 +187,11 @@ body {
 .agregar-section {
     position: relative;
     text-align: center;
-    border-top: 4px solid var(--border-color);
-    border-bottom: 4px solid var(--border-color);
-    padding: 18px 0 12px;
+    border-top: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    padding: 9px 0 6px;
     background: #ffffff;
-    box-shadow: inset 0 -6px 0 rgba(17, 24, 39, 0.12);
+    box-shadow: inset 0 -3px 0 rgba(17, 24, 39, 0.12);
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -218,31 +218,31 @@ body {
 
 .agregar-section h2 {
     font-family: var(--font-heading);
-    font-size: 2.4rem;
-    letter-spacing: 0.3rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.15rem;
     color: var(--border-color);
 }
 
 .items-container {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    min-height: 220px;
+    gap: 16px;
+    min-height: 110px;
 }
 
 .item-card {
     display: grid;
-    grid-template-columns: 1fr 64px;
+    grid-template-columns: 1fr 32px;
     grid-template-rows: auto 1fr;
     grid-template-areas:
         "select delete"
         "info metrics";
-    gap: 20px;
-    padding: 26px 30px 28px;
-    border: 4px solid var(--border-color);
-    border-radius: 20px;
+    gap: 10px;
+    padding: 13px 15px 14px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
     background: #f2f7f2;
-    box-shadow: inset 0 -8px 0 rgba(17, 24, 39, 0.08);
+    box-shadow: inset 0 -4px 0 rgba(17, 24, 39, 0.08);
 }
 
 .item-select {
@@ -251,16 +251,16 @@ body {
 
 .item-select select {
     width: 100%;
-    padding: 8px 12px;
-    border: 3px solid var(--border-color);
+    padding: 4px 6px;
+    border: 2px solid var(--border-color);
     border-radius: 0; /* More rectangular */
     background-color: #ffffff;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e1f24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 24px;
+    background-position: right 6px center;
+    background-size: 12px;
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.02rem;
     color: #1e1f24;
@@ -291,9 +291,9 @@ body {
     border: none;
     border-radius: 0;
     font-family: "Jersey M54", "Bebas Neue", sans-serif; /* Try to match athletic font if available, fallback to Bebas */
-    font-size: 6.5rem; /* Larger */
+    font-size: 3.25rem; /* Larger */
     line-height: 0.85;
-    letter-spacing: 0.1rem;
+    letter-spacing: 0.05rem;
     text-align: left;
     color: #374151; /* Dark gray */
     box-shadow: none;
@@ -301,14 +301,14 @@ body {
 
 .item-details {
     display: grid;
-    gap: 6px;
-    padding-top: 6px;
+    gap: 3px;
+    padding-top: 3px;
 }
 
 .item-detail {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.02rem;
+    letter-spacing: 0.01rem;
     text-transform: uppercase;
     color: #6b7280;
     line-height: 1.1;
@@ -320,7 +320,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 22px;
+    gap: 11px;
     flex-wrap: nowrap;
 }
 
@@ -328,19 +328,19 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
 }
 
 .input-box input {
-    width: 120px;
-    height: 120px;
-    border: 4px solid var(--border-color);
-    border-radius: 16px;
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
     background: #e5e7eb; /* Light gray background like image */
     text-align: center;
     font-family: var(--font-body); /* Standard sans-serif for numbers */
     font-weight: 500;
-    font-size: 2.8rem;
+    font-size: 1.4rem;
     letter-spacing: 0;
     color: #1f2937;
     box-shadow: none;
@@ -348,57 +348,57 @@ body {
 
 .input-box label {
     font-family: var(--font-heading);
-    font-size: 1.3rem;
-    letter-spacing: 0.16rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08rem;
     color: var(--border-color);
 }
 
 .delete-btn {
     grid-area: delete;
-    width: 54px;
-    height: 54px;
+    width: 27px;
+    height: 27px;
     border-radius: 50%;
-    border: 3px solid var(--border-color);
+    border: 2px solid var(--border-color);
     background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke='%231e1f24' fill='none'%3E%3Cpath stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2'/%3E%3C/svg%3E") center/60% no-repeat;
     cursor: pointer;
-    box-shadow: inset 0 -6px 0 rgba(17, 24, 39, 0.12);
+    box-shadow: inset 0 -3px 0 rgba(17, 24, 39, 0.12);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .delete-btn:hover {
     background-color: rgba(239, 68, 68, 0.18);
-    box-shadow: 0 12px 20px rgba(239, 68, 68, 0.2);
-    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(239, 68, 68, 0.2);
+    transform: translateY(-1.5px);
 }
 
 .action-buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 18px;
+    gap: 9px;
 }
 
 .btn {
-    padding: 14px 38px;
-    border: 3px solid var(--border-color);
-    border-radius: 18px;
+    padding: 7px 19px;
+    border: 2px solid var(--border-color);
+    border-radius: 9px;
     background: #ffffff;
     font-family: var(--font-heading);
-    font-size: 1.3rem;
-    letter-spacing: 0.18rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.09rem;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: inset 0 -6px 0 rgba(17, 24, 39, 0.08);
+    box-shadow: inset 0 -3px 0 rgba(17, 24, 39, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 18px rgba(17, 24, 39, 0.2);
+    transform: translateY(-1.5px);
+    box-shadow: 0 5px 9px rgba(17, 24, 39, 0.2);
 }
 
 .btn:active {
     transform: translateY(0);
-    box-shadow: inset 0 -6px 0 rgba(17, 24, 39, 0.08);
+    box-shadow: inset 0 -3px 0 rgba(17, 24, 39, 0.08);
 }
 
 .btn-cancel {
@@ -409,12 +409,12 @@ body {
 .btn-save {
     background: var(--accent-caja);
     color: #ffffff;
-    border-color: #15803d;
-    box-shadow: inset 0 -6px 0 rgba(21, 128, 61, 0.25);
+    border-color: #1d4ed8;
+    box-shadow: inset 0 -3px 0 rgba(29, 78, 216, 0.25);
 }
 
 .btn-save:hover {
-    background: #16a34a;
+    background: #1d4ed8;
 }
 
 .hidden {
@@ -423,38 +423,39 @@ body {
 
 @media (max-width: 960px) {
     body {
-        padding: 16px;
+        padding: 8px;
     }
 
     .main-container {
         margin: 0;
-        padding: 32px 28px;
+        padding: 16px 14px;
     }
 
     .tipo-empaque-container {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 16px;
+        gap: 8px;
     }
 
     .tipo-card {
-        max-width: 200px;
+        max-width: 100px;
     }
 
+    /* Keep item-card as a single row grid even on smaller screens */
     .item-card {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 32px;
+        grid-template-rows: auto 1fr;
         grid-template-areas:
-            "select"
-            "delete"
-            "info"
-            "metrics";
-        justify-items: center;
+            "select delete"
+            "info metrics";
+        justify-items: stretch;
+        gap: 8px;
     }
 
     .item-info {
-        align-items: center;
+        align-items: flex-start;
         flex-direction: column;
-        gap: 18px;
+        gap: 4px;
     }
 
     .item-select {
@@ -462,8 +463,8 @@ body {
     }
 
     .item-inputs {
-        justify-content: center;
-        flex-wrap: wrap;
+        justify-content: flex-end;
+        flex-wrap: nowrap;
     }
 
     .action-buttons {
@@ -477,74 +478,93 @@ body {
 
 @media (max-width: 600px) {
     .header h1 {
-        font-size: 1rem;
-        letter-spacing: 0.14rem;
+        font-size: 1.2rem;
+        letter-spacing: 0.1rem;
     }
 
     .main-container {
-        padding: 28px 20px;
-        gap: 24px;
+        padding: 14px 10px;
+        gap: 12px;
     }
 
     .tipo-empaque-container {
-        padding: 22px 18px;
+        padding: 10px 8px;
     }
     .tipo-card {
-        max-width: 100px;
-        max-height: 100px;
+        max-width: 80px;
     }
     .card-content{
-        padding: 0;
-        min-height: 100px;
-        gap: unset;
+        padding: 6px;
+        min-height: 60px;
+        gap: 4px;
     }
     .agregar-section h2 {
-        font-size: medium;
+        font-size: 1rem;
     }
     .item-code {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
+    
+    /* Force single row layout for very small screens too, if possible, or optimized stack */
+    .item-card {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px;
+        gap: 8px;
+    }
+    
+    .item-select {
+        width: 100%;
+        order: 1;
+    }
+    
+    .item-info {
+        order: 2;
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .item-inputs {
+        order: 3;
+        gap: 8px;
+    }
+    
     .delete-btn {
-    grid-area: delete;
-    width: 40px;
-    height: 40px;
-}
+        order: 4;
+        margin-left: auto;
+    }
+
     .icon{
-        width: 44px;
-        height: 44px;
+        width: 32px;
+        height: 32px;
         border: none;
-         border: none; 
-    background-color:none; 
-    box-shadow: none;
+        background-color: transparent; 
+        box-shadow: none;
     }
     .card-label {
-        font-size: 1.2rem;
-        letter-spacing: 0.12rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.05rem;
     }
-    .item-card {
-        padding: 0px 14px;
-        gap: 1px;
-    }
-.item-detail {
+    
+    .item-detail {
         font-size: 0.6rem;
-    }
-    .item-inputs {
-        
-        gap: 16px;
     }
 
     .input-box input {
-        width: 76px;
-        height: 76px;
-        font-size: 1.8rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
     }
 
     .btn {
         width: 100%;
+        padding: 8px;
     }
 }
 
 .tipo-card input[type="radio"]:checked + .card-content .icon-container::after {
-    background: #4ade80; /* Green dot */
+    background: #60a5fa; /* Blue dot */
     border-color: var(--border-color);
 }
