@@ -3,11 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado cajas HH</title>
+    <title>Editar Cajas HH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="crear-caja.css?v=6">
 </head>
 <body>
-    contenido de H
-    <button id="addCajaBtn">Agregar Caja</button>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>ELIGE TIPO DE EMPAQUE</h1>
+        </div>
+        
+        <!-- Radio buttons as image cards -->
+        <div class="tipo-empaque-container">
+            <label class="tipo-card" data-tipo="cajas">
+                <input type="radio" name="tipoCaja" value="cajas" id="tipoCajaSinPallet">
+                <div class="card-content">
+                    <div class="icon-container">
+                        <div class="icon icon-caja"></div>
+                    </div>
+                    <span class="card-label">CAJAS</span>
+                </div>
+            </label>
+            
+            <label class="tipo-card" data-tipo="pallet">
+                <input type="radio" name="tipoCaja" value="pallet_con" id="tipoCajaConPallet">
+                <div class="card-content">
+                    <div class="icon-container">
+                        <div class="icon icon-pallet"></div>
+                    </div>
+                    <span class="card-label">PALLET</span>
+                </div>
+            </label>
+            
+            <label class="tipo-card" data-tipo="otro">
+                <input type="radio" name="tipoCaja" value="otro" id="tipoCajaOtro">
+                <div class="card-content">
+                    <div class="icon-container">
+                        <div class="icon icon-otro"></div>
+                    </div>
+                    <span class="card-label">OTRO</span>
+                </div>
+            </label>
+        </div>
+        
+        <!-- Agregar section -->
+        <div class="agregar-section">
+            <h2>AGREGAR +</h2>
+            <div class="select-overlay">
+                <select id="packingListSelectCajas" name="packingListSelectCajas"></select>
+                <select id="packingListSelectPallet" name="packingListSelectPallet"></select>
+                <select id="packingListSelectOtro" name="packingListSelectOtro"></select>
+            </div>
+        </div>
+        
+        <!-- Items list -->
+        <div id="items-container" class="items-container">
+            <!-- Items will be added dynamically here -->
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button type="button" class="btn btn-cancel">Cancelar</button>
+            <button type="button" class="btn btn-save" id="btnGuardar">Guardar</button>
+        </div>
+    </div>
+
+    <template id="item-card-template">
+        <div class="item-card">
+            <div class="item-select">
+                <select></select>
+            </div>
+            <button type="button" class="delete-btn" aria-label="Eliminar empaque"></button>
+            <div class="item-info">
+                <div class="item-code"></div>
+                <div class="item-details">
+                    <span class="item-detail item-detail-width"></span>
+                    <span class="item-detail item-detail-length"></span>
+                    <span class="item-detail item-detail-height"></span>
+                </div>
+            </div>
+            <div class="item-inputs">
+                <div class="input-box">
+                    <input type="number" min="1" value="1" data-role="units-input">
+                    <label>UND</label>
+                </div>
+                <div class="input-box">
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input">
+                    <label>PESO</label>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="./assets/js/edit-cajas.js"></script>
 </body>
-<script src="./assets/js/hh-lista.js"></script>
 </html>

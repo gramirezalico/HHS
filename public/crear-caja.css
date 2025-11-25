@@ -477,8 +477,8 @@ body {
 
 @media (max-width: 600px) {
     .header h1 {
-        font-size: 2.6rem;
-        letter-spacing: 0.3rem;
+        font-size: 1rem;
+        letter-spacing: 0.14rem;
     }
 
     .main-container {
@@ -489,14 +489,47 @@ body {
     .tipo-empaque-container {
         padding: 22px 18px;
     }
-
-    .item-card {
-        padding: 22px 20px;
-        gap: 18px;
+    .tipo-card {
+        max-width: 100px;
+        max-height: 100px;
     }
-
+    .card-content{
+        padding: 0;
+        min-height: 100px;
+        gap: unset;
+    }
+    .agregar-section h2 {
+        font-size: medium;
+    }
+    .item-code {
+        font-size: 2.5rem;
+    }
+    .delete-btn {
+    grid-area: delete;
+    width: 40px;
+    height: 40px;
+}
+    .icon{
+        width: 44px;
+        height: 44px;
+        border: none;
+         border: none; 
+    background-color:none; 
+    box-shadow: none;
+    }
+    .card-label {
+        font-size: 1.2rem;
+        letter-spacing: 0.12rem;
+    }
+    .item-card {
+        padding: 0px 14px;
+        gap: 1px;
+    }
+.item-detail {
+        font-size: 0.6rem;
+    }
     .item-inputs {
-        flex-direction: column;
+        
         gap: 16px;
     }
 

@@ -2,31 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const ordenParam = urlParams.get('orden');
 const empIdParam = urlParams.get('EmpId');
 document.addEventListener('DOMContentLoaded', async () => {
-    try {
-                const myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
-
-                const raw = JSON.stringify({
-                  "orderNum": ordenParam
-                });
-
-                const requestOptions = {
-                  method: "POST",
-                  headers: myHeaders,
-                  body: raw,
-                  redirect: "follow"
-                };
-
-                const response = await fetch("/api/getCaja", requestOptions);
-                const result = await response.json();
-
-                if (Array.isArray(result) && result.length > 0) {
-                    window.location.href = `/EditCajas?orden=${ordenParam}&EmpId=${empIdParam}`;
-                    return;
-                }
-            } catch (error) {
-                console.error('Error fetching caja data:', error);
-            }
+   
     const packingListSelectCajas = document.getElementById('packingListSelectCajas');
     const packingListSelectPallet = document.getElementById('packingListSelectPallet');
     const packingListSelectOtro = document.getElementById('packingListSelectOtro');
@@ -124,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function addItemToList(selectedOption, tipoEmpaque) {   
+    function addItemToList(selectedOption, tipoEmpaque, initialValues = null) {
         if (!selectedOption || !selectedOption.dataset.item || !itemTemplate) return;
 
         const itemData = JSON.parse(selectedOption.dataset.item);
@@ -160,12 +136,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateCardDetails(itemData, codeEl, widthEl, lengthEl, heightEl, weightInput);
 
         if (unitsInput) {
-            unitsInput.value = 1;
+            unitsInput.value = (initialValues && initialValues.unidades) ? initialValues.unidades : 1;
             // Escuchar cambios en cantidad
             unitsInput.addEventListener('input', updatePalletWeight);
         }
         
         if (weightInput) {
+            if (initialValues && initialValues.peso) {
+                weightInput.value = initialValues.peso;
+            }
             // Escuchar cambios en peso
             weightInput.addEventListener('input', updatePalletWeight);
         }
@@ -281,6 +260,62 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        // Cargar datos existentes si hay ordenParam
+        if (ordenParam) {
+            try {
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+
+                const raw = JSON.stringify({
+                  "orderNum": ordenParam
+                });
+
+                const requestOptions = {
+                  method: "POST",
+                  headers: myHeaders,
+                  body: raw,
+                  redirect: "follow"
+                };
+
+                const response = await fetch("/api/getCaja", requestOptions);
+                const result = await response.json();
+
+                if (result && result.ordersArray && Array.isArray(result.ordersArray)) {
+                    console.log("Cargando datos existentes...", result.ordersArray);
+                    
+                    for (const savedItem of result.ordersArray) {
+                        // Find master item
+                        const masterItem = originalItems.find(i => i.Packing_PkgCode === savedItem.codigo);
+                        if (!masterItem) {
+                            console.warn("Item guardado no encontrado en master list:", savedItem.codigo);
+                            continue;
+                        }
+
+                        // Determine type
+                        let tipoEmpaque = 'otro';
+                        const desc = (masterItem.Packing_Description || '').toLowerCase();
+                        if(desc.includes('caja')) tipoEmpaque = 'cajas';
+                        else if(desc.includes('pallet')) tipoEmpaque = 'pallet_con';
+
+                        // Find the select element
+                        const selectEl = getCurrentSelect(tipoEmpaque);
+                        if (!selectEl) continue;
+
+                        // Find the option
+                        const option = Array.from(selectEl.options).find(opt => opt.value === savedItem.codigo);
+                        
+                        if (option) {
+                            addItemToList(option, tipoEmpaque, savedItem);
+                        }
+                    }
+                    // Recalculate totals after adding all items
+                    updatePalletWeight();
+                }
+
+            } catch (error) {
+                console.error("Error cargando datos existentes:", error);
+            }
+        }
     } catch (err) {
         console.error('Error al obtener la lista de empaque:', err);
     }
@@ -376,4 +411,3 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
-
