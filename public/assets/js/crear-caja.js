@@ -108,6 +108,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         const unitsInput = itemCard.querySelector('[data-role="units-input"]');
         const weightInput = itemCard.querySelector('[data-role="weight-input"]');
         const deleteBtn = itemCard.querySelector('.delete-btn');
+        const palletContents = itemCard.querySelector('.pallet-contents');
+        const btnAddContent = itemCard.querySelector('.btn-add-content');
+        const palletContentsList = itemCard.querySelector('.pallet-contents-list');
+
+        // Check if it's a pallet
+        const isPallet = tipoEmpaque === 'pallet_con';
+
+        // Configure editable dimensions
+        if (isPallet) {
+            if (widthEl) { widthEl.removeAttribute('readonly'); widthEl.disabled = false; }
+            if (lengthEl) { lengthEl.removeAttribute('readonly'); lengthEl.disabled = false; }
+            if (heightEl) { heightEl.removeAttribute('readonly'); heightEl.disabled = false; }
+            
+            // Show nested content section
+            if (palletContents) palletContents.classList.remove('hidden');
+            
+            // Handle adding nested boxes
+            if (btnAddContent) {
+                // Remove old listeners to avoid duplicates if any (though cloning usually handles this, but just in case)
+                const newBtn = btnAddContent.cloneNode(true);
+                btnAddContent.parentNode.replaceChild(newBtn, btnAddContent);
+                newBtn.addEventListener('click', () => {
+                    addNestedBox(palletContentsList);
+                });
+            }
+        } else {
+            if (widthEl) { widthEl.setAttribute('readonly', true); }
+            if (lengthEl) { lengthEl.setAttribute('readonly', true); }
+            if (heightEl) { heightEl.setAttribute('readonly', true); }
+            if (palletContents) palletContents.classList.add('hidden');
+        }
 
         // Populate the card's select with the full list of the current type
         if (selectEl) {
@@ -120,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (newOpt && newOpt.dataset.item) {
                     const newItemData = JSON.parse(newOpt.dataset.item);
                     updateCardDetails(newItemData, codeEl, widthEl, lengthEl, heightEl, weightInput);
-                    updatePalletWeight(); // Recalcular si cambia el tipo de caja
+                    // If type changes, we might need to re-evaluate if it's a pallet (though usually select only has one type)
                 }
             });
         }
@@ -156,9 +187,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateCardDetails(data, codeEl, widthEl, lengthEl, heightEl, weightInput) {
         if (codeEl) codeEl.textContent = data.Packing_PkgCode || 'N/A';
-        if (widthEl) widthEl.textContent = `ANCHO ${data.Packing_PkgWidth || 'N/A'} CM`;
-        if (lengthEl) lengthEl.textContent = `LARGO ${data.Packing_PkgLength || 'N/A'} CM`;
-        if (heightEl) heightEl.textContent = `ALTO ${data.Packing_PkgHeight || 'N/A'} CM`;
+        // Use value for inputs instead of textContent
+        if (widthEl) widthEl.value = data.Packing_PkgWidth || 0;
+        if (lengthEl) lengthEl.value = data.Packing_PkgLength || 0;
+        if (heightEl) heightEl.value = data.Packing_PkgHeight || 0;
         if (weightInput) weightInput.value = data.Packing_PkgWeight || 0;
     }
 
@@ -308,6 +340,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // Prepare data object
                     const itemData = JSON.parse(select.options[select.selectedIndex].dataset.item);
                     
+                    // Capture nested items if any
+                    const nestedItems = [];
+                    const palletContentsList = card.querySelector('.pallet-contents-list');
+                    if (palletContentsList) {
+                        const rows = palletContentsList.querySelectorAll('.nested-item-row');
+                        rows.forEach(row => {
+                            const nSelect = row.querySelector('select');
+                            const nQty = row.querySelector('input');
+                            if (nSelect && nSelect.value && nQty && nQty.value > 0) {
+                                const nItemData = JSON.parse(nSelect.options[nSelect.selectedIndex].dataset.item);
+                                nestedItems.push({
+                                    codigo: nItemData.Packing_PkgCode,
+                                    tipo: nItemData.Packing_Description,
+                                    unidades: parseFloat(nQty.value)
+                                });
+                            }
+                        });
+                    }
+
+                    // Capture editable dimensions
+                    const widthVal = card.querySelector('.item-detail-width').value;
+                    const lengthVal = card.querySelector('.item-detail-length').value;
+                    const heightVal = card.querySelector('.item-detail-height').value;
+
                     // Objeto estructurado según requerimiento
                     const objetoItem = {
                         orderNumber: ordenParam || '',
@@ -316,7 +372,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         codigo: itemData.Packing_PkgCode,   // Ej: "C03"
                         unidades: qtyValue,                 // Und
                         peso: pesoValue,                    // Peso
-                        es_pallet: itemData.Packing_Description.toLowerCase().includes('pallet') // Identificador extra
+                        es_pallet: itemData.Packing_Description.toLowerCase().includes('pallet'), // Identificador extra
+                        // New fields
+                        ancho: parseFloat(widthVal) || 0,
+                        largo: parseFloat(lengthVal) || 0,
+                        alto: parseFloat(heightVal) || 0,
+                        contenido: nestedItems // Array of nested boxes
                     };
 
                     datosValidos.push(objetoItem);
@@ -342,6 +403,37 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Aquí iría la llamada a tu API
             }
         });
+    }
+
+    function addNestedBox(container) {
+        const row = document.createElement('div');
+        row.className = 'nested-item-row';
+        
+        // Select for box type
+        const select = document.createElement('select');
+        select.className = 'nested-item-select';
+        populateSelect(select, cajasList, 'Seleccione Caja...'); // Only boxes allowed inside pallet
+        
+        // Qty input
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.min = '1';
+        qtyInput.value = '1';
+        qtyInput.className = 'nested-item-qty';
+        qtyInput.placeholder = 'Cant';
+
+        // Delete button
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'nested-delete-btn';
+        delBtn.textContent = 'X';
+        delBtn.onclick = () => row.remove();
+
+        row.appendChild(select);
+        row.appendChild(qtyInput);
+        row.appendChild(delBtn);
+        
+        container.appendChild(row);
     }
 });
 

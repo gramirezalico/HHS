@@ -80,9 +80,18 @@
             <div class="item-info">
                 <div class="item-code"></div>
                 <div class="item-details">
-                    <span class="item-detail item-detail-width"></span>
-                    <span class="item-detail item-detail-length"></span>
-                    <span class="item-detail item-detail-height"></span>
+                    <div class="detail-input-group">
+                        <label>ANCHO</label>
+                        <input type="number" step="0.01" class="item-detail-input item-detail-width" readonly>
+                    </div>
+                    <div class="detail-input-group">
+                        <label>LARGO</label>
+                        <input type="number" step="0.01" class="item-detail-input item-detail-length" readonly>
+                    </div>
+                    <div class="detail-input-group">
+                        <label>ALTO</label>
+                        <input type="number" step="0.01" class="item-detail-input item-detail-height" readonly>
+                    </div>
                 </div>
             </div>
             <div class="item-inputs">
@@ -95,9 +104,14 @@
                     <label>PESO</label>
                 </div>
             </div>
+            <!-- Container for nested items (boxes inside pallet) -->
+            <div class="pallet-contents hidden">
+                <div class="pallet-contents-list"></div>
+                <button type="button" class="btn-add-content">+ Agregar Caja</button>
+            </div>
         </div>
     </template>
 
-    <script src="./assets/js/edit-cajas.js?v=10"></script>
+        <script src="./assets/js/edit-cajas.js?v=13"></script>
 </body>
 </html>

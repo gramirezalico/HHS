@@ -300,19 +300,44 @@ body {
 }
 
 .item-details {
-    display: grid;
-    gap: 3px;
+    display: flex;
+    gap: 8px;
     padding-top: 3px;
 }
 
-.item-detail {
-    font-size: 0.7rem;
+.detail-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detail-input-group label {
+    font-size: 0.6rem;
     font-weight: 700;
-    letter-spacing: 0.01rem;
-    text-transform: uppercase;
     color: #6b7280;
-    line-height: 1.1;
     font-family: "Barlow Condensed", var(--font-heading);
+}
+
+.item-detail-input {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+    background: #ffffff;
+    pointer-events: auto;
+}
+
+.item-detail-input:read-only {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-weight: 700;
+    color: #6b7280;
+    width: auto;
+    text-align: left;
+    pointer-events: none;
 }
 
 .item-inputs {
@@ -562,9 +587,140 @@ body {
         width: 100%;
         padding: 8px;
     }
+
+    /* Fix for pallet contents in flex layout */
+    .pallet-contents {
+        width: 100%;
+        order: 5;
+        margin-top: 8px;
+    }
+
+    /* Allow details to wrap if needed or shrink inputs */
+    .item-details {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .item-detail-input {
+        width: 45px; /* Smaller on mobile to prevent overflow */
+        font-size: 0.8rem;
+    }
 }
 
 .tipo-card input[type="radio"]:checked + .card-content .icon-container::after {
     background: #60a5fa; /* Blue dot */
     border-color: var(--border-color);
+}
+
+/* Styles for editable dimensions */
+.item-details {
+    display: flex;
+    gap: 8px;
+    padding-top: 3px;
+}
+
+.detail-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detail-input-group label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #6b7280;
+    font-family: "Barlow Condensed", var(--font-heading);
+}
+
+.item-detail-input {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+    background: #ffffff;
+    pointer-events: auto;
+}
+
+.item-detail-input:read-only {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-weight: 700;
+    color: #6b7280;
+    width: auto;
+    text-align: left;
+    pointer-events: none;
+}
+
+/* Styles for nested pallet contents */
+.pallet-contents {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+}
+
+.pallet-contents.hidden {
+    display: none;
+}
+
+.pallet-contents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.nested-item-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+    background: #f3f4f6;
+    border-radius: 4px;
+}
+
+.nested-item-select {
+    flex: 1;
+    padding: 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.nested-item-qty {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.nested-delete-btn {
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-add-content {
+    width: 100%;
+    padding: 6px;
+    background: #e0f2fe;
+    color: #0284c7;
+    border: 1px dashed #0284c7;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.btn-add-content:hover {
+    background: #bae6fd;
 }
