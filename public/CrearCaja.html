@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado cajas HH</title>
+    <title>Editar Cajas HH</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="crear-caja.css?v=10">
+    <link rel="stylesheet" href="crear-caja.css?v=15">
 </head>
 <body>
     <div class="main-container">
@@ -75,33 +75,36 @@
         <div class="item-card">
             <div class="item-select">
                 <select></select>
+                <button type="button" class="delete-btn" aria-label="Eliminar empaque"></button>
             </div>
-            <button type="button" class="delete-btn" aria-label="Eliminar empaque"></button>
-            <div class="item-info">
-                <div class="item-code"></div>
-                <div class="item-details">
-                    <div class="detail-input-group">
-                        <label>ANCHO</label>
-                        <input type="number" step="0.01" class="item-detail-input item-detail-width" readonly>
-                    </div>
-                    <div class="detail-input-group">
-                        <label>LARGO</label>
-                        <input type="number" step="0.01" class="item-detail-input item-detail-length" readonly>
-                    </div>
-                    <div class="detail-input-group">
-                        <label>ALTO</label>
-                        <input type="number" step="0.01" class="item-detail-input item-detail-height" readonly>
-                    </div>
-                </div>
-            </div>
+            
+            
+                <!-- <div class="item-code"></div> -->
             <div class="item-inputs">
                 <div class="input-box">
-                    <input type="number" min="1" value="1" data-role="units-input">
-                    <label>UND</label>
+                    <label>ANCHO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-width" readonly>
                 </div>
                 <div class="input-box">
+                    <label>LARGO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-length" readonly>
+                </div>
+                <div class="input-box">
+                    <label>ALTO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-height" readonly>
+                </div>
+            
+                <div class="input-box">
+                    <label>UND</label>
+                    <input type="number" min="1" value="1" data-role="units-input">
+                </div>
+                <div class="input-box">
+                    <label>PESO NETO</label>
                     <input type="number" step="0.1" min="0" value="0" data-role="weight-input">
-                    <label>PESO</label>
+                </div>
+                 <div class="input-box">
+                     <label>PESO BRUTO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input-bruto">
                 </div>
             </div>
             <!-- Container for nested items (boxes inside pallet) -->
@@ -112,6 +115,6 @@
         </div>
     </template>
 
-        <script src="./assets/js/crear-caja.js?v=13"></script>
+        <script src="./assets/js/crear-caja.js"></script>
 </body>
 </html>

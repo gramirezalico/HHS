@@ -76,12 +76,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const itemFragment = itemTemplate.content.cloneNode(true);
         const itemCard = itemFragment.querySelector('.item-card');
         const selectEl = itemCard.querySelector('.item-select select');
-        const codeEl = itemCard.querySelector('.item-code');
+        // const codeEl = itemCard.querySelector('.item-code');
         const widthEl = itemCard.querySelector('.item-detail-width');
         const lengthEl = itemCard.querySelector('.item-detail-length');
         const heightEl = itemCard.querySelector('.item-detail-height');
         const unitsInput = itemCard.querySelector('[data-role="units-input"]');
         const weightInput = itemCard.querySelector('[data-role="weight-input"]');
+        const weightBrutoInput = itemCard.querySelector('[data-role="weight-input-bruto"]');
         const deleteBtn = itemCard.querySelector('.delete-btn');
         const palletContents = itemCard.querySelector('.pallet-contents');
         const btnAddContent = itemCard.querySelector('.btn-add-content');
@@ -125,13 +126,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const newOpt = e.target.options[e.target.selectedIndex];
                 if (newOpt && newOpt.dataset.item) {
                     const newItemData = JSON.parse(newOpt.dataset.item);
-                    updateCardDetails(newItemData, codeEl, widthEl, lengthEl, heightEl, weightInput);
+                    updateCardDetails(newItemData, widthEl, lengthEl, heightEl, weightInput, weightBrutoInput);
                     // If type changes, we might need to re-evaluate if it's a pallet (though usually select only has one type)
                 }
             });
         }
 
-        updateCardDetails(itemData, codeEl, widthEl, lengthEl, heightEl, weightInput);
+        updateCardDetails(itemData, widthEl, lengthEl, heightEl, weightInput,weightBrutoInput);
 
         if (unitsInput) {
             unitsInput.value = (initialValues && initialValues.unidades) ? initialValues.unidades : 1;
@@ -163,13 +164,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentSelect) currentSelect.value = '';
     }
 
-    function updateCardDetails(data, codeEl, widthEl, lengthEl, heightEl, weightInput) {
-        if (codeEl) codeEl.textContent = data.Packing_PkgCode || 'N/A';
+    function updateCardDetails(data, widthEl, lengthEl, heightEl, weightInput,weightBrutoInput) {
+        // if (codeEl) codeEl.textContent = data.Packing_PkgCode || 'N/A';
         // Use value for inputs instead of textContent
-        if (widthEl) widthEl.value = data.Packing_PkgWidth || 0;
-        if (lengthEl) lengthEl.value = data.Packing_PkgLength || 0;
-        if (heightEl) heightEl.value = data.Packing_PkgHeight || 0;
-        if (weightInput) weightInput.value = data.Packing_PkgWeight || 0;
+        if (widthEl) widthEl.value = parseFloat(data.Packing_PkgWidth || 0).toFixed(1);
+        if (lengthEl) lengthEl.value = parseFloat(data.Packing_PkgLength || 0).toFixed(1);
+        if (heightEl) heightEl.value = parseFloat(data.Packing_PkgHeight || 0).toFixed(1);
+        if (weightInput) weightInput.value = parseFloat(data.Packing_PkgWeight || 0).toFixed(1);
+        if (weightBrutoInput) weightBrutoInput.value = parseFloat(data.Packing_PkgWeight || 0).toFixed(1);
     }
 
     function getCurrentSelect(tipo) {

@@ -188,10 +188,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateCardDetails(data, codeEl, widthEl, lengthEl, heightEl, weightInput) {
         if (codeEl) codeEl.textContent = data.Packing_PkgCode || 'N/A';
         // Use value for inputs instead of textContent
-        if (widthEl) widthEl.value = data.Packing_PkgWidth || 0;
-        if (lengthEl) lengthEl.value = data.Packing_PkgLength || 0;
-        if (heightEl) heightEl.value = data.Packing_PkgHeight || 0;
-        if (weightInput) weightInput.value = data.Packing_PkgWeight || 0;
+        if (widthEl) widthEl.value = parseFloat(data.Packing_PkgWidth || 0).toFixed(1);
+        if (lengthEl) lengthEl.value = parseFloat(data.Packing_PkgLength || 0).toFixed(1);
+        if (heightEl) heightEl.value = parseFloat(data.Packing_PkgHeight || 0).toFixed(1);
+        if (weightInput) weightInput.value = parseFloat(data.Packing_PkgWeight || 0).toFixed(1);
     }
 
     function getCurrentSelect(tipo) {
@@ -306,6 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const inputs = card.querySelectorAll('.input-box input'); 
                 const inputQty = card.querySelector('[data-role="units-input"]');
                 const inputPeso = card.querySelector('[data-role="weight-input"]');
+                const inputPesoBruto = card.querySelector('[data-role="weight-input-bruto"]');
 
                 // Reset styles
                 if(select) select.style.borderColor = '';
@@ -329,6 +330,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // 3. Validate Weight (> 0)
                 const pesoValue = inputPeso ? parseFloat(inputPeso.value) : 0;
+                const pesoValueBruto = inputPeso ? parseFloat(inputPesoBruto.value) : 0;
                 if (!pesoValue || pesoValue <= 0) {
                     if(inputPeso) inputPeso.parentElement.style.border = '2px solid red';
                     itemValido = false;
@@ -377,6 +379,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ancho: parseFloat(widthVal) || 0,
                         largo: parseFloat(lengthVal) || 0,
                         alto: parseFloat(heightVal) || 0,
+                        pesoBruto: pesoValueBruto || 0,
                         contenido: nestedItems // Array of nested boxes
                     };
 

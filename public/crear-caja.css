@@ -229,7 +229,7 @@ body {
     gap: 16px;
     min-height: 110px;
 }
-
+/*
 .item-card {
     display: grid;
     grid-template-columns: 1fr 32px;
@@ -243,14 +243,15 @@ body {
     border-radius: 10px;
     background: #f2f7f2;
     box-shadow: inset 0 -4px 0 rgba(17, 24, 39, 0.08);
-}
+}*/
 
 .item-select {
     grid-area: select;
 }
 
 .item-select select {
-    width: 100%;
+    width: 80%;
+    display: inline-block;
     padding: 4px 6px;
     border: 2px solid var(--border-color);
     border-radius: 0; /* More rectangular */
@@ -280,8 +281,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
-    padding-left: 8px;
 }
 
 .item-code {
@@ -300,9 +299,8 @@ body {
 }
 
 .item-details {
-    display: flex;
-    gap: 8px;
-    padding-top: 3px;
+    display: grid;
+    grid-template-columns: 33.3% 33.3% 33%;
 }
 
 .detail-input-group {
@@ -317,7 +315,7 @@ body {
     color: #6b7280;
     font-family: "Barlow Condensed", var(--font-heading);
 }
-
+/* 
 .item-detail-input {
     width: 60px;
     padding: 4px;
@@ -327,8 +325,8 @@ body {
     text-align: center;
     background: #ffffff;
     pointer-events: auto;
-}
-
+} */
+/* 
 .item-detail-input:read-only {
     background: transparent;
     border: none;
@@ -338,27 +336,28 @@ body {
     width: auto;
     text-align: left;
     pointer-events: none;
-}
+} */
 
 .item-inputs {
    grid-area: metrics;
-    display: flex;
+    display: grid;
+    grid-template-columns: 17% 17% 17% 17% 17% 17%;
     align-items: center;
-    justify-content: flex-end;
-    gap: 11px;
-    flex-wrap: nowrap;
+    /* justify-content: flex-end; */
+    /* gap: 11px; */
+    /* flex-wrap: nowrap;? */
 }
 
-.input-box {
+/* .input-box {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 6px;
+    align-items: flex-start;
+     gap: 6px; 
 }
-
+*/
 .input-box input {
     width: 60px;
-    height: 60px;
+    height: 35px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
     background: #e5e7eb; /* Light gray background like image */
@@ -369,7 +368,7 @@ body {
     letter-spacing: 0;
     color: #1f2937;
     box-shadow: none;
-}
+} */
 
 .input-box label {
     font-family: var(--font-heading);
@@ -447,66 +446,35 @@ body {
 }
 
 @media (max-width: 960px) {
-    body {
-        padding: 8px;
-    }
-
-    .main-container {
-        margin: 0;
-        padding: 16px 14px;
-    }
-
-    .tipo-empaque-container {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .tipo-card {
-        max-width: 100px;
-    }
-
-    /* Keep item-card as a single row grid even on smaller screens */
-    .item-card {
-        grid-template-columns: 1fr 32px;
-        grid-template-rows: auto 1fr;
-        grid-template-areas:
-            "select delete"
-            "info metrics";
-        justify-items: stretch;
-        gap: 8px;
-    }
-
-    .item-info {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .item-select {
-        width: 100%;
-    }
-
-    .item-inputs {
-        justify-content: flex-end;
-        flex-wrap: nowrap;
-    }
-
-    .action-buttons {
-        justify-content: center;
-    }
-
-    .delete-btn {
-        justify-self: flex-end;
-    }
+/* .input-box input{
+    font-size: .6rem;
+    width: 40px;
+    height: 40px;
+} */
+.item-code {
+    font-size: 0.5rem;  
+}
+.item-info{
+    max-width:  50px;
+}
 }
 
 @media (max-width: 600px) {
+    .item-detail-input:read-only {
+        text-align: center;
+    }
     .header h1 {
         font-size: 1.2rem;
         letter-spacing: 0.1rem;
     }
-
+    .item-details{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        width: 100%;
+        margin-top: 8px;
+        padding-top: 0;
+    }
     .main-container {
         padding: 14px 10px;
         gap: 12px;
@@ -530,36 +498,71 @@ body {
         font-size: 2rem;
     }
     
-    /* Force single row layout for very small screens too, if possible, or optimized stack */
-    .item-card {
+    /* Optimized mobile layout using display: contents for reordering */
+    /* .item-card {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
-        padding: 8px;
+        padding: 10px;
         gap: 8px;
     }
-    
+     */
     .item-select {
         width: 100%;
         order: 1;
+        margin-bottom: 4px;
     }
     
+    /* Flatten item-info to allow children to participate in flex layout */
     .item-info {
+        display: contents;
+    }
+
+    .item-code {
         order: 2;
-        flex: 1;
-        min-width: 120px;
+        width: auto;
+        font-size: 2rem;
+        margin-right: auto;
+        line-height: 1;
+        align-self: center;
     }
     
     .item-inputs {
         order: 3;
         gap: 8px;
+        justify-content: flex-end;
+        flex: 0 1 auto;
     }
     
     .delete-btn {
         order: 4;
-        margin-left: auto;
+        margin-left: 4px;
+        align-self: center;
     }
+
+    /* Dimensions on a new full row */
+    .item-details {
+        order: 5;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        width: 100%;
+        margin-top: 8px;
+        padding-top: 0;
+    }
+
+    .detail-input-group {
+        width: 100%;
+        align-items: center;
+        min-width: 0;
+    }
+
+    /* .item-detail-input {
+        width: 100%;
+        min-width: 0;
+        font-size: 0.9rem;
+    } */
 
     .icon{
         width: 32px;
@@ -588,22 +591,26 @@ body {
         padding: 8px;
     }
 
-    /* Fix for pallet contents in flex layout */
     .pallet-contents {
+        order: 6;
         width: 100%;
-        order: 5;
         margin-top: 8px;
     }
 
-    /* Allow details to wrap if needed or shrink inputs */
-    .item-details {
+    /* Fix for nested items on mobile */
+    .nested-item-row {
         flex-wrap: wrap;
-        gap: 4px;
     }
-    
-    .item-detail-input {
-        width: 45px; /* Smaller on mobile to prevent overflow */
-        font-size: 0.8rem;
+
+    .nested-item-select {
+        width: 100%;
+        flex: 1 1 100%;
+        margin-bottom: 4px;
+        max-width: 100%;
+    }
+
+    .nested-item-qty {
+        flex: 1;
     }
 }
 
@@ -612,47 +619,7 @@ body {
     border-color: var(--border-color);
 }
 
-/* Styles for editable dimensions */
-.item-details {
-    display: flex;
-    gap: 8px;
-    padding-top: 3px;
-}
 
-.detail-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.detail-input-group label {
-    font-size: 0.6rem;
-    font-weight: 700;
-    color: #6b7280;
-    font-family: "Barlow Condensed", var(--font-heading);
-}
-
-.item-detail-input {
-    width: 60px;
-    padding: 4px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 0.9rem;
-    text-align: center;
-    background: #ffffff;
-    pointer-events: auto;
-}
-
-.item-detail-input:read-only {
-    background: transparent;
-    border: none;
-    padding: 0;
-    font-weight: 700;
-    color: #6b7280;
-    width: auto;
-    text-align: left;
-    pointer-events: none;
-}
 
 /* Styles for nested pallet contents */
 .pallet-contents {

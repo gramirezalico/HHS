@@ -160,7 +160,7 @@ app.post('/api/cajasPorEmp', async (req, res) => {
         body: JSON.stringify(newExtructure),
         redirect: "follow"
     };
-fetch("https://apps.alico-sa.com/webhook/972e02ef-b5a1-421a-a49c-5698119c1box?dataBase=CajasOrdenes", requestOptions)
+fetch("https://apps.alico-sa.com/webhook/fc943f62-bf89-4150-ae2d-28b54e91e992?dataBase=CajasOrdenes", requestOptions)
   .then((response) => response.text())
   .then((result) => console.log(result))
   .catch((error) => console.error(error));
