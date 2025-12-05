@@ -148,6 +148,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             weightInput.addEventListener('input', updatePalletWeight);
         }
 
+        if (weightBrutoInput) {
+            if (initialValues && initialValues.pesoBruto) {
+                weightBrutoInput.value = initialValues.pesoBruto;
+            }
+        }
+
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
                 itemCard.remove();
@@ -315,14 +321,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                             
                             // We need to access the last added card (which is prepended)
                             const lastCard = itemsContainer.firstElementChild; 
-                            if (lastCard && tipoEmpaque === 'pallet_con') {
-                                if (savedItem.ancho) lastCard.querySelector('.item-detail-width').value = savedItem.ancho;
-                                if (savedItem.largo) lastCard.querySelector('.item-detail-length').value = savedItem.largo;
-                                if (savedItem.alto) lastCard.querySelector('.item-detail-height').value = savedItem.alto;
+                            if (lastCard) {
+                                // Cargar pesoBruto para todos los tipos
+                                if (savedItem.pesoBruto) {
+                                    const pesoBrutoInput = lastCard.querySelector('[data-role="weight-input-bruto"]');
+                                    if (pesoBrutoInput) pesoBrutoInput.value = savedItem.pesoBruto;
+                                }
                                 
-                                if (savedItem.contenido && Array.isArray(savedItem.contenido)) {
-                                    const container = lastCard.querySelector('.pallet-contents-list');
-                                    savedItem.contenido.forEach(c => addNestedBox(container, c));
+                                if (tipoEmpaque === 'pallet_con') {
+                                    if (savedItem.ancho) lastCard.querySelector('.item-detail-width').value = savedItem.ancho;
+                                    if (savedItem.largo) lastCard.querySelector('.item-detail-length').value = savedItem.largo;
+                                    if (savedItem.alto) lastCard.querySelector('.item-detail-height').value = savedItem.alto;
+                                    
+                                    if (savedItem.contenido && Array.isArray(savedItem.contenido)) {
+                                        const container = lastCard.querySelector('.pallet-contents-list');
+                                        savedItem.contenido.forEach(c => addNestedBox(container, c));
+                                    }
                                 }
                             }
                         }
@@ -360,6 +374,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const inputs = card.querySelectorAll('.input-box input'); 
                 const inputQty = card.querySelector('[data-role="units-input"]');
                 const inputPeso = card.querySelector('[data-role="weight-input"]');
+                const inputPesoBruto = card.querySelector('[data-role="weight-input-bruto"]');
 
                 // Reset styles
                 if(select) select.style.borderColor = '';
@@ -383,6 +398,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // 3. Validate Weight (> 0)
                 const pesoValue = inputPeso ? parseFloat(inputPeso.value) : 0;
+                const pesoValueBruto = inputPesoBruto ? parseFloat(inputPesoBruto.value) : 0;
                 if (!pesoValue || pesoValue <= 0) {
                     if(inputPeso) inputPeso.parentElement.style.border = '2px solid red';
                     itemValido = false;
@@ -431,6 +447,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ancho: parseFloat(widthVal) || 0,
                         largo: parseFloat(lengthVal) || 0,
                         alto: parseFloat(heightVal) || 0,
+                        pesoBruto: pesoValueBruto || 0,
                         contenido: nestedItems // Array of nested boxes
                     };
 

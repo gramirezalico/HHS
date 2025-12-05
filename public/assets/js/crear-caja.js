@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // 3. Validate Weight (> 0)
                 const pesoValue = inputPeso ? parseFloat(inputPeso.value) : 0;
-                const pesoValueBruto = inputPeso ? parseFloat(inputPesoBruto.value) : 0;
+                const pesoValueBruto = inputPesoBruto ? parseFloat(inputPesoBruto.value) : 0;
                 if (!pesoValue || pesoValue <= 0) {
                     if(inputPeso) inputPeso.parentElement.style.border = '2px solid red';
                     itemValido = false;
