@@ -169,6 +169,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             unitsInput.addEventListener('input', updatePalletWeight);
         }
 
+        if (unitsPerPackageInput) {
+            unitsPerPackageInput.value = (initialValues && initialValues.unidadesPorPaquete) ? initialValues.unidadesPorPaquete : 1;
+        }
+
         if (weightInput) {
             if (initialValues && initialValues.peso) {
                 weightInput.value = initialValues.peso;
@@ -357,6 +361,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     if (pesoBrutoInput) pesoBrutoInput.value = savedItem.pesoBruto;
                                 }
 
+                                // Cargar unidadesPorPaquete para todos los tipos
+                                if (savedItem.unidadesPorPaquete) {
+                                    const unitsPerPackageInput = lastCard.querySelector('[data-role="units-per-package-input"]');
+                                    if (unitsPerPackageInput) unitsPerPackageInput.value = savedItem.unidadesPorPaquete;
+                                }
+
                                 if (tipoEmpaque === 'pallet_con') {
                                     if (savedItem.ancho) lastCard.querySelector('.item-detail-width').value = savedItem.ancho;
                                     if (savedItem.largo) lastCard.querySelector('.item-detail-length').value = savedItem.largo;
@@ -404,6 +414,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const inputQty = card.querySelector('[data-role="units-input"]');
                 const inputPeso = card.querySelector('[data-role="weight-input"]');
                 const inputPesoBruto = card.querySelector('[data-role="weight-input-bruto"]');
+                const inputUnitsPerPackage = card.querySelector('[data-role="units-per-package-input"]');
 
                 // Reset styles
                 if (select) select.style.borderColor = '';
@@ -446,13 +457,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const rows = palletContentsList.querySelectorAll('.nested-item-row');
                         rows.forEach(row => {
                             const nSelect = row.querySelector('select');
-                            const nQty = row.querySelector('input');
+                            const nQty = row.querySelector('.nested-item-qty');
+                            const nUC = row.querySelector('.nested-item-uc');
                             if (nSelect && nSelect.value && nQty && nQty.value > 0) {
                                 const nItemData = JSON.parse(nSelect.options[nSelect.selectedIndex].dataset.item);
                                 nestedItems.push({
                                     codigo: nItemData.Packing_PkgCode,
                                     tipo: nItemData.Packing_Description,
-                                    unidades: parseFloat(nQty.value)
+                                    unidades: parseFloat(nQty.value),
+                                    unidadesPorPaquete: nUC ? parseFloat(nUC.value) : 1
                                 });
                             }
                         });
@@ -462,6 +475,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const widthVal = card.querySelector('.item-detail-width').value;
                     const lengthVal = card.querySelector('.item-detail-length').value;
                     const heightVal = card.querySelector('.item-detail-height').value;
+                    
+                    // Capture units per package value
+                    const unitsPerPackageValue = inputUnitsPerPackage ? parseFloat(inputUnitsPerPackage.value) : 1;
 
                     // Objeto estructurado según requerimiento
                     const objetoItem = {
@@ -477,6 +493,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         largo: parseFloat(lengthVal) || 0,
                         alto: parseFloat(heightVal) || 0,
                         pesoBruto: pesoValueBruto || 0,
+                        unidadesPorPaquete: unitsPerPackageValue || 1,
                         contenido: nestedItems // Array of nested boxes
                     };
 
@@ -532,6 +549,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // U/C
         const ucInput = document.createElement('input');
         ucInput.type = 'number';
+        ucInput.min = '1';
+        ucInput.value = (initialData && initialData.unidadesPorPaquete) ? initialData.unidadesPorPaquete : '1';
         ucInput.className = 'nested-item-uc';
         ucInput.placeholder = 'U/C';
         // Delete button
