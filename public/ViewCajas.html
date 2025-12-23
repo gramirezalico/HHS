@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cajas HH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="view-cajas.css?v=12">
+</head>
+<body>
+    <div class="main-container">
+       
+        
+        <!-- Agregar section -->
+        <div class="agregar-section">
+           
+            <div class="select-overlay">
+                <select id="packingListSelectCajas" name="packingListSelectCajas"></select>
+                <select id="packingListSelectPallet" name="packingListSelectPallet"></select>
+                <select id="packingListSelectOtro" name="packingListSelectOtro"></select>
+            </div>
+        </div>
+        
+        <!-- Items list -->
+        <div id="items-container" class="items-container">
+            <!-- Items will be added dynamically here -->
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button type="button" class="btn btn-cancel">Cancelar</button>
+            <button type="button" class="btn btn-save" id="btnGuardar">Editar</button>
+        </div>
+    </div>
+
+    <template id="item-card-template">
+        <div class="item-card">
+            <div class="item-select">
+                <select></select>
+                </div>
+            
+            
+                <!-- <div class="item-code"></div> -->
+            <div class="item-inputs">
+               
+            
+                <div class="input-box">
+                    <label>UND</label>
+                    <input type="number" min="1" value="1" data-role="units-input">
+                </div>
+                <div class="input-box">
+                    <label>PESO NETO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input">
+                </div>
+                 <div class="input-box">
+                     <label>PESO BRUTO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input-bruto">
+                </div>
+            </div>
+            <!-- Container for nested items (boxes inside pallet) -->
+            <div class="pallet-contents hidden">
+                <div class="pallet-contents-list"></div>
+               
+            </div>
+        </div>
+    </template>
+
+        <script src="./assets/js/view-cajas.js?v=4"></script>
+</body>
+</html>

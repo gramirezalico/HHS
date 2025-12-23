@@ -71,6 +71,11 @@ app.get('/EditCajas', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'EditCajas.html'));
 });
 
+// Pantalla de Ver Cajas
+app.get('/ViewCajas', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'ViewCajas.html'));
+});
+
 // ---------------------------------------------------------
 // API ENDPOINTS
 // ---------------------------------------------------------
@@ -145,25 +150,47 @@ app.post('/api/getCaja', async (req, res) => {
     }
 })
 app.post('/api/cajasPorEmp', async (req, res) => {
-    console.log(req.body);
-    let ordersArray = req.body;
-    let newExtructure = {
-        unixtimestamp: new Date().getTime(),
-        orderNum: ordersArray[0].orderNumber,
-        ordersArray: ordersArray
+    console.log('Datos recibidos:', req.body);
+    
+    try {
+        const ordersArray = req.body;
+        
+        if (!ordersArray || !Array.isArray(ordersArray) || ordersArray.length === 0) {
+            return res.status(400).json({ status: 'error', message: 'No se recibieron datos válidos' });
+        }
+
+        const newExtructure = {
+            unixtimestamp: new Date().getTime(),
+            orderNum: ordersArray[0].orderNumber,
+            ordersArray: ordersArray
+        };
+
+        const response = await fetch("https://apps.alico-sa.com/webhook/ea609c91-64c3-463f-b21e-82156cfba1box?dataBase=CajasOrdenes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newExtructure)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en webhook: ${response.status}`);
+        }
+
+        const contentType = response.headers.get("content-type");
+        let result;
+        
+        if (contentType && contentType.includes("application/json")) {
+            result = await response.json();
+        } else {
+            result = await response.text();
+        }
+
+        console.log('Respuesta de webhook:', result);
+        res.json({ status: 'success', data: result });
+
+    } catch (error) {
+        console.error('Error en /api/cajasPorEmp:', error);
+        res.status(500).json({ status: 'error', message: error.message });
     }
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify(newExtructure),
-        redirect: "follow"
-    };
-fetch("https://apps.alico-sa.com/webhook/ea609c91-64c3-463f-b21e-82156cfba1box?dataBase=CajasOrdenes", requestOptions)
-  .then((response) => response.text())
-  .then((result) => console.log(result))
-  .catch((error) => console.error(error));
 })
 app.get('/api/packingList', async (req, res) => {
     const url = `${EPICOR_API_BASE}/TI_packingList(ALICO)/`;

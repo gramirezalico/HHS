@@ -187,9 +187,6 @@ body {
 .agregar-section {
     position: relative;
     text-align: center;
-    border-top: 2px solid var(--border-color);
-    border-bottom: 2px solid var(--border-color);
-    padding: 9px 0 6px;
     background: #ffffff;
     box-shadow: inset 0 -3px 0 rgba(17, 24, 39, 0.12);
     cursor: pointer;
@@ -250,25 +247,7 @@ body {
 }
 
 .item-select select {
-    width: 80%;
-    display: inline-block;
-    padding: 4px 6px;
-    border: 2px solid var(--border-color);
-    border-radius: 0; /* More rectangular */
-    background-color: #ffffff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e1f24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 6px center;
-    background-size: 12px;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.02rem;
-    color: #1e1f24;
-    box-shadow: none;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+   
 }
 
 .item-select select:focus-visible {
@@ -315,60 +294,32 @@ body {
     color: #6b7280;
     font-family: "Barlow Condensed", var(--font-heading);
 }
-/* 
-.item-detail-input {
-    width: 60px;
-    padding: 4px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 0.9rem;
-    text-align: center;
-    background: #ffffff;
-    pointer-events: auto;
-} */
-/* 
-.item-detail-input:read-only {
-    background: transparent;
-    border: none;
-    padding: 0;
-    font-weight: 700;
-    color: #6b7280;
-    width: auto;
-    text-align: left;
-    pointer-events: none;
-} */
+
 
 .item-inputs {
    grid-area: metrics;
     display: grid;
-    grid-template-columns: 17% 17% 17% 17% 17% 17%;
+    grid-template-columns: 32% 32% 32%;
     align-items: center;
     /* justify-content: flex-end; */
     /* gap: 11px; */
     /* flex-wrap: nowrap;? */
 }
-.item-inputs-2 {
-   grid-area: metrics;
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    align-items: center;
-    /* justify-content: flex-end; */
-    /* gap: 11px; */
-    /* flex-wrap: nowrap;? */
+
+select {
+  appearance: none; /* Quita estilos por defecto */
+  -webkit-appearance: none; /* Para Safari/Chrome */
+  -moz-appearance: none; /* Para Firefox */
+  /* Opcional: resetear todo */
+  /* all: unset; */
+  border: none;
 }
-/* .input-box {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-     gap: 6px; 
-}
-*/
 .input-box input {
     width: 60px;
     height: 35px;
-    border: 2px solid var(--border-color);
+    border: none;
     border-radius: 8px;
-    background: #e5e7eb; /* Light gray background like image */
+    background: none; /* Light gray background like image */
     text-align: center;
     font-family: var(--font-body); /* Standard sans-serif for numbers */
     font-weight: 500;
@@ -408,9 +359,7 @@ body {
     justify-content: flex-end;
     gap: 9px;
 }
-.input-box label{
-        display: block;
-    }
+
 .btn {
     padding: 7px 19px;
     border: 2px solid var(--border-color);
@@ -537,19 +486,13 @@ body {
         line-height: 1;
         align-self: center;
     }
-    .input-box label{
-        display: block;
-    }
+    
     .item-inputs {
         font-size: 10px;
         justify-content: flex-end;
         flex: 0 1 auto;
     }
-    .item-inputs-2 {
-        font-size: 10px;
-        justify-content: flex-end;
-        flex: 0 1 auto;
-    }
+    
     .delete-btn {
         order: 4;
         margin-left: 4px;
@@ -641,8 +584,8 @@ body {
     grid-column: 1 / -1;
     margin-top: 10px;
     padding: 10px;
-    background: #ffffff;
-    border: 1px dashed var(--border-color);
+    /* background: #ffffff; */
+    /* border: 1px dashed var(--border-color); */
     border-radius: 8px;
 }
 
@@ -658,27 +601,25 @@ body {
 }
 
 .nested-item-row {
-    display: grid;
+    display: flex;
     align-items: center;
-    grid-template-columns: 40% 20% 20% 15%;
     gap: 8px;
-    justify-content: center;
     padding: 4px;
-    background: #f3f4f6;
+    background: none;
     border-radius: 4px;
 }
 
 .nested-item-select {
     flex: 1;
     padding: 4px;
-    border: 1px solid #d1d5db;
+    border:none;
     border-radius: 4px;
 }
 
 .nested-item-qty {
     width: 60px;
     padding: 4px;
-    border: 1px solid #d1d5db;
+    border: none;
     border-radius: 4px;
     text-align: center;
 }
