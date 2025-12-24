@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cajas HH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="lista.css?v=16">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Lista de pedidos</h1>
+        </div>
+        
+        <!-- Radio buttons as image cards -->
+        <div class="tipo-empaque-container">
+           <table>
+            <tr>
+                <th>✓</th>
+                <th>Cliente</th>
+                <th>Parte</th>
+                <th>Cantidad</th>
+                <th>Bin</th>
+                <th>OV</th>
+            </tr>
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td>Cliente A</td>
+                <td>P-001</td>
+                <td>100</td>
+                <td>A1</td>
+                <td>OV-001</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td>Cliente B</td>
+                <td>P-002</td>
+                <td>200</td>
+                <td>B2</td>
+                <td>OV-002</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td>Cliente C</td>
+                <td>P-003</td>
+                <td>150</td>
+                <td>C3</td>
+                <td>OV-003</td>
+            </tr>
+           </table>
+        </div>
+        
+       
+        
+        <!-- Items list -->
+        <div id="items-container" class="items-container">
+            <!-- Items will be added dynamically here -->
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button type="button" class="btn btn-cancel">Cancelar</button>
+            <button type="button" class="btn btn-save" id="btnGuardar">CAJAS</button>
+        </div>
+    </div>
+
+   
+        <!-- <script src="./assets/js/lista.js?v=16"></script> -->
+</body>
+</html>

@@ -75,7 +75,9 @@ app.get('/EditCajas', (req, res) => {
 app.get('/ViewCajas', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'ViewCajas.html'));
 });
-
+app.get('/Lista', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'Lista.html'));
+});
 // ---------------------------------------------------------
 // API ENDPOINTS
 // ---------------------------------------------------------

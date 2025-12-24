@@ -71,7 +71,54 @@
         </div>
     </div>
 
-    <template id="item-card-template">
+  <template id="item-card-template">
+        <div class="item-card">
+            <div class="item-select">
+                <select></select>
+                <button type="button" class="delete-btn" aria-label="Eliminar empaque"></button>
+            </div>
+            
+            
+                <!-- <div class="item-code"></div> -->
+            <div class="item-inputs-2">
+                <div class="input-box hidden">
+                    <label>ANCHO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-width" readonly>
+                </div>
+                <div class="input-box hidden">
+                    <label>LARGO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-length" readonly>
+                </div>
+                <div class="input-box hidden">
+                    <label>ALTO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-height" readonly>
+                </div>
+            
+                <div class="input-box">
+                    <label>CNT</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-input" data-role="units-input">
+                </div>
+                 <div class="input-box">
+                    <label>U/C</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-per-package-input" data-role="units-per-package-input">
+                </div>
+                <div class="input-box">
+                    <label>PESO NETO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input">
+                </div>
+                 <div class="input-box">
+                     <label>PESO BRUTO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input-bruto">
+                </div>
+            </div>
+            <!-- Container for nested items (boxes inside pallet) -->
+            <div class="pallet-contents hidden">
+                <div class="pallet-contents-list"></div>
+                <button type="button" class="btn-add-content">+ Agregar Caja</button>
+            </div>
+        </div>
+    </template>
+    <template id="item-card-template-pallet">
         <div class="item-card">
             <div class="item-select">
                 <select></select>
@@ -81,22 +128,26 @@
             
                 <!-- <div class="item-code"></div> -->
             <div class="item-inputs">
-                <div class="input-box">
+                <div class="input-box ">
                     <label>ANCHO</label>
                     <input type="number" step="0.01" class="item-detail-input item-detail-width" readonly>
                 </div>
-                <div class="input-box">
+                <div class="input-box ">
                     <label>LARGO</label>
                     <input type="number" step="0.01" class="item-detail-input item-detail-length" readonly>
                 </div>
-                <div class="input-box">
+                <div class="input-box ">
                     <label>ALTO</label>
                     <input type="number" step="0.01" class="item-detail-input item-detail-height" readonly>
                 </div>
             
                 <div class="input-box">
-                    <label>UND</label>
-                    <input type="number" min="1" value="1" data-role="units-input">
+                    <label>CNT</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-input" data-role="units-input">
+                </div>
+                 <div class="input-box hidden">
+                    <label>U/C</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-per-package-input" data-role="units-per-package-input">
                 </div>
                 <div class="input-box">
                     <label>PESO NETO</label>

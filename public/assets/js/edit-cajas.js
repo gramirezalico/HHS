@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const unitsPerPackageInput = itemCard.querySelector('.item-detail-units-per-package-input');
         const unitsInput = itemCard.querySelector('[data-role="units-input"]');
         const weightInput = itemCard.querySelector('[data-role="weight-input"]');
-        const weightBrutoInput = itemCard.querySelector('[data-role="weight-input-bruto"]');
+        const weightBrutoInput = itemCard.querySelector('[data-role="weight-input-neto"]');
         const deleteBtn = itemCard.querySelector('.delete-btn');
         const palletContents = itemCard.querySelector('.pallet-contents');
         const btnAddContent = itemCard.querySelector('.btn-add-content');
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             if (lastCard) {
                                 // Cargar pesoBruto para todos los tipos
                                 if (savedItem.pesoBruto) {
-                                    const pesoBrutoInput = lastCard.querySelector('[data-role="weight-input-bruto"]');
+                                    const pesoBrutoInput = lastCard.querySelector('[data-role="weight-input-neto"]');
                                     if (pesoBrutoInput) pesoBrutoInput.value = savedItem.pesoBruto;
                                 }
 
@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const inputs = card.querySelectorAll('.input-box input');
                 const inputQty = card.querySelector('[data-role="units-input"]');
                 const inputPeso = card.querySelector('[data-role="weight-input"]');
-                const inputPesoBruto = card.querySelector('[data-role="weight-input-bruto"]');
+                const inputPesoBruto = card.querySelector('[data-role="weight-input-neto"]');
                 const inputUnitsPerPackage = card.querySelector('[data-role="units-per-package-input"]');
 
                 // Reset styles
