@@ -23,113 +23,661 @@ body {
     background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
     font-family: var(--font-body);
     color: #1f2937;
-    line-height: 1.6;
-    padding: 12px 8px;
+    line-height: 1.4;
+    padding: 8px 4px;
+    font-size: 10px;
 }
 
 .main-container {
-    max-width: 600px;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 20px 24px 24px;
+    padding: 8px;
     background: var(--panel-bg-strong);
     border: 2px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 6px;
     box-shadow: var(--shadow-soft);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
 }
 
 .header {
     text-align: center;
-    /* padding: 18px 24px;
-    border: 4px solid var(--border-color);
-    border-radius: 18px;
-    background: #ffffff;
-    box-shadow: inset 0 -6px 0 rgba(17, 24, 39, 0.1); */
+    padding: 4px 0;
 }
 
 .header h1 {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
-    letter-spacing: 0.2rem;
+    font-size: 1rem;
+    letter-spacing: 0.1rem;
     color: var(--border-color);
 }
 
-.tipo-empaque-container {
+/* ========================================
+   DATAGRID STYLES - MOBILE OPTIMIZED
+   ======================================== */
+
+.datagrid-wrapper {
     display: flex;
-    gap: 12px;
-    justify-content: space-between;
-    padding: 14px;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
     border: 2px solid var(--border-color);
-    border-radius: 10px;
-    background: #eef2ff;
-    overflow-x: auto;
-}
-
-/* Estilos para la tabla */
-.tipo-empaque-container table {
-    width: 100%;
-    min-width: 500px;
-    border-collapse: collapse;
+    border-radius: 6px;
     background: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.tipo-empaque-container table th {
-    /* background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); */
-    color: black;
-    font-family: var(--font-heading);
-    font-size: 0.85rem;
-    letter-spacing: 0.08rem;
-    padding: 12px 8px;
-    text-align: left;
-    border-bottom: 2px solid var(--border-color);
+/* Toolbar - Condensed */
+.datagrid-toolbar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.datagrid-search {
+    flex: 1;
+    min-width: 150px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 3px;
+    font-family: var(--font-body);
+    font-size: 10px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-caja);
+}
+
+.datagrid-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-tool {
+    padding: 4px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background: #ffffff;
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 600;
+    cursor: pointer;
     white-space: nowrap;
 }
 
-.tipo-empaque-container table th:first-child {
-    width: 40px;
-    text-align: center;
+.btn-tool:active {
+    background: #f3f4f6;
 }
 
-.tipo-empaque-container table td {
-    padding: 10px 8px;
+/* Filter Chips - Compact */
+.filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background: #dbeafe;
+    border: 1px solid var(--accent-caja);
+    border-radius: 10px;
+    font-size: 9px;
+    color: #1e40af;
+}
+
+.chip-close {
+    background: none;
+    border: none;
+    color: #1e40af;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 0;
+}
+
+/* Table - Mobile First */
+.datagrid-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.datagrid-table {
+    width: 100%;
+    min-width: 500px;
+    border-collapse: collapse;
+    font-size: 9px;
+}
+
+.datagrid-table thead {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.datagrid-table th {
+    padding: 6px 8px;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    letter-spacing: 0.02rem;
+    white-space: nowrap;
+}
+
+.datagrid-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.datagrid-table th.col-checkbox {
+    width: 35px;
+    text-align: center;
+    padding: 6px 4px;
+}
+
+.th-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.column-filter {
+    padding: 2px 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 9px;
     font-family: var(--font-body);
-    font-size: 0.85rem;
-    color: #374151;
+    color: #1f2937;
+}
+
+.datagrid-table tbody tr {
     border-bottom: 1px solid #e5e7eb;
 }
 
-.tipo-empaque-container table td:first-child {
-    text-align: center;
-    padding: 8px;
+.datagrid-table tbody tr:active {
+    background-color: #f3f4f6;
 }
 
-.tipo-empaque-container table td input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: #2563eb;
-}
-
-.tipo-empaque-container table tr:last-child td {
-    border-bottom: none;
-}
-
-.tipo-empaque-container table tr:hover {
+.datagrid-table tbody tr:nth-child(even) {
     background-color: #f9fafb;
+}
+
+.datagrid-table td {
+    padding: 6px 8px;
+    color: #374151;
+    font-size: 9px;
+}
+
+.datagrid-table td.col-checkbox {
+    text-align: center;
+    padding: 6px 4px;
+}
+
+.datagrid-table input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
     cursor: pointer;
+    accent-color: var(--accent-caja);
 }
 
-.tipo-empaque-container table tr:nth-child(even) {
-    background-color: #f8fafc;
+.empty-state {
+    text-align: center;
+    padding: 20px 15px;
+    color: #9ca3af;
+    font-size: 9px;
 }
 
-.tipo-empaque-container table tr:nth-child(even):hover {
-    background-color: #f1f5f9;
+/* Pagination - Compact */
+.datagrid-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 6px;
+    border-top: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 9px;
+}
+
+.pagination-info {
+    color: #6b7280;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.btn-page {
+    padding: 3px 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 2px;
+    background: #ffffff;
+    font-size: 9px;
+    cursor: pointer;
+    min-width: 24px;
+}
+
+.btn-page:active:not([disabled]) {
+    background: #f3f4f6;
+}
+
+.btn-page.active {
+    background: var(--accent-caja);
+    color: #ffffff;
+    border-color: var(--accent-caja);
+}
+
+.btn-page:disabled {
+    opacity: 0.4;
+}
+
+.page-ellipsis {
+    padding: 0 4px;
+    color: #9ca3af;
+}
+
+.pagination-size select {
+    padding: 3px 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 9px;
+}
+
+/* Loading & Error States */
+.loading-state,
+.error-state {
+    text-align: center;
+    padding: 30px 15px;
+    font-size: 10px;
+    color: #6b7280;
+}
+
+.error-state {
+    color: #dc2626;
+}
+
+/* Modals - Optimized */
+.column-manager-modal,
+.selection-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 10px;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    letter-spacing: 0.02rem;
+    color: var(--border-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.modal-body {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.column-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    margin-bottom: 4px;
+    border-radius: 3px;
+    font-size: 10px;
+}
+
+.column-option input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--accent-caja);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 12px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.modal-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    background: #f9fafb;
+}
+
+.modal-item h4 {
+    margin-bottom: 4px;
+    color: var(--accent-caja);
+    font-family: var(--font-heading);
+    font-size: 10px;
+}
+
+.modal-item p {
+    margin: 2px 0;
+    font-size: 9px;
+}
+
+/* Action Buttons - Compact */
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: #ffffff;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.selection-info {
+    font-size: 10px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.button-group {
+    display: flex;
+    gap: 6px;
+}
+
+.btn {
+    padding: 6px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    letter-spacing: 0.02rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel {
+    background: #ffffff;
+    color: var(--border-color);
+}
+
+.btn-cancel:active {
+    background: #f3f4f6;
+}
+
+.btn-primary {
+    background: var(--accent-caja);
+    color: #ffffff;
+    border-color: var(--accent-caja);
+}
+
+.btn-primary:active {
+    background: #1e40af;
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #6b7280;
+    border-color: #d1d5db;
+}
+
+/* Desktop Enhancements - Mayor a 400px */
+@media (min-width: 401px) {
+    body {
+        padding: 12px 8px;
+    }
+
+    .main-container {
+        max-width: 1200px;
+        padding: 16px 20px;
+        gap: 14px;
+    }
+
+    .header {
+        padding: 6px 0;
+    }
+
+    .header h1 {
+        font-size: 1.4rem;
+        letter-spacing: 0.18rem;
+    }
+
+    .datagrid-wrapper {
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .datagrid-toolbar {
+        gap: 10px;
+    }
+
+    .search-input {
+        padding: 7px 12px;
+        font-size: 10px;
+    }
+
+    .btn-tool {
+        padding: 7px 14px;
+        font-size: 10px;
+    }
+
+    .btn-tool:hover {
+        background: #f3f4f6;
+        transform: translateY(-1px);
+    }
+
+    .datagrid-table {
+        font-size: 10px;
+        min-width: 700px;
+    }
+
+    .datagrid-table th {
+        padding: 10px 14px;
+        font-size: 10px;
+    }
+
+    .datagrid-table th.sortable:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .datagrid-table td {
+        padding: 10px 14px;
+        font-size: 10px;
+    }
+
+    .datagrid-table tbody tr:hover {
+        background-color: #f9fafb;
+    }
+
+    .datagrid-table input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .column-filter {
+        padding: 3px 6px;
+        font-size: 9px;
+    }
+
+    .btn-page {
+        padding: 5px 10px;
+        font-size: 10px;
+        min-width: 32px;
+    }
+
+    .btn-page:hover:not([disabled]) {
+        background: #f3f4f6;
+        transform: translateY(-1px);
+    }
+
+    .pagination-size select {
+        padding: 5px 8px;
+        font-size: 10px;
+    }
+
+    .action-buttons {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .selection-info {
+        font-size: 10px;
+    }
+
+    .button-group {
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 20px;
+        font-size: 10px;
+    }
+
+    .btn-cancel:hover {
+        background: #f3f4f6;
+        transform: translateY(-2px);
+    }
+
+    .btn-primary:hover {
+        background: #1e40af;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .modal-content {
+        max-width: 500px;
+    }
+
+    .modal-header {
+        padding: 14px 18px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .modal-body {
+        padding: 18px;
+    }
+
+    .modal-footer {
+        padding: 14px 18px;
+    }
+
+    .column-option {
+        padding: 10px;
+        margin-bottom: 6px;
+        font-size: 10px;
+    }
+
+    .column-option:hover {
+        background: #f9fafb;
+    }
+
+    .column-option input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .modal-item {
+        padding: 14px;
+        margin-bottom: 10px;
+    }
+
+    .modal-item h4 {
+        font-size: 10px;
+    }
+
+    .modal-item p {
+        font-size: 10px;
+    }
+}
+
+/* Mobile Specific - Hasta 400px */
+@media (max-width: 400px) {
+    .th-content{
+        width: 30px;
+    }
+    .datagrid-toolbar {
+        flex-direction: column;
+    }
+
+    .datagrid-search {
+        min-width: 100%;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .button-group {
+        width: 100%;
+    }
+
+    .button-group .btn {
+        flex: 1;
+    }
+
+    .pagination-controls {
+        justify-content: center;
+    }
+
+    .datagrid-table {
+        min-width: 450px;
+    }
+}
+
+/* Old table styles - can be removed if not used elsewhere */
+.tipo-empaque-container {
+    display: none; /* Hidden - replaced by DataGrid */
 }
 
 .tipo-card {

@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Cajas HH</title>
+    <title>Lista de Pedidos HH</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="lista.css?v=16">
+    <link rel="stylesheet" href="lista.css?v=17">
 </head>
 <body>
     <div class="main-container">
@@ -16,41 +16,22 @@
             <h1>Lista de pedidos</h1>
         </div>
         
-        <!-- Radio buttons as image cards -->
-        <div class="tipo-empaque-container">
-           <table id="listTable">
-            <thead>
-                <tr>
-                    <th>✓</th>
-                    <th>Cliente</th>
-                    <th>Parte</th>
-                    <th>Cantidad</th>
-                    <th>Bin</th>
-                    <th>OV</th>
-                    <th>Lote</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- Las filas se generarán dinámicamente -->
-            </tbody>
-           </table>
-        </div>
-        
-       
-        
-        <!-- Items list -->
-        <div id="items-container" class="items-container">
-            <!-- Items will be added dynamically here -->
-        </div>
+        <!-- DataGrid Container -->
+        <div id="dataGridContainer"></div>
         
         <!-- Action buttons -->
         <div class="action-buttons">
-            <button type="button" class="btn btn-cancel">Cancelar</button>
-            <button type="button" class="btn btn-save" id="btnGuardar">CAJAS</button>
+            <div class="selection-info">
+                <span id="selectionCount">0 items seleccionados</span>
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" id="btnCancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnCajas">CAJAS →</button>
+            </div>
         </div>
     </div>
 
-   
-    <script src="./assets/js/lista.js?v=16"></script>
+    <script src="./assets/js/components/DataGrid.js?v=17"></script>
+    <script src="./assets/js/lista.js?v=17"></script>
 </body>
 </html>
