@@ -18,39 +18,21 @@
         
         <!-- Radio buttons as image cards -->
         <div class="tipo-empaque-container">
-           <table>
-            <tr>
-                <th>✓</th>
-                <th>Cliente</th>
-                <th>Parte</th>
-                <th>Cantidad</th>
-                <th>Bin</th>
-                <th>OV</th>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>Cliente A</td>
-                <td>P-001</td>
-                <td>100</td>
-                <td>A1</td>
-                <td>OV-001</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>Cliente B</td>
-                <td>P-002</td>
-                <td>200</td>
-                <td>B2</td>
-                <td>OV-002</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>Cliente C</td>
-                <td>P-003</td>
-                <td>150</td>
-                <td>C3</td>
-                <td>OV-003</td>
-            </tr>
+           <table id="listTable">
+            <thead>
+                <tr>
+                    <th>✓</th>
+                    <th>Cliente</th>
+                    <th>Parte</th>
+                    <th>Cantidad</th>
+                    <th>Bin</th>
+                    <th>OV</th>
+                    <th>Lote</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Las filas se generarán dinámicamente -->
+            </tbody>
            </table>
         </div>
         
@@ -69,6 +51,6 @@
     </div>
 
    
-        <!-- <script src="./assets/js/lista.js?v=16"></script> -->
+    <script src="./assets/js/lista.js?v=16"></script>
 </body>
 </html>

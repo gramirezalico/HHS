@@ -3,7 +3,9 @@ const path = require('path');
 const { getData } = require('./utils/getData');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const pilot = true;
 const EPICOR_API_BASE = 'https://centralusdtapp73.epicorsaas.com/SaaS5333/api/v1/BaqSvc';
+const EPICOR_API_BASE_P = 'https://centralusdtpilot73.epicorsaas.com/SaaS5333pilot/api/v1/BaqSvc';
 
 // Middleware de seguridad y configuración
 app.use(express.json({ limit: '10mb' }));
@@ -91,6 +93,63 @@ app.get('/api/status', (req, res) => {
     });
 });
 
+app.get('/api/TI_HH_Listado', async (req, res) => {
+    let url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=00010&Plant=MfgSys`;
+    if (pilot) {
+        url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=00010&Plant=MfgSys`;
+    }
+    try {
+        const response = await getData(url);
+        if (!response) {
+            return res.status(400).json({ status: 'error', message: 'No data found' });
+        } else {
+            const value = response.value;
+            if (value) {
+                // Agrupar y transformar los datos
+                const groupedData = {};
+                
+                value.forEach(item => {
+                    // Crear una clave única para agrupar
+                    const groupKey = `${item.MtlQueue_LotNum}_${item.Customer_CustID}_${item.MtlQueue_OrderNum}_${item.MtlQueue_PartNum}`;
+                    
+                    if (!groupedData[groupKey]) {
+                        // Crear nuevo grupo
+                        groupedData[groupKey] = {
+                            ID: [],
+                            Cliente: item.Customer_CustID,
+                            Parte: item.MtlQueue_PartNum,
+                            Cantidad: 0,
+                            Bin: [],
+                            OV: item.MtlQueue_OrderNum,
+                            LotNum: item.MtlQueue_LotNum
+                        };
+                    }
+                    
+                    // Agregar datos al grupo
+                    groupedData[groupKey].ID.push(item.MtlQueue_MtlQueueSeq);
+                    groupedData[groupKey].Bin.push(item.MtlQueue_FromBinNum);
+                    groupedData[groupKey].Cantidad += parseFloat(item.MtlQueue_Quantity);
+                });
+                
+                // Convertir el objeto agrupado a array y formatear
+                const organizedData = Object.values(groupedData).map(group => ({
+                    ID: group.ID.join(','),
+                    Cliente: group.Cliente,
+                    Parte: group.Parte,
+                    Cantidad: group.Cantidad.toFixed(0),
+                    Bin: group.Bin.join(','),
+                    OV: group.OV,
+                    LotNum: group.LotNum
+                }));
+                
+                res.json({ status: 'success', value: organizedData });
+            }
+        }
+    } catch (error) {
+        console.error('API Error:', error);
+        res.status(500).json({ status: 'error', message: 'Server Error' });
+    }
+});
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'healthy' });
 });
@@ -98,7 +157,7 @@ app.get('/health', (req, res) => {
 app.post('/api/login', async (req, res) => {
     const { id } = req.body;
     console.log('Login attempt for ID:', id);
-    
+
     const url = `${EPICOR_API_BASE}/HHLogin(ALICO)/?idEmp=${id}`;
 
     try {
@@ -121,7 +180,7 @@ app.post('/api/getCaja', async (req, res) => {
     const myHeaders = new Headers();
     let newExtructure = { orderNum: orderNum };
     myHeaders.append("Content-Type", "application/json");
-    
+
     const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -131,7 +190,7 @@ app.post('/api/getCaja', async (req, res) => {
 
     try {
         const response = await fetch("https://apps.alico-sa.com/webhook/6baaad35-d336-4fb4-b0f6-a42c4feaa2b8?dataBase=CajasOrdenes", requestOptions);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -153,10 +212,10 @@ app.post('/api/getCaja', async (req, res) => {
 })
 app.post('/api/cajasPorEmp', async (req, res) => {
     console.log('Datos recibidos:', req.body);
-    
+
     try {
         const ordersArray = req.body;
-        
+
         if (!ordersArray || !Array.isArray(ordersArray) || ordersArray.length === 0) {
             return res.status(400).json({ status: 'error', message: 'No se recibieron datos válidos' });
         }
@@ -179,7 +238,7 @@ app.post('/api/cajasPorEmp', async (req, res) => {
 
         const contentType = response.headers.get("content-type");
         let result;
-        
+
         if (contentType && contentType.includes("application/json")) {
             result = await response.json();
         } else {
