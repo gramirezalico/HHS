@@ -708,3 +708,19 @@ body {
 .btn-add-content:hover {
     background: #bae6fd;
 }
+
+/* Estilos para los labels de nested items */
+.nested-item-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nested-item-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: "Barlow Condensed", var(--font-heading);
+}

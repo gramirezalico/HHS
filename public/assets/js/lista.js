@@ -246,13 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Botón Cancelar
+    // Botón Cerrar
     const btnCancelar = document.getElementById('btnCancelar');
     if (btnCancelar) {
+        btnCancelar.textContent = 'Cerrar';
         btnCancelar.addEventListener('click', () => {
-            if (confirm('¿Deseas salir de la lista?')) {
-                window.location.href = '/hh';
-            }
+            window.close();
         });
     }
 });

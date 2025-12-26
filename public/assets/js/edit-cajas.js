@@ -530,7 +530,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const row = document.createElement('div');
         row.className = 'nested-item-row';
 
-        // Select for box type
+        // Label y Select para empaque
+        const selectWrapper = document.createElement('div');
+        selectWrapper.className = 'nested-item-field';
+        
+        const selectLabel = document.createElement('label');
+        selectLabel.textContent = 'Empaque';
+        selectLabel.className = 'nested-item-label';
+        
         const select = document.createElement('select');
         select.className = 'nested-item-select';
         populateSelect(select, cajasList, 'Seleccione Caja...'); // Only boxes allowed inside pallet
@@ -538,21 +545,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (initialData && initialData.codigo) {
             select.value = initialData.codigo;
         }
+        
+        selectWrapper.appendChild(selectLabel);
+        selectWrapper.appendChild(select);
 
-        // Qty input
+        // Label y input para CNT (Cantidad)
+        const qtyWrapper = document.createElement('div');
+        qtyWrapper.className = 'nested-item-field';
+        
+        const qtyLabel = document.createElement('label');
+        qtyLabel.textContent = 'CNT';
+        qtyLabel.className = 'nested-item-label';
+        
         const qtyInput = document.createElement('input');
         qtyInput.type = 'number';
         qtyInput.min = '1';
         qtyInput.value = (initialData && initialData.unidades) ? initialData.unidades : '1';
         qtyInput.className = 'nested-item-qty';
         qtyInput.placeholder = 'Cant';
-        // U/C
+        
+        qtyWrapper.appendChild(qtyLabel);
+        qtyWrapper.appendChild(qtyInput);
+        
+        // Label y input para U/C (Unidades por Caja)
+        const ucWrapper = document.createElement('div');
+        ucWrapper.className = 'nested-item-field';
+        
+        const ucLabel = document.createElement('label');
+        ucLabel.textContent = 'U/C';
+        ucLabel.className = 'nested-item-label';
+        
         const ucInput = document.createElement('input');
         ucInput.type = 'number';
         ucInput.min = '1';
         ucInput.value = (initialData && initialData.unidadesPorPaquete) ? initialData.unidadesPorPaquete : '1';
         ucInput.className = 'nested-item-uc';
         ucInput.placeholder = 'U/C';
+        
+        ucWrapper.appendChild(ucLabel);
+        ucWrapper.appendChild(ucInput);
+        
         // Delete button
         const delBtn = document.createElement('button');
         delBtn.type = 'button';
@@ -560,9 +592,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         delBtn.textContent = 'X';
         delBtn.onclick = () => row.remove();
 
-        row.appendChild(select);
-        row.appendChild(qtyInput);
-        row.appendChild(ucInput);
+        row.appendChild(selectWrapper);
+        row.appendChild(qtyWrapper);
+        row.appendChild(ucWrapper);
         row.appendChild(delBtn);
 
         container.appendChild(row);
