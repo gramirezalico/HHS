@@ -94,9 +94,12 @@ app.get('/api/status', (req, res) => {
 });
 
 app.get('/api/TI_HH_Listado', async (req, res) => {
-    let url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=00010&Plant=MfgSys`;
+    // Obtener EmpID de query params o usar valor por defecto
+    const empId = req.query.EmpID || req.query.empId || '00010';
+    
+    let url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=${empId}&Plant=MfgSys`;
     if (pilot) {
-        url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=00010&Plant=MfgSys`;
+        url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=${empId}&Plant=MfgSys`;
     }
     try {
         const response = await getData(url);
@@ -121,7 +124,8 @@ app.get('/api/TI_HH_Listado', async (req, res) => {
                             Cantidad: 0,
                             Bin: [],
                             OV: item.MtlQueue_OrderNum,
-                            LotNum: item.MtlQueue_LotNum
+                            LotNum: item.MtlQueue_LotNum,
+                            EmpID: item.MtlQueue_SelectedByEmpID
                         };
                     }
                     
@@ -139,7 +143,8 @@ app.get('/api/TI_HH_Listado', async (req, res) => {
                     Cantidad: group.Cantidad.toFixed(0),
                     Bin: group.Bin.join(','),
                     OV: group.OV,
-                    LotNum: group.LotNum
+                    LotNum: group.LotNum,
+                    EmpID:group.EmpID 
                 }));
                 
                 res.json({ status: 'success', value: organizedData });

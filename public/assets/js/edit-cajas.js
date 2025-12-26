@@ -567,4 +567,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         container.appendChild(row);
     }
+
+    // Evento para el botón Cancelar
+    const btnCancelar = document.querySelector('.btn-cancel');
+    if (btnCancelar) {
+        btnCancelar.addEventListener('click', () => {
+            // Obtener EmpID del URL actual
+            const urlParams = new URLSearchParams(window.location.search);
+            const empId = urlParams.get('EmpId') || urlParams.get('empId') || '00010';
+            
+            // Redirigir a Lista con el EmpID
+            window.location.href = `./Lista?EmpID=${empId}`;
+        });
+    }
 });

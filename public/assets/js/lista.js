@@ -77,7 +77,11 @@ async function loadData() {
         const container = document.getElementById('dataGridContainer');
         container.innerHTML = '<div class="loading-state">Cargando datos...</div>';
 
-        const response = await fetch('/api/TI_HH_Listado');
+        // Obtener EmpID de los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const empId = urlParams.get('EmpID') || urlParams.get('empId') || urlParams.get('EmpId')|| '00010';
+        
+        const response = await fetch(`./api/TI_HH_Listado?EmpID=${empId}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -102,6 +106,7 @@ async function loadData() {
                 },
                 onSelectionChange: (selectedItems) => {
                     updateSelectionCount(selectedItems.length);
+                    validateOVSelection(selectedItems);
                 },
                 onRowClick: (item) => {
                     console.log('Row clicked:', item);
@@ -128,6 +133,60 @@ function updateSelectionCount(count) {
     }
 }
 
+// Validar que todos los items seleccionados tengan el mismo OV
+function validateOVSelection(selectedItems) {
+    if (selectedItems.length === 0) return true;
+    
+    // Obtener el OV del primer item seleccionado
+    const firstOV = selectedItems[0].OV;
+    
+    // Verificar que todos los items tengan el mismo OV
+    const allSameOV = selectedItems.every(item => item.OV === firstOV);
+    
+    if (!allSameOV) {
+        // Mostrar advertencia si hay items con diferentes OV
+        showWarning('Todos los items seleccionados deben pertenecer a la misma Orden de Venta (OV)');
+        return false;
+    }
+    
+    // Verificar si hay un intento de selección rechazado
+    // Esto se detecta cuando el callback se llama sin cambios en la selección
+    const currentCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+    if (currentCheckboxes.length !== selectedItems.length) {
+        showWarning(`Solo puedes seleccionar items de la OV ${firstOV}`);
+        return false;
+    }
+    
+    return true;
+}
+
+// Mostrar advertencia temporal
+function showWarning(message) {
+    // Crear o actualizar elemento de advertencia
+    let warningElement = document.getElementById('ovWarning');
+    
+    if (!warningElement) {
+        warningElement = document.createElement('div');
+        warningElement.id = 'ovWarning';
+        warningElement.className = 'ov-warning';
+        
+        const gridContainer = document.getElementById('dataGridContainer');
+        if (gridContainer) {
+            gridContainer.insertAdjacentElement('beforebegin', warningElement);
+        }
+    }
+    
+    warningElement.textContent = `⚠️ ${message}`;
+    warningElement.style.display = 'block';
+    
+    // Ocultar después de 4 segundos
+    setTimeout(() => {
+        if (warningElement) {
+            warningElement.style.display = 'none';
+        }
+    }, 4000);
+}
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     // Cargar datos al iniciar
@@ -146,6 +205,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (selectedItems.length === 0) {
                 alert('Por favor selecciona al menos un item');
+                return;
+            }
+            
+            // Validar que todos tengan el mismo OV
+            const firstOV = selectedItems[0].OV;
+            const allSameOV = selectedItems.every(item => item.OV === firstOV);
+            
+            if (!allSameOV) {
+                alert('Error: Todos los items seleccionados deben pertenecer a la misma Orden de Venta (OV)');
                 return;
             }
             
@@ -203,6 +271,7 @@ function showSelectionModal(items) {
             <p><strong>Bin:</strong> ${item.Bin}</p>
             <p><strong>OV:</strong> ${item.OV}</p>
             <p><strong>Lote:</strong> ${item.LotNum}</p>
+            <p><strong>Empleado:</strong> ${item.EmpID}</p>
             <p><strong>ID:</strong> ${item.ID}</p>
         </div>
     `).join('');
@@ -218,7 +287,7 @@ function showSelectionModal(items) {
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="btnCloseModal">Cerrar</button>
-                <button class="btn btn-primary" id="btnConfirmCajas">Confirmar y Procesar</button>
+                <button class="btn btn-primary" id="btnConfirmCajas">Confirmar</button>
             </div>
         </div>
     `;
@@ -229,10 +298,18 @@ function showSelectionModal(items) {
     modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
     modal.querySelector('#btnCloseModal').addEventListener('click', () => modal.remove());
     modal.querySelector('#btnConfirmCajas').addEventListener('click', () => {
-        console.log('Procesando items:', items);
-        // TODO: Aquí va la lógica de procesamiento
+        // Obtener datos para la URL
+        const orden = items[0].OV; // OV es la misma para todos
+        const empId = items[0].EmpID || '00010'; // EmpID por defecto
+        const ids = items.map(item => item.ID).join(','); // Concatenar todos los IDs
+        
+        // Construir URL y redirigir
+        const url = `./EditCajas?orden=${orden}&EmpId=${empId}&ids=${encodeURIComponent(ids)}`;
+        console.log('Redirigiendo a:', url);
+        console.log('Items:', items);
+        
         modal.remove();
-        alert(`Procesando ${items.length} items...`);
+        window.location.href = url;
     });
     
     modal.addEventListener('click', (e) => {

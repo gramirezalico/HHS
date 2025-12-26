@@ -118,7 +118,105 @@ class DataGrid {
             delete this.state.filters[columnId];
         }
         this.saveToStorage();
-        this.applyFilters();
+        this.applyFiltersWithoutRerender();
+    }
+
+    applyFiltersWithoutRerender() {
+        let filtered = [...this.state.data];
+
+        // Aplicar filtros
+        Object.entries(this.state.filters).forEach(([columnId, filterValue]) => {
+            if (filterValue && filterValue.trim() !== '') {
+                filtered = filtered.filter(row => {
+                    const cellValue = String(row[columnId] || '').toLowerCase();
+                    return cellValue.includes(filterValue.toLowerCase());
+                });
+            }
+        });
+
+        this.state.filteredData = filtered;
+        
+        // Aplicar ordenamiento si existe
+        if (this.state.sortColumn) {
+            const column = this.config.columns.find(col => col.id === this.state.sortColumn);
+            const sorted = [...this.state.filteredData].sort((a, b) => {
+                let aVal = a[this.state.sortColumn];
+                let bVal = b[this.state.sortColumn];
+
+                if (column && column.type === 'number') {
+                    aVal = parseFloat(aVal) || 0;
+                    bVal = parseFloat(bVal) || 0;
+                } else {
+                    aVal = String(aVal || '').toLowerCase();
+                    bVal = String(bVal || '').toLowerCase();
+                }
+
+                if (aVal < bVal) return this.state.sortDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return this.state.sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+            this.state.filteredData = sorted;
+        }
+
+        this.state.currentPage = 1;
+        this.updateTableBody();
+        this.updateFilterChips();
+        this.updatePagination();
+    }
+
+    updateTableBody() {
+        const tbody = this.container.querySelector('.datagrid-table tbody');
+        if (!tbody) return;
+
+        const pageData = this.getPageData();
+        const visibleColumns = this.config.columns.filter(col => 
+            this.state.visibleColumns.includes(col.id)
+        );
+
+        tbody.innerHTML = this.renderBodyRows(pageData, visibleColumns);
+        this.attachRowEvents();
+    }
+
+    updateFilterChips() {
+        const existingChipsContainer = this.container.querySelector('.filter-chips');
+        const newChips = this.renderFilterChips();
+        
+        if (existingChipsContainer) {
+            if (newChips) {
+                existingChipsContainer.outerHTML = newChips;
+            } else {
+                existingChipsContainer.remove();
+            }
+        } else if (newChips) {
+            const toolbar = this.container.querySelector('.datagrid-toolbar');
+            toolbar.insertAdjacentHTML('afterend', newChips);
+        }
+        
+        // Reattach chip events
+        this.container.querySelectorAll('.chip-close').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const columnId = btn.dataset.column;
+                delete this.state.filters[columnId];
+                
+                // Actualizar el input de filtro correspondiente
+                const filterInput = this.container.querySelector(`.column-filter[data-column="${columnId}"]`);
+                if (filterInput) {
+                    filterInput.value = '';
+                }
+                
+                this.saveToStorage();
+                this.applyFiltersWithoutRerender();
+            });
+        });
+    }
+
+    updatePagination() {
+        const paginationContainer = this.container.querySelector('.datagrid-pagination');
+        if (!paginationContainer) return;
+
+        const totalPages = this.getTotalPages();
+        paginationContainer.outerHTML = this.renderPagination(totalPages);
+        this.attachPaginationEvents();
     }
 
     clearFilters() {
@@ -154,11 +252,31 @@ class DataGrid {
 
     toggleRowSelection(row) {
         const rowId = this.getRowId(row);
-        if (this.state.selectedRows.has(rowId)) {
+        const isCurrentlySelected = this.state.selectedRows.has(rowId);
+        
+        if (isCurrentlySelected) {
+            // Always allow deselection
             this.state.selectedRows.delete(rowId);
         } else {
+            // Check if we can select this row (OV validation)
+            const currentlySelected = this.getSelectedItems();
+            
+            if (currentlySelected.length > 0) {
+                // Get the OV of the first selected item
+                const firstOV = currentlySelected[0].OV;
+                
+                // Check if the new row has the same OV
+                if (row.OV !== firstOV) {
+                    // Don't add the row, trigger validation callback
+                    this.config.onSelectionChange(currentlySelected);
+                    return; // Exit without adding the row
+                }
+            }
+            
+            // Add the row if validation passed
             this.state.selectedRows.add(rowId);
         }
+        
         this.render();
         this.config.onSelectionChange(this.getSelectedItems());
     }
@@ -247,9 +365,6 @@ class DataGrid {
     renderToolbar() {
         return `
             <div class="datagrid-toolbar">
-                <div class="datagrid-search">
-                    <input type="text" id="globalSearch" placeholder="🔍 Buscar..." class="search-input" />
-                </div>
                 <div class="datagrid-actions">
                     <button class="btn-tool" id="btnClearFilters" title="Limpiar filtros">
                         🎯 Filtros
@@ -324,7 +439,11 @@ class DataGrid {
             `;
         }
 
-        const rows = data.map(row => {
+        return `<tbody>${this.renderBodyRows(data, visibleColumns)}</tbody>`;
+    }
+
+    renderBodyRows(data, visibleColumns) {
+        return data.map(row => {
             const rowId = this.getRowId(row);
             const isSelected = this.state.selectedRows.has(rowId);
             
@@ -345,8 +464,6 @@ class DataGrid {
 
             return `<tr data-row='${JSON.stringify(row)}'>${cells}</tr>`;
         }).join('');
-
-        return `<tbody>${rows}</tbody>`;
     }
 
     renderPagination(totalPages) {
@@ -408,25 +525,6 @@ class DataGrid {
     }
 
     attachEvents() {
-        // Global search
-        const globalSearch = document.getElementById('globalSearch');
-        if (globalSearch) {
-            globalSearch.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                if (searchTerm === '') {
-                    this.state.filteredData = [...this.state.data];
-                } else {
-                    this.state.filteredData = this.state.data.filter(row => {
-                        return Object.values(row).some(val => 
-                            String(val).toLowerCase().includes(searchTerm)
-                        );
-                    });
-                }
-                this.state.currentPage = 1;
-                this.render();
-            });
-        }
-
         // Column sorting
         this.container.querySelectorAll('th.sortable').forEach(th => {
             th.addEventListener('click', () => {
@@ -478,13 +576,23 @@ class DataGrid {
         }
 
         // Row selection
+        this.attachRowEvents();
+
+        // Pagination
+        this.attachPaginationEvents();
+    }
+
+    attachRowEvents() {
+        // Row selection
         this.container.querySelectorAll('.row-checkbox').forEach((checkbox, index) => {
             checkbox.addEventListener('change', () => {
                 const row = this.getPageData()[index];
                 this.toggleRowSelection(row);
             });
         });
+    }
 
+    attachPaginationEvents() {
         // Pagination
         this.container.querySelectorAll('.btn-page:not([disabled])').forEach(btn => {
             btn.addEventListener('click', () => {
