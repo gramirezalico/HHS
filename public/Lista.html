@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Pedidos HH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="lista.css?v=17">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Lista de pedidos</h1>
+        </div>
+        
+        <!-- DataGrid Container -->
+        <div id="dataGridContainer"></div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <div class="selection-info">
+                <span id="selectionCount">0 items seleccionados</span>
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" id="btnCancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnCajas">CAJAS →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./assets/js/components/DataGrid.js?v=17"></script>
+    <script src="./assets/js/lista.js?v=17"></script>
+</body>
+</html>

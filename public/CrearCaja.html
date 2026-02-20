@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cajas HH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="crear-caja.css?v=15">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>ELIGE TIPO DE EMPAQUE</h1>
+        </div>
+        
+        <!-- Radio buttons as image cards -->
+        <div class="tipo-empaque-container">
+            <label class="tipo-card" data-tipo="cajas">
+                <input type="radio" name="tipoCaja" value="cajas" id="tipoCajaSinPallet">
+                <div class="card-content">
+                    <div class="icon-container">
+                        <div class="icon icon-caja"></div>
+                    </div>
+                    <span class="card-label">CAJAS</span>
+                </div>
+            </label>
+            
+            <label class="tipo-card" data-tipo="pallet">
+                <input type="radio" name="tipoCaja" value="pallet_con" id="tipoCajaConPallet">
+                <div class="card-content">
+                    <div class="icon-container">
+                        <div class="icon icon-pallet"></div>
+                    </div>
+                    <span class="card-label">PALLET</span>
+                </div>
+            </label>
+            
+            <label class="tipo-card" data-tipo="otro">
+                <input type="radio" name="tipoCaja" value="otro" id="tipoCajaOtro">
+                <div class="card-content">
+                    <div class="icon-container">
+                        <div class="icon icon-otro"></div>
+                    </div>
+                    <span class="card-label">OTRO</span>
+                </div>
+            </label>
+        </div>
+        
+        <!-- Agregar section -->
+        <div class="agregar-section">
+            <h2>AGREGAR +</h2>
+            <div class="select-overlay">
+                <select id="packingListSelectCajas" name="packingListSelectCajas"></select>
+                <select id="packingListSelectPallet" name="packingListSelectPallet"></select>
+                <select id="packingListSelectOtro" name="packingListSelectOtro"></select>
+            </div>
+        </div>
+        
+        <!-- Items list -->
+        <div id="items-container" class="items-container">
+            <!-- Items will be added dynamically here -->
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button type="button" class="btn btn-cancel">Cancelar</button>
+            <button type="button" class="btn btn-save" id="btnGuardar">Guardar</button>
+        </div>
+    </div>
+
+  <template id="item-card-template">
+        <div class="item-card">
+            <div class="item-select">
+                <select></select>
+                <button type="button" class="delete-btn" aria-label="Eliminar empaque"></button>
+            </div>
+            
+            
+                <!-- <div class="item-code"></div> -->
+            <div class="item-inputs-2">
+                <div class="input-box hidden">
+                    <label>ANCHO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-width" readonly>
+                </div>
+                <div class="input-box hidden">
+                    <label>LARGO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-length" readonly>
+                </div>
+                <div class="input-box hidden">
+                    <label>ALTO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-height" readonly>
+                </div>
+            
+                <div class="input-box">
+                    <label>CNT</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-input" data-role="units-input">
+                </div>
+                 <div class="input-box">
+                    <label>U/C</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-per-package-input" data-role="units-per-package-input">
+                </div>
+                <div class="input-box">
+                    <label>PESO NETO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input">
+                </div>
+                 <div class="input-box">
+                     <label>PESO BRUTO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input-bruto">
+                </div>
+            </div>
+            <!-- Container for nested items (boxes inside pallet) -->
+            <div class="pallet-contents hidden">
+                <div class="pallet-contents-list"></div>
+                <button type="button" class="btn-add-content">+ Agregar Caja</button>
+            </div>
+        </div>
+    </template>
+    <template id="item-card-template-pallet">
+        <div class="item-card">
+            <div class="item-select">
+                <select></select>
+                <button type="button" class="delete-btn" aria-label="Eliminar empaque"></button>
+            </div>
+            
+            
+                <!-- <div class="item-code"></div> -->
+            <div class="item-inputs">
+                <div class="input-box ">
+                    <label>ANCHO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-width" readonly>
+                </div>
+                <div class="input-box ">
+                    <label>LARGO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-length" readonly>
+                </div>
+                <div class="input-box ">
+                    <label>ALTO</label>
+                    <input type="number" step="0.01" class="item-detail-input item-detail-height" readonly>
+                </div>
+            
+                <div class="input-box">
+                    <label>CNT</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-input" data-role="units-input">
+                </div>
+                 <div class="input-box hidden">
+                    <label>U/C</label>
+                    <input type="number" min="1" value="1" class="item-detail-input item-detail-units-per-package-input" data-role="units-per-package-input">
+                </div>
+                <div class="input-box">
+                    <label>PESO NETO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input">
+                </div>
+                 <div class="input-box">
+                     <label>PESO BRUTO</label>
+                    <input type="number" step="0.1" min="0" value="0" data-role="weight-input-bruto">
+                </div>
+            </div>
+            <!-- Container for nested items (boxes inside pallet) -->
+            <div class="pallet-contents hidden">
+                <div class="pallet-contents-list"></div>
+                <button type="button" class="btn-add-content">+ Agregar Caja</button>
+            </div>
+        </div>
+    </template>
+
+        <script src="./assets/js/crear-caja.js"></script>
+</body>
+</html>
