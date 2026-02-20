@@ -6,8 +6,26 @@
     <title>Listado cajas HH</title>
 </head>
 <body>
-    contenido de H
-    <button id="addCajaBtn">Agregar Caja</button>
+    <div class="container">
+        <h1>Administración de cajas</h1>
+        <div class="button-group">
+            <a href="mPck.html" class="btn btn-add">Agregar</a>
+            <button class="btn btn-logout">Cerrar sesión</button>
+        </div>
+        <div id="packagesList" class="packages-list">
+        </div>
+        <div class="employe">
+            <span class="employee-name">Usuario: <span id="userName"></span></span>
+        </div> 
+    </div>
+    <div class="status">
+        Ready
+    </div>
+
+    <!-- Modal movido a mPck.html -->
+
+    <!-- Eliminados modales secundarios; funcionalidad movida a mPck.html -->
+    
 </body>
 <script src="./assets/js/hh-lista.js"></script>
 </html>

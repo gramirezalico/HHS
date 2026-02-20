@@ -30,8 +30,16 @@ req.onupgradeneeded = function(event) {
    
   };
  
-function save(data) { db.transaction('Cajas','readwrite').objectStore('Cajas').add(data); }
-function getById(id, cb) { db.transaction('Cajas').objectStore('Cajas').get(id).onsuccess = e => cb(e.target.result); }
+
+window.save = function(data) { db.transaction('Cajas','readwrite').objectStore('Cajas').add(data); };
+window.clearAll = function(cb) {
+  const tx = db.transaction('Cajas', 'readwrite');
+  const store = tx.objectStore('Cajas');
+  const clearRequest = store.clear();
+  clearRequest.onsuccess = () => { if (cb) cb(); };
+  clearRequest.onerror = e => { console.error('Error al limpiar:', e.target.error); if (cb) cb(); };
+};
+window.getById = function(id, cb) { db.transaction('Cajas').objectStore('Cajas').get(id).onsuccess = e => cb(e.target.result); };
 
 function size(cb) {
   const tx = db.transaction('Cajas', 'readwrite');
@@ -42,12 +50,10 @@ function size(cb) {
   countRequest.onerror = e => console.error('Error al contar:', e.target.error);
 }
 
-function getAllData(cb) {
-    
+window.getAllData = function(cb) {
   const tx = db.transaction('Cajas', 'readwrite');
   const store = tx.objectStore('Cajas');
   const getAllRequest = store.getAll();
-
   getAllRequest.onsuccess = e => cb(e.target.result);
   getAllRequest.onerror = e => console.error('Error al obtener datos:', e.target.error);
 }
