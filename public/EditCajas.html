@@ -7,13 +7,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="crear-caja.css?v=16">
+    <link rel="stylesheet" href="crear-caja.css?v=18">
 </head>
 <body>
     <div class="main-container">
         <!-- Header -->
         <div class="header">
-            <h1>ELIGE TIPO DE EMPAQUE</h1>
+            <div id="cliente"></div>
+            
+            <div id="empid"></div>
         </div>
         
         <!-- Radio buttons as image cards -->
@@ -66,8 +68,8 @@
         
         <!-- Action buttons -->
         <div class="action-buttons">
-            <button type="button" class="btn btn-cancel">Cancelar</button>
-            <button type="button" class="btn btn-save" id="btnGuardar">Editar</button>
+            <button type="button" class="btn btn-cancel">Salir</button>
+            <button type="button" class="btn btn-save" id="btnGuardar">Guardar</button>
         </div>
     </div>
 
@@ -166,6 +168,6 @@
         </div>
     </template>
 
-        <script src="./assets/js/edit-cajas.js?v=16"></script>
+        <script src="./assets/js/edit-cajas.js?v=17"></script>
 </body>
 </html>

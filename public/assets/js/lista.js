@@ -303,7 +303,7 @@ function showSelectionModal(items) {
         const ids = items.map(item => item.ID).join(','); // Concatenar todos los IDs
         
         // Construir URL y redirigir
-        const url = `./EditCajas?orden=${orden}&EmpId=${empId}&ids=${encodeURIComponent(ids)}`;
+        const url = `./EditCajas?orden=${orden}&EmpId=${empId}&ids=${encodeURIComponent(ids)}&Customer=${encodeURIComponent(items[0].Cliente)}`;
         console.log('Redirigiendo a:', url);
         console.log('Items:', items);
         

@@ -1,8 +1,22 @@
 const urlParams = new URLSearchParams(window.location.search);
 const ordenParam = urlParams.get('orden');
 const empIdParam = urlParams.get('EmpId');
+// Additional URL params: orderLine and optional line2/line3
+const orderLineParam = urlParams.get('orderLine') || urlParams.get('orderline') || urlParams.get('OrderLine') || '';
+const line2Param = urlParams.get('line2') || urlParams.get('Line2') || urlParams.get('line_2') || '';
+const line3Param = urlParams.get('line3') || urlParams.get('Line3') || urlParams.get('line_3') || '';
 document.addEventListener('DOMContentLoaded', async () => {
-
+    fetch(`./api/orderhh?OrderNum=${ordenParam}`, {
+        headers: { 'Accept': 'application/json' }
+    }).then(res => res.json())
+      .then(data => {
+          if (data && data.status === 'success' && data.value) {
+            Customer_CustID = data.value[0].Customer_CustID || '';
+            document.getElementById('cliente').textContent = `Cliente: ${Customer_CustID}`;
+          }
+        });
+    document.getElementById('empid').textContent = `EmpID: ${empIdParam || 'N/A'}`;
+    document.getElementById('cliente').textContent = `Cliente: ${urlParams.get('Customer') || 'N/A'}`;
     const packingListSelectCajas = document.getElementById('packingListSelectCajas');
     const packingListSelectPallet = document.getElementById('packingListSelectPallet');
     const packingListSelectOtro = document.getElementById('packingListSelectOtro');
@@ -307,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 myHeaders.append("Content-Type", "application/json");
 
                 const raw = JSON.stringify({
-                    "orderNum": ordenParam
+                    "orderNum": ordenParam,orderLine: orderLineParam
                 });
 
                 const requestOptions = {
@@ -481,8 +495,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     // Objeto estructurado según requerimiento
                     const objetoItem = {
+
                         orderNumber: ordenParam || '',
                         empId: empIdParam || '',
+                        // URL params included so backend receives them
+                        orderLine: orderLineParam || '',
+                        line2: line2Param || '',
+                        line3: line3Param || '',
                         tipo: itemData.Packing_Description, // Ej: "Caja C03"
                         codigo: itemData.Packing_PkgCode,   // Ej: "C03"
                         unidades: qtyValue,                 // Und
@@ -494,7 +513,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         alto: parseFloat(heightVal) || 0,
                         pesoBruto: pesoValueBruto || 0,
                         unidadesPorPaquete: unitsPerPackageValue || 1,
-                        contenido: nestedItems // Array of nested boxes
+                        contenido: nestedItems, // Array of nested boxes
+                        id: new Date().getTime()+"" // Unique ID
+
                     };
 
                     datosValidos.push(objetoItem);
@@ -605,11 +626,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnCancelar) {
         btnCancelar.addEventListener('click', () => {
             // Obtener EmpID del URL actual
-            const urlParams = new URLSearchParams(window.location.search);
-            const empId = urlParams.get('EmpId') || urlParams.get('empId') || '00010';
-            
-            // Redirigir a Lista con el EmpID
-            window.location.href = `./Lista?EmpID=${empId}`;
+            // Intentar cerrar la ventana
+        
+        window.close();
+        
+        // Si no se puede cerrar (navegadores bloquean esto), regresar en el historial
+        setTimeout(() => {
+            if (!window.closed) {
+                window.history.back();
+            }
+        }, 100);
         });
     }
 });

@@ -1,6 +1,10 @@
 const urlParams = new URLSearchParams(window.location.search);
 const ordenParam = urlParams.get('orden');
 const empIdParam = urlParams.get('EmpId');
+// Additional URL params: orderLine and optional line2/line3
+const orderLineParam = urlParams.get('orderLine') || urlParams.get('orderline') || urlParams.get('OrderLine') || '';
+const line2Param = urlParams.get('line2') || urlParams.get('Line2') || urlParams.get('line_2') || '';
+const line3Param = urlParams.get('line3') || urlParams.get('Line3') || urlParams.get('line_3') || '';
 document.addEventListener('DOMContentLoaded', async () => {
     try {
                 const myHeaders = new Headers();
@@ -370,6 +374,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const objetoItem = {
                         orderNumber: ordenParam || '',
                         empId: empIdParam || '',
+                        // URL params included so backend receives them
+                        orderLine: orderLineParam || '',
+                        line2: line2Param || '',
+                        line3: line3Param || '',
                         tipo: itemData.Packing_Description, // Ej: "Caja C03"
                         codigo: itemData.Packing_PkgCode,   // Ej: "C03"
                         unidades: qtyValue,                 // Und

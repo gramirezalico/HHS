@@ -4,8 +4,8 @@ const { getData } = require('./utils/getData');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const pilot = true;
-const EPICOR_API_BASE = 'https://centralusdtapp73.epicorsaas.com/SaaS5333/api/v1/BaqSvc';
-const EPICOR_API_BASE_P = 'https://centralusdtpilot73.epicorsaas.com/SaaS5333pilot/api/v1/BaqSvc';
+const EPICOR_API_BASE = 'https://alicoempaques-live.epicorsaas.com/server/api/v1/BaqSvc';
+const EPICOR_API_BASE_P = 'https://alicoempaques-pilot.epicorsaas.com/server/api/v1/BaqSvc';
 
 // Middleware de seguridad y configuración
 app.use(express.json({ limit: '10mb' }));
@@ -92,11 +92,36 @@ app.get('/api/status', (req, res) => {
         environment: process.env.NODE_ENV || 'development'
     });
 });
+app.get('/api/orderhh', async (req, res) => {
+    // Obtener EmpID de query params o usar valor por defecto
+    const OrderNum = req.query.OrderNum || req.query.OrderNum || '00010';
 
+    let url = `${EPICOR_API_BASE_P}/CajasHHCliente(ALICO)/?OrderNum=${OrderNum}`;
+    if (pilot) {
+        url = `${EPICOR_API_BASE_P}/CajasHHCliente(ALICO)/?OrderNum=${OrderNum}`;
+    }
+    try {
+        const response = await getData(url);
+        if (!response) {
+            return res.status(400).json({ status: 'error', message: 'No data found' });
+        } else {
+            const value = response.value;
+            if (value) {
+
+                res.json({ status: 'success', value });
+             }
+        }
+    }
+    catch (error) {
+        console.error('API Error:', error);
+        res.status(500).json({ status: 'error', message: 'Server Error' });
+    }
+
+})
 app.get('/api/TI_HH_Listado', async (req, res) => {
     // Obtener EmpID de query params o usar valor por defecto
     const empId = req.query.EmpID || req.query.empId || '00010';
-    
+
     let url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=${empId}&Plant=MfgSys`;
     if (pilot) {
         url = `${EPICOR_API_BASE_P}/TI_HH_Listado(ALICO)/?EmpID=${empId}&Plant=MfgSys`;
@@ -110,11 +135,11 @@ app.get('/api/TI_HH_Listado', async (req, res) => {
             if (value) {
                 // Agrupar y transformar los datos
                 const groupedData = {};
-                
+
                 value.forEach(item => {
                     // Crear una clave única para agrupar
                     const groupKey = `${item.MtlQueue_LotNum}_${item.Customer_CustID}_${item.MtlQueue_OrderNum}_${item.MtlQueue_PartNum}`;
-                    
+
                     if (!groupedData[groupKey]) {
                         // Crear nuevo grupo
                         groupedData[groupKey] = {
@@ -128,13 +153,13 @@ app.get('/api/TI_HH_Listado', async (req, res) => {
                             EmpID: item.MtlQueue_SelectedByEmpID
                         };
                     }
-                    
+
                     // Agregar datos al grupo
                     groupedData[groupKey].ID.push(item.MtlQueue_MtlQueueSeq);
                     groupedData[groupKey].Bin.push(item.MtlQueue_FromBinNum);
                     groupedData[groupKey].Cantidad += parseFloat(item.MtlQueue_Quantity);
                 });
-                
+
                 // Convertir el objeto agrupado a array y formatear
                 const organizedData = Object.values(groupedData).map(group => ({
                     ID: group.ID.join(','),
@@ -144,9 +169,9 @@ app.get('/api/TI_HH_Listado', async (req, res) => {
                     Bin: group.Bin.join(','),
                     OV: group.OV,
                     LotNum: group.LotNum,
-                    EmpID:group.EmpID 
+                    EmpID: group.EmpID
                 }));
-                
+
                 res.json({ status: 'success', value: organizedData });
             }
         }
@@ -181,9 +206,9 @@ app.post('/api/login', async (req, res) => {
     }
 });
 app.post('/api/getCaja', async (req, res) => {
-    const { orderNum } = req.body;
+    const { orderNum, orderLine } = req.body;
     const myHeaders = new Headers();
-    let newExtructure = { orderNum: orderNum };
+    let newExtructure = { orderNum: orderNum, orderLine: orderLine };
     myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
@@ -228,6 +253,7 @@ app.post('/api/cajasPorEmp', async (req, res) => {
         const newExtructure = {
             unixtimestamp: new Date().getTime(),
             orderNum: ordersArray[0].orderNumber,
+            orderLine: ordersArray[0].orderLine,
             ordersArray: ordersArray
         };
 

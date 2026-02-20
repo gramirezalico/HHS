@@ -1,6 +1,10 @@
 const urlParams = new URLSearchParams(window.location.search);
 const ordenParam = urlParams.get('orden');
 const empIdParam = urlParams.get('EmpId');
+// Additional URL params: orderLine and optional line2/line3
+const orderLineParam = urlParams.get('orderLine') || urlParams.get('orderline') || urlParams.get('OrderLine') || '';
+const line2Param = urlParams.get('line2') || urlParams.get('Line2') || urlParams.get('line_2') || '';
+const line3Param = urlParams.get('line3') || urlParams.get('Line3') || urlParams.get('line_3') || '';
 document.addEventListener('DOMContentLoaded', async () => {
    
     const packingListSelectCajas = document.getElementById('packingListSelectCajas');
@@ -274,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 myHeaders.append("Content-Type", "application/json");
 
                 const raw = JSON.stringify({
-                  "orderNum": ordenParam
+                  "orderNum": ordenParam,orderLine: orderLineParam
                 });
 
                 const requestOptions = {
@@ -403,12 +407,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnCancelar = document.querySelector('.btn-cancel');
     if (btnCancelar) {
         btnCancelar.addEventListener('click', () => {
-            // Obtener EmpID del URL actual
-            const urlParams = new URLSearchParams(window.location.search);
-            const empId = urlParams.get('EmpId') || urlParams.get('empId') || '00010';
-            
-            // Redirigir a Lista con el EmpID
-            window.location.href = `./Lista?EmpID=${empId}`;
+         window.close();
         });
     }
 });
