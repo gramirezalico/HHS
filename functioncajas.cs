@@ -14,8 +14,8 @@ try
     newRow.Number04 = this.Number04;
     newRow.ShortChar01 = this.ShortChar01;
     newRow.ShortChar02 = this.ShortChar02;
-        newRow.ShortChar03 = this.ShortChar03;
-            newRow.ShortChar04= this.ShortChar04;
+    newRow.ShortChar03 = this.ShortChar03;
+    newRow.ShortChar04= this.ShortChar04;
     newRow.Number05 = this.Number05;
     newRow.ShortChar05 = this.ShortChar05;
     newRow.ShortChar06 = this.ShortChar06;

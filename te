@@ -1,0 +1,76 @@
+IssueReturn.LotNum
+IssueReturn.OrderRel
+IssueReturn.FromBinNum
+
+
+{"orderNum":  "1165802" , "orderLine": "3", "id":"3076323","bin":"CA08", "OrderRel":"3", "LotNum": "FE667379-1165802"}
+[
+  {
+    "_id": "699dc523cd480b6f2455158e",
+    "unixtimestamp": 1771947282733,
+    "orderNum": "1165802",
+    "orderLine": "3",
+    "id": "1771947282680",
+    "bin": "CA08",
+    "OrderRel": "3",
+    "LotNum": "FE667379-1165802",
+    "ordersArray": [
+      {
+        "orderNumber": "1165802",
+        "empId": "00010",
+        "id": "1771947282680",
+        "bin": "CA08",
+        "OrderRel": "3",
+        "LotNum": "FE667379-1165802",
+        "orderLine": "3",
+        "line2": "",
+        "line3": "",
+        "tipo": "CAJA C03",
+        "codigo": "C03",
+        "unidades": 1,
+        "peso": 2,
+        "es_pallet": false,
+        "ancho": 32,
+        "largo": 42,
+        "alto": 26,
+        "pesoBruto": 2,
+        "unidadesPorPaquete": 1,
+        "contenido": []
+      }
+    ]
+  },
+  {
+    "_id": "699dc523cd480b6f2455158f",
+    "unixtimestamp": 1771947298785,
+    "orderNum": "1165802",
+    "orderLine": "3",
+    "id": "1771947289159",
+    "bin": "CA08",
+    "OrderRel": "3",
+    "LotNum": "FE667379-1165802",
+    "ordersArray": [
+      {
+        "orderNumber": "1165802",
+        "empId": "00010",
+        "id": "1771947289159",
+        "bin": "CA08",
+        "OrderRel": "3",
+        "LotNum": "FE667379-1165802",
+        "orderLine": "3",
+        "line2": "",
+        "line3": "",
+        "tipo": "CAJA C03",
+        "codigo": "C03",
+        "unidades": 1,
+        "peso": 2,
+        "es_pallet": false,
+        "ancho": 32,
+        "largo": 42,
+        "alto": 26,
+        "pesoBruto": 2,
+        "unidadesPorPaquete": 1,
+        "contenido": []
+      }
+    ]
+  }
+]

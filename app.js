@@ -206,9 +206,9 @@ app.post('/api/login', async (req, res) => {
     }
 });
 app.post('/api/getCaja', async (req, res) => {
-    const { orderNum, orderLine } = req.body;
+    const { orderNum, orderLine, mtlId, bin, OrderRel, LotNum } = req.body;
     const myHeaders = new Headers();
-    let newExtructure = { orderNum: orderNum, orderLine: orderLine };
+    let newExtructure = { orderNum: orderNum, orderLine: orderLine, mtlId : mtlId, bin: bin, OrderRel: OrderRel, LotNum: LotNum };
     myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
@@ -219,7 +219,7 @@ app.post('/api/getCaja', async (req, res) => {
     };
 
     try {
-        const response = await fetch("https://apps.alico-sa.com/webhook/6baaad35-d336-4fb4-b0f6-a42c4feaa2b8?dataBase=CajasOrdenes", requestOptions);
+        const response = await fetch("https://respaldoapps.alico-sa.com/webhook/c9a66458-958c-411a-af3a-f3c2f538faec0Live?dataBase=CajasOrdenesL", requestOptions);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -254,10 +254,14 @@ app.post('/api/cajasPorEmp', async (req, res) => {
             unixtimestamp: new Date().getTime(),
             orderNum: ordersArray[0].orderNumber,
             orderLine: ordersArray[0].orderLine,
+            mtlId: ordersArray[0].mtlId,
+            bin: ordersArray[0].bin,
+            OrderRel: ordersArray[0].OrderRel,
+            LotNum: ordersArray[0].LotNum,
             ordersArray: ordersArray
         };
 
-        const response = await fetch("https://apps.alico-sa.com/webhook/ea609c91-64c3-463f-b21e-82156cfba1box?dataBase=CajasOrdenes", {
+        const response = await fetch("https://respaldoapps.alico-sa.com/webhook/c6ff0c36-1d9e-4b2f-8fc2-337dd59ce09dLive?dataBase=CajasOrdenesL", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newExtructure)

@@ -1,6 +1,10 @@
 const urlParams = new URLSearchParams(window.location.search);
 const ordenParam = urlParams.get('orden');
 const empIdParam = urlParams.get('EmpId');
+const mtlId = urlParams.get('mtlId');
+const bin = urlParams.get('bin');
+const OrderRel = urlParams.get('OrderRel');
+const LotNum = urlParams.get('LotNum');
 // Additional URL params: orderLine and optional line2/line3
 const orderLineParam = urlParams.get('orderLine') || urlParams.get('orderline') || urlParams.get('OrderLine') || '';
 const line2Param = urlParams.get('line2') || urlParams.get('Line2') || urlParams.get('line_2') || '';
@@ -321,7 +325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 myHeaders.append("Content-Type", "application/json");
 
                 const raw = JSON.stringify({
-                    "orderNum": ordenParam,orderLine: orderLineParam
+                    "orderNum": ordenParam,orderLine: orderLineParam,mtlId: mtlId, bin: bin, OrderRel: OrderRel, LotNum: LotNum
                 });
 
                 const requestOptions = {
@@ -499,6 +503,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         orderNumber: ordenParam || '',
                         empId: empIdParam || '',
                         // URL params included so backend receives them
+                        mtlId: mtlId ,
+                        
+                        bin: bin ,
+                        OrderRel: OrderRel,
+                        LotNum: LotNum ,
                         orderLine: orderLineParam || '',
                         line2: line2Param || '',
                         line3: line3Param || '',
